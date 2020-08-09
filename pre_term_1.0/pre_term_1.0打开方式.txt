@@ -1,1 +1,0 @@
-在终端中进入pre_term_1.0文件夹下（即本说明文档所在目录下），然后输入python manage.py runserver，回车即可
