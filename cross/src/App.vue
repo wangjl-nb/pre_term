@@ -7,6 +7,7 @@
         @select="handleSelect"
         router
         background-color="#ffffff "
+        font-size='20px'
         text-color="#24292e" 
       >
         <el-menu-item-group >
@@ -63,8 +64,10 @@
 
 <style scoped>
 .el-menu-item.is-active {
-  position:relative; 
-  left:'-20px';
+  font-size: 21px  !important;
+
+  position:relative  !important; 
+  left:-10px  !important;
 　　text-color:#aa67aa  !important; 
    background-image: linear-gradient(to right, #aa67aa, #1682dc) !important;
         -webkit-background-clip: text;

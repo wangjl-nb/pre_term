@@ -35,6 +35,11 @@ const routes = [
         component: () => import("../views/dashboard/team.vue")
       },
       {
+        path: "team/:teamId",
+        name: "Team",
+        component: () => import("../views/dashboard/teamInfo.vue")
+      },
+      {
         path: "trash",
         name: "Trash",
         component: () => import("../views/dashboard/trash.vue")

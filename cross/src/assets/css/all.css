@@ -1,0 +1,12 @@
+a{
+    text-decoration:none
+}
+a:link{color:#aa67aa;}
+a:visited{color:#1682dc;}
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }
