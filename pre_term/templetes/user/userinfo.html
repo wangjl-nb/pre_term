@@ -1,0 +1,98 @@
+{% extends 'base_main.html' %}
+{% load static %}
+{% block ext_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'web/user/css/login.css' %}">
+{% endblock %}
+{% block ext_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/md5.js' %}"></script>
+{% endblock %}
+{% block content %}
+    <div id="all">
+        <div class="container-fluid">
+            <div class="row row-offcanvas row-offcanvas-left">
+<!--                   左侧引导栏（不是上方导航栏）-->
+                <div id="sidebar" class="col-md-2 col-lg-2 sidebar-offcanvas" style="margin-top: 3rem; background-color: #e8e8e8;">
+                    <div class="sidebar-content" style="height: 16rem; margin-top: 2rem">
+                        <img src="/static/uploads/{{ request.user.u_icon.url }}" alt="用户头像" style="width: 100%; height: 100%">
+                    </div>
+                    <h3 style="text-align: center; margin-top: 2rem">头像</h3>
+                </div>
+<!--                引导栏结束-->
+
+<!--                个人信息-->
+                <div class="col-md-10 col-lg-10 content-column white-background" style="margin-top: 3rem">
+<!--                    修改密码-->
+                    <div class="col-md-6 col-lg-6">
+                        <div class="content-column-content">
+                            <h1><strong>用户名：</strong></h1>
+                            <h3 id="username" style="color: blue">{{ user.u_username }}</h3>
+                            <h1><strong>邮箱：</strong></h1>
+                            <h3 id="email" style="color: blue">{{ user.u_email }}</h3>
+                            <a href="{% url 'web:changepwd' %}" style="text-decoration: none"><button class="btn-lg btn-primary" id="changepwdbutton">修改密码</button></a>
+                        </div>
+                    </div>
+<!--                    我参与的小组和话题-->
+                    <div class="col-md-6 col-lg-6">
+                        <div class="col-md-12 col-lg-12">
+                            <h3 style="color: #9055A2">我加入的小组（仅展示名字）</h3>
+                            {% for group in groups %}
+                            <div>
+                                <h4>{{ group.g_name }}</h4>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-12 col-lg-12" style="margin-top: 2rem">
+                            <h3 style="color: #c7254e">我参与的话题（仅展示名字）</h3>
+                            {% for topic in topics %}
+                                <div>
+                                    <h4>{{ topic.t_name }}</h4>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+<!--                    我的最近评论，只展示标题和内容即可，3条即可-->
+                    <div class="col-md-12 col-lg-12">
+<!--                        一个div是一个完整的回复元素-->
+                        <h1 style="margin: 3rem 0">我的最近动态（仅展示文字,每部分最多3条）</h1>
+                        <hr>
+                        <h2 style="margin-bottom: 2rem; color: #491217">书籍评论</h2>
+                        {% for book_comment in book_comments %}
+                        <div style="height: 10rem">
+                            <h3 style="margin-bottom: 2rem">标题：{{ book_comment.title }}</h3>
+                            <p style="font-size: 1.2rem">内容：{{ book_comment.content }}</p>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                        <h2 style="margin-bottom: 2rem; color: #5e65ef">影视评论</h2>
+                        {% for movie_comment in movie_comments %}
+                        <div style="height: 10rem">
+                            <h3 style="margin-bottom: 2rem">标题：{{ movie_comment.title }}</h3>
+                            <p style="font-size: 1.2rem">内容：{{ movie_comment.content }}</p>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                        <h2 style="margin-bottom: 2rem; color: #81ef48">小组帖子</h2>
+                        {% for group_comment in group_comments %}
+                        <div style="height: 10rem">
+                            <h3 style="margin-bottom: 2rem">标题：{{ group_comment.title }}</h3>
+                            <p style="font-size: 1.2rem">内容：{{ group_comment.content }}</p>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                        <h2 style="margin-bottom: 2rem; color: #ef4c3e">话题回复</h2>
+                        {% for topic_comment in topic_comments %}
+                        <div style="height: 10rem">
+                            <h3 style="margin-bottom: 2rem">标题：{{ topic_comment.title }}</h3>
+                            <p style="font-size: 1.2rem">内容：{{ topic_comment.content }}</p>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                    </div>
+                </div>
+<!--            个人信息部分结束-->
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -77,13 +77,16 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../myproject" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/App" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\code\djcode\pre_term\pre_term\App" />
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes" />
+      <recent name="D:\code\djcode\pre_term\pre_term" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />

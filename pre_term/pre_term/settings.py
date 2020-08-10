@@ -56,7 +56,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'DIRS': ['appfront/dist'],
+        'DIRS': ['templetes'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,3 +144,8 @@ EMAIL_POST = 25
 EMAIL_HOST_USER = '352263861@qq.com'
 
 EMAIL_HOST_PASSWORD = 'rbbdqivdnguhcaja'
+
+SERVER_HOST = '127.0.0.1'
+
+SERVER_PORT = '8000'
+

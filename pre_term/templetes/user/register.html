@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block ext_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'web/user/js/register.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/md5.js' %}"></script>
+{% endblock %}
+{% block ext_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'web/user/css/register.css' %}">
+
+{% endblock %}
+
+{% block content %}
+    <div class="banner_main">
+        <div class="overlay-w3pvt">
+            <div class="container">
+                <div class="text-center login">
+                    <div style="line-height: 100%">
+                        <h3>请注册</h3>
+                    </div>
+                    <div style="margin-top: 3rem; text-align: center">
+                        <form style="width: 100%; font-size: 1rem" method="post" enctype="multipart/form-data"
+                              action="{% url 'app:register' %}">
+                            {% csrf_token %}
+                            {#防跨站攻击#}
+                            <div class="form-group">
+                                <!--								<label for="username">用户名</label>-->
+                                <strong>用户名：&emsp;&emsp;</strong>
+                                <input type="text" class="form-control" id="username" placeholder="Username"
+                                       style="display: inline-block;width: 50%" name="username">
+                            </div>
+                            <div class="form-group">
+                                <!--<label for="email">邮箱</label>-->
+                                <strong>邮箱：&emsp;&emsp;&emsp;</strong>
+                                <input type="email" class="form-control" id="email" placeholder="Email"
+                                       style="display: inline-block;width: 50%" name="email">
+                            </div>
+                            <div class="form-group">
+                                <!--								<label for="password">密码</label>-->
+                                <strong>&emsp;&nbsp;密码：&emsp;&emsp;&emsp;</strong>
+                                <input type="password" class="form-control" id="password" placeholder="Password"
+                                       style="display: inline-block;width: 50%" name="password">
+                                <span class="glyphicon glyphicon-eye-close" id="eye"></span>
+                            </div>
+                            <div class="form-group">
+                                <!--	<label for="password">密码</label>-->
+                                <strong>&emsp;&nbsp;确认密码：&emsp;</strong>
+                                <input type="password" class="form-control" id="password2" placeholder="Password"
+                                       style="display: inline-block;width: 50%">
+                                <span class="glyphicon glyphicon-eye-close" id="eye2"></span>
+                            </div>
+                            <div class="form-group">
+                                <strong>&nbsp;头像：&emsp;&emsp;&emsp;</strong>
+                                <input name="icon" type="file" id="icon_input"
+                                       style=" display: inline-block;width: 50%">
+                            </div>
+                            <button type="submit" class="submit" id="submit">提交</button>
+                        </form>
+                        <div>
+                                <div style="width: 60%; margin: 1rem auto;text-align: center">
+                                    <p id="wrong" class="wrongText" style="font-size: 1.2rem"></p>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //banner -->
+{% endblock %}

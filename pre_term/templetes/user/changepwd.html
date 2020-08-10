@@ -1,0 +1,52 @@
+{% extends 'base_main.html' %}
+{% load static %}
+{% block ext_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'web/user/css/login.css' %}">
+{% endblock %}
+{% block ext_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'web/user/js/userinfo.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/md5.js' %}"></script>
+{% endblock %}
+{% block content %}
+    <div id="all">
+        <div class="container-fluid">
+            <div class="row row-offcanvas row-offcanvas-left">
+<!--                   左侧引导栏（不是上方导航栏）-->
+                <div id="sidebar" class="col-md-2 col-lg-2 sidebar-offcanvas" style="margin-top: 3rem; background-color: #e8e8e8;">
+                    <div class="sidebar-content" style="height: 16rem; margin-top: 2rem">
+                        <img src="/static/uploads/{{ request.user.u_icon.url }}" alt="用户头像" style="width: 100%; height: 100%">
+                    </div>
+                    <h3 style="text-align: center; margin-top: 2rem">头像</h3>
+                </div>
+<!--                引导栏结束-->
+
+<!--                个人信息-->
+                <div class="col-md-10 col-lg-10 content-column white-background" style="margin-top: 3rem">
+<!--                    修改密码-->
+                    <div class="col-md-6 col-lg-6">
+                        <div class="content-column-content">
+                            <h1>修改密码</h1>
+                            <div id="changepwdform">
+                                <form method="post" action="{% url 'web:changepwd' %}" onsubmit="return parse_data()">
+                                    {% csrf_token %}
+                                    <input type="password" class="form-control" name="oldpwd" id="oldpwd" placeholder="请输入旧密码" style="width: 70%; display: inline-block; margin-top: 2rem">
+                                    <span class="glyphicon glyphicon-eye-close" id="eye"></span>
+                                    <input type="password" class="form-control" name="newpwd1" id="newpwd1" placeholder="请输入新密码" style="width: 70%; display: inline-block; margin-top: 2rem">
+                                    <span class="glyphicon glyphicon-eye-close" id="eye2"></span>
+                                    <input type="password" class="form-control" name="newpwd2" id="newpwd2" placeholder="请再次输入新密码" style="width: 70%; display: inline-block; margin-top: 2rem">
+                                    <span class="glyphicon glyphicon-eye-close" id="eye3"></span>
+                                    <button type="submit" id="submit" class="btn-lg btn-success" style="display: block; margin-top: 2rem">提交</button>
+                                    <p id="changewrong" class="wrongText">{{ error_message }}</p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+<!--            个人信息部分结束-->
+            </div>
+        </div>
+    </div>
+{% endblock %}

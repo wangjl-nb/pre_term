@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {#    <meta http-equiv="X-UA-Compatible" content="ie=edge">#}
+    <title>{{ title }}</title>
+
+    <link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" media="all">
+    <link rel="stylesheet" href="{% static "css/font-awesome.css" %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
+
+    {% block ext_css %}
+
+    {% endblock %}
+</head>
+<body>
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+
+{% block footer %}
+    <section class="testimonials" id="test" style="margin-top: 50px">
+        <div class="overlay-w3pvt-test py-5">
+            <div class="container py-md-5">
+                <div class="test-info text-center">
+                    <h3>Book & Movie & Play & Discussion</h3>
+                    <h2 style="color: #f7f7f7"><strong>BooMPlay书籍影视交流平台</strong></h2>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{#<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>#}
+<script type="text/javascript" src="{% static 'web/main/js/jquery.min.js' %}"></script>
+{#<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
+<script type="text/javascript" src="{% static 'web/main/js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+
+{% block ext_js %}
+
+{% endblock %}
+
+</body>
+</html>
