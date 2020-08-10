@@ -106,3 +106,12 @@ class Comment(models.Model):
 
     class Meta:
         db_table = 'comment'
+
+# 文档修改日志
+class file_log(models.Model):
+    file = models.ForeignKey(File, on_delete=CASCADE)
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    change_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'file_log'

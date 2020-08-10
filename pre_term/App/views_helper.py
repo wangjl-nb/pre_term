@@ -5,7 +5,7 @@ from pre_term.settings import *
 
 
 def send_email_activate(username, receive, u_token):
-    subject = '%s BooMPlay Active' % username
+    subject = '%s 金刚石 Active' % username
 
     from_email = EMAIL_HOST_USER
 
@@ -13,7 +13,7 @@ def send_email_activate(username, receive, u_token):
 
     data = {
         'username': username,
-        'activate_url': 'http://{}:{}/web/activate/?u_token={}'.format(SERVER_HOST, SERVER_PORT, u_token),
+        'activate_url': 'http://{}:{}/app/activate/?u_token={}'.format(SERVER_HOST, SERVER_PORT, u_token),
     }
 
     html_message = loader.get_template('user/activate.html').render(data)
