@@ -131,11 +131,11 @@ CACHES = {
     }
 }
 
-MEDIA_KEY_PREFIX = "/static/uploads/"
+MEDIA_KEY_PREFIX = "/appfront/dist/static/uploads/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'appfront/dist/static/uploads')
 
-STATIC_URL = '/static/'
+STATIC_URL = '/appfront/dist/static/'
 
 EMAIL_HOST = 'smtp.qq.com'
 
