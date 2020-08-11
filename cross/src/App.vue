@@ -7,7 +7,6 @@
         @select="handleSelect"
         router
         background-color="#ffffff "
-        font-size='20px'
         text-color="#24292e" 
       >
         <el-menu-item-group >
@@ -23,6 +22,9 @@
           >
           <el-menu-item index="/dashboard/desktop">
             <span slot="title">工作台</span>
+          </el-menu-item>
+          <el-menu-item index="/profile">
+            <span slot="title">个人信息</span>
           </el-menu-item>
           <el-menu-item index="/inbox">
             <span slot="title">消息通知</span>
@@ -64,10 +66,8 @@
 
 <style scoped>
 .el-menu-item.is-active {
-  font-size: 21px  !important;
-
-  position:relative  !important; 
-  left:-10px  !important;
+  position:relative; 
+  left:'-20px';
 　　text-color:#aa67aa  !important; 
    background-image: linear-gradient(to right, #aa67aa, #1682dc) !important;
         -webkit-background-clip: text;

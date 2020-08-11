@@ -4,10 +4,6 @@ import router from "./router";
 import Element from "element-ui";
 import axios from "axios";
 import 'element-ui/lib/theme-chalk/index.css';
-import './assets/iconfont/iconfont.css'
-import './assets/iconfont/iconfont.js'
-import './assets/css/all.css'
-
 axios.defaults.baseURL='http://127.0.0.1:8000'
 axios.defaults.headers={'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }
 

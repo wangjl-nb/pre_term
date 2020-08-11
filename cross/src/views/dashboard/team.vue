@@ -2,24 +2,7 @@
   <el-container>
   <el-main class="dashboard">
     <el-row>
-          <el-col :span="24" v-for="(item,index) in list" :key="index">
-               <el-divider></el-divider>
-              <div class="flex flex6">
-                   <div style="margin-top:-10px;flex-grow: 1;">  
-                        <svg class="icon" aria-hidden="true" style="width:3em;height:3em">
-                            <use :xlink:href="item.icon" ></use>
-                        </svg>
-                  </div> 
-                    <div style="margin-left:0px;margin-top:-14px;flex-grow:32;"  >
-                 <a style="font-size:18px" :href="'team/'+item.id">{{item.name}}</a>
-                <el-card shadow="never" style="margin-top:10px" > 
-                <p style="margin:-6px 0">{{item.context}}</p>
-               </el-card>
-
-                        
-                    </div>
-               </div>
-          </el-col>
+          <el-col :span="24"><div class="grid-content bg-purple-dark"></div></el-col>
     </el-row>
   </el-main>
 </el-container>
@@ -30,19 +13,7 @@
 
 
 export default {
-  name: "Team",
-  data(){
-      return{
-          owner:"#icon-guanli ",
-          manager:"#icon-gerenguanli",
-          people:"#icon-zhanghaoguanli",
-          list:[
-              {icon:"#icon-guanli ",name:"sddsss",context:"团队描述",id:213},
-              {icon:"#icon-gerenguanli",name:"sddfhdsss",context:"团队描述",id:234},
-              {icon:"#icon-zhanghaoguanli",name:"sddsdfgdss",context:"团队描述",id:3463345}
-          ]
-      }
-  }
+  name: "Desktop",
 };
 </script>
 <style scoped>
@@ -73,9 +44,4 @@ export default {
     padding: 10px 0;
     background-color: #f9fafc;
   }
-   .flex6 {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
 </style>

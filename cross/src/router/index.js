@@ -35,14 +35,35 @@ const routes = [
         component: () => import("../views/dashboard/team.vue")
       },
       {
-        path: "team/:teamId",
-        name: "Team",
-        component: () => import("../views/dashboard/teamInfo.vue")
-      },
-      {
         path: "trash",
         name: "Trash",
         component: () => import("../views/dashboard/trash.vue")
+      },
+    ]
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: () =>
+        import(/* webpackChunkName: "about" */ "../components/profile.vue"),
+    children: [
+      {
+        path: "changeusername",
+        name: "ChangeUsername",
+        component: () =>
+            import(/* webpackChunkName: "about" */ "../views/profile/changeUsername.vue")
+      },
+      {
+        path: "changepassword",
+        name: "ChangePassword",
+        component: () =>
+            import(/* webpackChunkName: "about" */ "../views/profile/changePassword.vue")
+      },
+      {
+        path: "changeicon",
+        name: "ChangeIcon",
+        component: () =>
+            import(/* webpackChunkName: "about" */ "../views/profile/changeIcon.vue")
       },
     ]
   },
