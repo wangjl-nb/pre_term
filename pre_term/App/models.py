@@ -81,6 +81,9 @@ class Team_relation(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
     team = models.ForeignKey(Team, on_delete=CASCADE)
     level = models.IntegerField(default=1)
+    check = models.BooleanField(default=False)
+    change = models.BooleanField(default=False)
+    delete = models.BooleanField(default=False)
 
     class Meta:
         db_table = "team_relation"

@@ -98,7 +98,7 @@ def login(request):
                 else:
                     print('密码错误')
                     request.session['error_message'] = '密码错误'
-                    return redirect(reverse('web:login'))
+                    return redirect(reverse('app:login'))
             print('用户名不存在')
             request.session['error_message'] = '用户不存在'
             return redirect(reverse('app:login'))
