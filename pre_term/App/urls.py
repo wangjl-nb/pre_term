@@ -19,4 +19,6 @@ urlpatterns = [
     re_path('file_info/(?P<file_id>\d+)', views.file_info, name='file_info'),
     re_path('delete_file/(?P<file_id>\d+)', views.delete_file, name='delete_file'),
     path('file_log/',views.file_log,name='file_log'),
+    path('delete_files_list/', views.delete_files_list, name='delete_files_list'),
+    re_path('recover_file/(?P<file_id>\d+)', views.recover_file, name='recover_file'),
 ]

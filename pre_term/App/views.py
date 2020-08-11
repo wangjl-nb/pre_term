@@ -199,6 +199,7 @@ def create_file(request):
         return redirect(reverse('app:file_info', args={file.id}))
 
 
+# 修改文件
 def change_file(request, file_id):
     if request.method == 'GET':
         file = File.objects.get(pk=file_id)
@@ -219,6 +220,7 @@ def change_file(request, file_id):
         return redirect(reverse('app:file_info', args={file.id}))
 
 
+# 个人文档列表
 def my_files_list(request):
     user = request.user
     files = File.objects.filter(personal_record__user=user).filter(is_delete=False).order_by('-id')
@@ -231,6 +233,7 @@ def my_files_list(request):
     return render(request, 'file/my_files_list.html', context=data)
 
 
+# 文件信息
 def file_info(request, file_id):
     file = File.objects.get(pk=file_id)
     if file.is_delete:
@@ -244,6 +247,7 @@ def file_info(request, file_id):
     return render(request, 'file/file_info.html', context=data)
 
 
+# 文件删除
 def delete_file(request, file_id):
     file = File.objects.get(pk=file_id)
     file.is_delete = True
@@ -251,7 +255,23 @@ def delete_file(request, file_id):
     return redirect(reverse('app:my_files_list'))
 
 
+# 修改日志
 def file_log(request):
     file_id = request.GET.get('file_id')
     file_log = File_log.objects.filter(file_id=file_id).order_by('-change_date')
     return render(request, 'file/file_log.html', context={'file_logs': file_log})
+
+
+# 垃圾箱（回收站）
+def delete_files_list(request):
+    user = request.user
+    delete_files = File.objects.filter(personal_record__user=user).filter(is_delete=True)
+    return render(request, 'file/delete_files_list.html', context={'delete_files': delete_files})
+
+
+# 恢复文档
+def recover_file(request, file_id):
+    file = File.objects.get(pk=file_id)
+    file.is_delete = False
+    file.save()
+    return redirect(reverse('app:delete_files_list'))
