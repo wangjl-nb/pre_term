@@ -3,7 +3,6 @@
   <el-main class="dashboard">
     <el-row>
           <el-col :span="24">
-            <div class="grid-content bg-purple-dark">
             <div id="recycleBin">
               <div>
                 <el-row :gutter="20">
@@ -55,7 +54,7 @@
                 </el-table-column>
               </el-table>
             </div>
-          </div></el-col>
+    </el-col>
     </el-row>
   </el-main>
 </el-container>

@@ -40,6 +40,12 @@ const routes = [
         component: () => import("../views/dashboard/trash.vue")
       },
     ]
+  }
+  ,
+  {
+    path: "/dashboard/team/:teamId",
+    name: "TeamInfo",
+    component: () => import("../views/dashboard/teamInfo.vue")
   },
   {
     path: "/profile",

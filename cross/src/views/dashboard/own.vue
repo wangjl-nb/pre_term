@@ -1,47 +1,32 @@
 <template>
   <el-container>
-  <el-main class="dashboard">
-    <el-row>
-          <el-col :span="24"><div class="grid-content bg-purple-dark"></div></el-col>
-    </el-row>
+  <el-main class="dashboard"> 
+      <show-documents :list="list"></show-documents>
   </el-main>
 </el-container>
 </template>
 
 <script>
 // @ is an alias to /src
-
+import showDocuments from "@/components/showDocuments";
 
 export default {
-  name: "Desktop",
+  name: "Own",
+  components: {
+    showDocuments
+  },
+  data(){
+      return{
+        list:  [{name:"jackff",id:123,author:"mala",create:"2020/2/2",edit:"2020/2/4"},
+        {name:"jacasdk66",id:12322666,author:"masla",create:"2020/2/2",edit:"2020/2/4"},
+        {name:"jacsdawek",id:1223432,author:"malsa",create:"2020/2/2",edit:"2020/2/4"}
+        ]  
+      }
+  },
+  mounted:{
+
+  }
 };
 </script>
 <style scoped>
-
-  .el-row {
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
 </style>

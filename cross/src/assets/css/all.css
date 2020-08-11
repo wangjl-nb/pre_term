@@ -10,3 +10,24 @@ a:visited{color:#1682dc;}
     fill: currentColor;
     overflow: hidden;
   }
+  .flex7 {
+    display: flex;
+    flex-wrap: wrap;
+}
+.flex6 {
+    display: flex;
+    flex-wrap: wrap;
+      align-items: center;
+}
+.router{
+    left:-110px;
+    position:relative
+}
+.change-color{
+    　　text-color:#aa67aa  !important; 
+   background-image: linear-gradient(to right, #aa67aa, #1682dc) !important;
+        -webkit-background-clip: text !important;
+        color: transparent !important;
+
+
+}
