@@ -191,9 +191,9 @@ def create_file(request):
         file.content = content
         file.creator = request.user.u_username
         file.save()
-        personal_record=Personal_record()
-        personal_record.user=request.user
-        personal_record.files=file
+        personal_record = Personal_record()
+        personal_record.user = request.user
+        personal_record.files = file
         personal_record.save()
         return redirect(reverse('app:index'))
 
