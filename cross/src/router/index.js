@@ -88,7 +88,17 @@ const routes = [
     path:"/register",
     name: "Register",
     component: () => import("../components/Register.vue")
-  }
+  },
+  {
+    path:"/templates/:teamId",
+    name: "Templates",
+    component: () => import("../views/templates.vue")
+  },
+  {
+    path:"/createTeam",
+    name: "CreateTeam",
+    component: () => import("../views/createTeam.vue")
+  },
 ];
 
 const router = new VueRouter({

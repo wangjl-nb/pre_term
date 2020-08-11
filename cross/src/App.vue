@@ -23,13 +23,15 @@
           <el-menu-item index="/dashboard/desktop">
             <span slot="title">工作台</span>
           </el-menu-item>
+            <el-menu-item index="/createTeam">
+            <span slot="title">创建团队</span>
+          </el-menu-item>
+           <el-menu-item index="/inbox">
+            <span slot="title">消息通知</span>
+          </el-menu-item>
           <el-menu-item index="/profile">
             <span slot="title">个人信息</span>
           </el-menu-item>
-          <el-menu-item index="/inbox">
-            <span slot="title">消息通知</span>
-          </el-menu-item>
-
         </el-menu-item-group>
       </el-menu>
     </el-col>

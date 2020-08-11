@@ -1,19 +1,23 @@
 <template>
-  <el-container>
+  <el-container >
   <el-main class="dashboard"> 
       <show-documents :list="list"></show-documents>
   </el-main>
+   <el-aside>
+    <create-document></create-document>
+  </el-aside>
 </el-container>
 </template>
  
 <script>
 // @ is an alias to /src
 import showDocuments from "@/components/showDocuments";
-
+import createDocument from "@/components/createDocument";
 export default {
   name: "Used",
   components: {
-    showDocuments
+    showDocuments,
+    createDocument
   },
   data(){
       return{

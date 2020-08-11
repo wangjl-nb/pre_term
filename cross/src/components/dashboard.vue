@@ -1,5 +1,5 @@
 <template>
-  <div style="left:-110px;position:relative">    
+  <div class="router">    
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"   router>
   <el-submenu index="2">
     <template slot="title">我的文档</template>

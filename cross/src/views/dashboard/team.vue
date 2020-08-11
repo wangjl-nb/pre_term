@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container >
   <el-main class="dashboard">
     <el-row>
           <el-col :span="24" v-for="(item,index) in list" :key="index">
@@ -37,7 +37,6 @@ export default {
           manager:"#icon-gerenguanli",
           people:"#icon-zhanghaoguanli",
           list:[
-              {icon:"#icon-guanli ",name:"sddsss",context:"团队描述",id:213},
               {icon:"#icon-gerenguanli",name:"sddfhdsss",context:"团队描述",id:234},
               {icon:"#icon-zhanghaoguanli",name:"sddsdfgdss",context:"团队描述",id:3463345}
           ]
