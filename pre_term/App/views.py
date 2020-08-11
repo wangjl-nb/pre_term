@@ -63,7 +63,7 @@ def register(request):
 def login(request):
     user_id = request.session.get('user_id')
     if user_id:
-        return redirect(reverse('app:index'))
+        return redirect(reverse('app:user_info'))
         # return HttpResponseRedirect(reverse('web:one_group',args=[7]))
     else:
         if request.method == "GET":
@@ -90,7 +90,7 @@ def login(request):
                         request.session['user_name'] = user.u_username
                         request.session['is_manager'] = user.is_manager
                         print("登陆成功")
-                        return redirect(reverse('app:index'))
+                        return redirect(reverse('app:user_info'))
                     else:
                         print('用户未激活')
                         request.session['error_message'] = '用户未激活'
@@ -124,3 +124,18 @@ def activate(request):
         return redirect(reverse('app:login'))
 
     return render(request, 'user/activate_fail.html')
+
+
+def user_info(request):
+    user_id = request.session.get('user_id')
+    user = User.objects.get(pk=user_id)
+    data={}
+    data['icon']=user.u_icon
+    data['username']=user.u_username
+    data['email']=user.u_email
+    return render(request,'user/info.html',context=data)
+
+
+def logout(request):
+    request.session.flush()
+    return redirect(reverse('app:login'))

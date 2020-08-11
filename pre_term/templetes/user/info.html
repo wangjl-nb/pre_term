@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <style>
+        div {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <label>
+        <span>头像：<img src="/static/uploads/{{ icon }}"></span>
+    </label>
+</div>
+
+<div>
+    <label>
+        <span>用户名：{{ username }}</span>
+    </label>
+</div>
+
+
+<div>
+    <label for="newPassword">
+        <span>邮箱：{{ email }}</span>
+    </label>
+</div>
+
+<a href="{% url "app:logout" %}">
+    <button>登出</button>
+</a>
+
+</body>
+</html>

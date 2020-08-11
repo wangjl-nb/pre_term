@@ -121,7 +121,7 @@ USE_TZ = False
 
 STATICFILES_DIRS = [
     #os.path.join(BASE_DIR, 'appfront/dist'),
-    os.path.join(BASE_DIR, 'appfront/dist/static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 CACHES = {
@@ -133,7 +133,7 @@ CACHES = {
 
 MEDIA_KEY_PREFIX = "/static/uploads/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, '/static/uploads')
 
 STATIC_URL = '/static/'
 
