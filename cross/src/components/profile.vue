@@ -3,35 +3,65 @@
 		<el-container>
 			<el-main class="dashboard">
 				<el-row>
+					<el-col :span="5"><div class="grid-content"></div></el-col>
 <!--					<el-col :span="5"><div class="grid-content"></div></el-col>-->
-					<el-col :span="14" style="background:white">
+					<el-col :span="8" style="background:white">
 						<el-container>
 							<el-main>
 								<div class="center">
 									<div class="block" style="text-align: center"><el-avatar :size="100" :src="circleUrl"></el-avatar></div>
 									<el-button type="text" @click="$router.push('/profile/changeicon')">修改头像</el-button>
 									<el-row :gutter="20">
-										<el-col :span="8"><div class="grid-content">
+										<el-col :span="24"><div class="grid-content">
 											<span>用户名：</span>
 											<span style="font-weight: 700; margin-right: 1rem">用户名</span>
 											<el-button type="text" @click="$router.push('/profile/changeusername')">修改用户名</el-button>
 										</div></el-col>
-										<el-col :span="8"><div class="grid-content">
+										<el-col :span="24"><div class="grid-content">
 											<span>密码：</span>
 											<el-button type="text" @click="$router.push('/profile/changepassword')">修改密码</el-button>
 										</div></el-col>
-										<el-col :span="8"><div class="grid-content" style="margin-top: 0.4rem">
+										<el-col :span="24"><div class="grid-content" style="margin-top: 0.4rem">
 											<span>邮箱：</span>
 											<span style="font-weight: 700">用户邮箱</span>
 										</div></el-col>
 									</el-row>
 								</div>
+								<router-view></router-view>
 							</el-main>
 							<el-footer></el-footer>
 						</el-container>
 					</el-col>
-					<el-col :span="10"><div class="grid-content">
-						<router-view></router-view>
+					<el-col :span="8"><div class="grid-content">
+						<div>
+							<el-button type="primary" size="small" @click="commentVisible = true">评论</el-button>
+
+							<el-dialog
+											title="请发布评论"
+											:visible.sync="commentVisible"
+											width="30%"
+											center>
+								<el-form ref="form" :model="form" label-width="80px">
+									<el-form-item label="评论">
+										<el-input v-model="form.comment"></el-input>
+									</el-form-item>
+								</el-form>
+								<span slot="footer" class="dialog-footer">
+          <el-button native-type="submit" type="primary" @click="onSubmit">确 定</el-button>
+          <el-button @click="commentVisible = false">取 消</el-button>
+        </span>
+							</el-dialog>
+						</div>
+						<div>
+							<input type="text" v-model="url" style="display: none">
+							<el-button class="copyURL"
+												 icon="el-icon-share"
+												 :data-clipboard-text="url"
+												 size="small"
+												 type="info"
+												 @click="copy">
+								分享链接</el-button>
+						</div>
 					</div></el-col>
 				</el-row>
 			</el-main>
@@ -114,6 +144,14 @@
 						{ validator: validatePass2, trigger: 'blur' }
 					],
 				},
+
+
+
+				commentVisible: false,
+				form: {
+					comment: ''
+				},
+				url: '',
 			};
 		},
 
@@ -135,6 +173,8 @@
 					that.ruleForm.email=res.data.email
 				}
 			})
+
+			this.getURL()
 		},
 		methods: {
 			//图片上传之前检验
@@ -199,7 +239,7 @@
 							url:'user/user_info',
 							method:'POST',
 							data: {
-								img:that.ruleForm.jpg[0].url,
+								icon:that.ruleForm.jpg[0].url,
 								username:that.ruleForm.username,
 								password:that.ruleForm.password,
 							}
@@ -217,13 +257,6 @@
 					}
 				});
 			},
-			handleClose(done) {
-				this.$confirm('确认关闭？')
-						.then(_ => {
-							done();
-						})
-						.catch(_ => {});
-			}
 			// 上传成功回调
 			//  handleAvatarSuccess(res, file) {
 			//    alert(this.ruleForm.jpg.length)
@@ -231,6 +264,55 @@
 			//  this.ruleForm.jpg.push( res.data.url)
 //    },
 			// 上传前格式和图片大小限制
+
+
+			open() {
+				this.$prompt('请在此发布您的评论', '评论', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+				}).then(({ value }) => {
+					this.$axios({
+						url: ''
+					})
+					this.$message({
+						type: 'success',
+						message: '评论成功'
+					});
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '取消输入'
+					});
+				});
+			},
+			copy() {
+				let clipboard = new this.Clipboard('.copyURL');
+				clipboard.on('success', e => {
+					this.$message({
+						type: 'success',
+						message: '链接已复制到剪贴板'
+					});
+					clipboard.destroy()
+				})
+				// clipboard.on('error', e => {
+				//   // 不支持复制
+				//   console.log('该浏览器不支持自动复制')
+				//   // 释放内存
+				//   clipboard.destroy()
+				// })
+			},
+			getURL() {
+				this.url = location.href
+			},
+			onSubmit() {
+				if(this.form.comment === ''){
+					alert('评论内容不能为空')
+					event.preventDefault();
+				}
+				else{
+					this.commentVisible = false;
+				}
+			}
 		}}
 
 </script>
