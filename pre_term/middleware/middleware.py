@@ -12,6 +12,8 @@ REQUIRE_LOGIN = [
     '/app/user_info/',
     '/app/teams_show/',
     '/app/create_file/',
+    '/app/my_files_list/',
+    '/app/change_file/'
 ]
 
 

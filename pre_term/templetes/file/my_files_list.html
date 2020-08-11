@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <style>
+        div {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <ul>
+    {% for file in files.object_list %}
+        <a href="{% url 'app:file_info' file_id=file.id %}"><li>{{ file.title }}-{{ file.content }}</li></a>
+        <a href="{% url 'app:change_file' file_id=file.id %}"><button>修改</button></a>
+        <a href="{% url 'app:delete_file' file_id=file.id %}"><button>删除</button></a>
+    {% endfor %}
+    {{ teams.number }}
+    </ul>
+</div>
+
+
+</body>
+</html>

@@ -8,15 +8,19 @@
     <title>Document</title>
 </head>
 <body>
-<form  method="post" action="{% url 'app:change_file' %}?file_id={{ file.id }}">
+<form  method="post" action="{% url 'app:change_file' file_id=file.id %}">
     {% csrf_token %}
-    文件标题:<br>
-    <input type="text" name="title" value="{{ file.title }}">
-    <br>
-    文件内容:<br>
-    <input type="textarea" name="content" value="{{ file.content }}">
-    <br>
-    <input type="submit" value="修改">
+    {% if not file.is_delete %}
+        文件标题:<br>
+        <input type="text" name="title" value="{{ file.title }}">
+        <br>
+        文件内容:<br>
+        <input type="textarea" name="content" value="{{ file.content }}">
+        <br>
+        <input type="submit" value="修改">
+    {% else %}
+        <div>文档已被删除</div>
+    {% endif %}
 </form>
 </body>
 </html>

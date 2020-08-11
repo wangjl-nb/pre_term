@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <style>
+        div {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div>
+    {{ file.id }}--{{ file.title }}--{{ file.content }}--{{ file.file_log_set.last.change_date }}--{{ file.file_log_set.last.user.u_username }}
+    <a href="{% url 'app:file_log' %}?file_id={{ file.id }}">修改日志</a>
+</div>
+{{ wrong }}
+
+</body>
+</html>

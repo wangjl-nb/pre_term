@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <style>
+        div {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <ul>
+    {% for file_log in file_logs %}
+        <li>{{ file_log.change_date }}--{{ file_log.user.u_username }}</li>
+    {% endfor %}
+    </ul>
+</div>
+
+
+</body>
+</html>
