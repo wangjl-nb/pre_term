@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <style>
+        div {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <label>
+        <span>团队头像：<img src="/static/uploads/{{ team.icon }}"></span>
+    </label>
+</div>
+
+<div>
+    <label>
+        <span>团队名称：{{ team.name }}</span>
+    </label>
+</div>
+
+<div>
+    <label>
+        <span>创建时间：{{ team.create_date }}</span>
+    </label>
+</div>
+
+<div>
+    <label>
+        <span>团队成员数量：{{ team.number_num }}</span>
+    </label>
+</div>
+
+
+<div>
+    <label>
+        <span>团队简介：{{ describe }}</span>
+    </label>
+</div>
+
+
+</body>
+</html>

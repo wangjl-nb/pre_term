@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <style>
+        div {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <ul>
+    {% for team in teams.object_list %}
+        <li>{{ team.name }}-{{ team.describe }}-{{ team.create_date }}</li>
+    {% endfor %}
+    {{ teams.number }}
+    </ul>
+</div>
+
+
+</body>
+</html>

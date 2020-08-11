@@ -32,9 +32,11 @@ class User(models.Model):
 
 
 # 个人文档创建记录
-class personal_record(models.Model):
+class Personal_record(models.Model):
     files = models.ForeignKey(File, on_delete=CASCADE)
     user = models.ForeignKey(User, on_delete=CASCADE)
+    class Meta:
+        db_table = "personal_record"
 
 
 # 团队信息
@@ -52,9 +54,12 @@ class Team(models.Model):
 
 
 # 团队文档创建记录
-class team_record(models.Model):
+class Team_record(models.Model):
     files = models.ForeignKey(File, on_delete=CASCADE)
     team = models.ForeignKey(Team, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "team_record"
 
 
 # 团队文档收藏

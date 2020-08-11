@@ -2,7 +2,8 @@ import uuid
 
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.cache import cache
-from django.http import HttpResponse
+from django.core.paginator import Paginator
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -16,6 +17,7 @@ def index(request):
     return HttpResponse('Hello World')
 
 
+# 注册
 def register(request):
     if request.method == 'GET':
 
@@ -48,18 +50,19 @@ def register(request):
         user.u_icon = icon
 
         user.save()
-
+        # 设置缓存
         u_token = uuid.uuid4().hex
 
         print(u_token)
 
         cache.set(u_token, user.id, timeout=60 * 60 * 24)
-
+        # 发送邮箱
         send_email_activate(username, email, u_token)
 
         return redirect(reverse('app:login'))
 
 
+# 登录
 def login(request):
     user_id = request.session.get('user_id')
     if user_id:
@@ -105,6 +108,8 @@ def login(request):
         else:
             return redirect(reverse('app:login'))
 
+
+# 邮件激活
 def activate(request):
     u_token = request.GET.get('u_token')
 
@@ -126,16 +131,84 @@ def activate(request):
     return render(request, 'user/activate_fail.html')
 
 
+# 用户信息展示
 def user_info(request):
     user_id = request.session.get('user_id')
     user = User.objects.get(pk=user_id)
-    data={}
-    data['icon']=user.u_icon
-    data['username']=user.u_username
-    data['email']=user.u_email
-    return render(request,'user/info.html',context=data)
+    data = {'icon': user.u_icon, 'username': user.u_username, 'email': user.u_email}
+    return render(request, 'user/info.html', context=data)
 
 
+# 登出
 def logout(request):
     request.session.flush()
     return redirect(reverse('app:login'))
+
+
+# def add_team(request):
+#     for i in range(1, 30):
+#         team = Team()
+#         team.name = '团队' + str(i)
+#         team.describe = '这是第' + str(i) + '个团队'
+#         team.icon = 'suoluetubig.jpg'
+#         team.save()
+#         team_relation = Team_relation()
+#         team_relation.user_id = 4
+#         team_relation.team = team
+#         team_relation.save()
+#     return JsonResponse(data={'code': 'ok'})
+
+# 加入团队
+def teams_show(request):
+    user = request.user
+    teams = Team.objects.filter(team_relation__user=user).order_by('-id')
+    page = int(request.GET.get("page", 1))
+    perpage = int(request.GET.get('perpage', 10))
+    paginator = Paginator(teams, perpage)
+
+    page_object = paginator.page(page)
+    data = {'msg': '团队信息', 'teams': page_object, "page_range": paginator.page_range}
+    return render(request, 'team/teams_info.html', context=data)
+
+
+# 团队信息展示
+def team_info(request):
+    team_id = request.GET.get('team_id', 4)
+    team = Team.objects.get(pk=team_id)
+    # data = {'name': team.name, 'create_date': team.create_date, 'number_num': team.number_num,
+    #         'describe': team.describe, 'icon': team.icon}
+    return render(request, 'team/teaminfo.html', context={'team': team})
+
+
+def create_file(request):
+    if request.method == 'GET':
+        return render(request, 'file/create_file.html')
+    elif request.method == 'POST':
+        content = request.POST.get('content')
+        title = request.POST.get('title')
+        file = File()
+        file.title = title
+        file.content = content
+        file.creator = request.user.u_username
+        file.save()
+        personal_record=Personal_record()
+        personal_record.user=request.user
+        personal_record.files=file
+        personal_record.save()
+        return redirect(reverse('app:index'))
+
+
+def change_file(request):
+    if request.method == 'GET':
+        file_id = request.GET.get('file_id')
+        file = File.objects.get(pk=file_id)
+        return render(request, 'file/change_file.html', context={'file': file})
+    elif request.method == 'POST':
+        file_id = request.GET.get('file_id')
+        file = File.objects.get(pk=file_id)
+        content = request.POST.get('content')
+        title = request.POST.get('title')
+        file.title = title
+        file.content = content
+        file.save()
+        return redirect(reverse('app:index'))
