@@ -6,6 +6,8 @@ import axios from "axios";
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/iconfont/iconfont.css'
 import './assets/iconfont/iconfont.js'
+import './assets/iconfontEditor/iconfont.css'
+import './assets/iconfontEditor/iconfont.js'
 import './assets/css/all.css'
 import Clipboard from 'clipboard';
 

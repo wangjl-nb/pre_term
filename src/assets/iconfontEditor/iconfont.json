@@ -1,0 +1,58 @@
+{
+  "id": "2002979",
+  "name": "editor",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "3816501",
+      "name": "文档",
+      "font_class": "wendang",
+      "unicode": "e716",
+      "unicode_decimal": 59158
+    },
+    {
+      "icon_id": "4520176",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e68f",
+      "unicode_decimal": 59023
+    },
+    {
+      "icon_id": "7333067",
+      "name": "权限",
+      "font_class": "quanxian",
+      "unicode": "e6a0",
+      "unicode_decimal": 59040
+    },
+    {
+      "icon_id": "12401098",
+      "name": "人物02",
+      "font_class": "renwu",
+      "unicode": "e9c4",
+      "unicode_decimal": 59844
+    },
+    {
+      "icon_id": "12401104",
+      "name": "人物11",
+      "font_class": "renwu1",
+      "unicode": "e9c6",
+      "unicode_decimal": 59846
+    },
+    {
+      "icon_id": "12401111",
+      "name": "人物17",
+      "font_class": "renwu2",
+      "unicode": "e9c8",
+      "unicode_decimal": 59848
+    },
+    {
+      "icon_id": "12401115",
+      "name": "人物20",
+      "font_class": "renwu3",
+      "unicode": "e9c9",
+      "unicode_decimal": 59849
+    }
+  ]
+}

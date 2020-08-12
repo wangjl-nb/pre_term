@@ -1,22 +1,136 @@
 <template>
-  <el-row>
-    <el-col :span="24">
-      <div class="grid-content">
-        <el-button type="info" plain><i class="el-icon-edit"></i> 修改</el-button>
-        <el-button type="info" plain><i class="el-icon-chat-line-round"></i> 评论</el-button>
-        <el-button type="info" plain><i class="el-icon-paperclip"></i> 分享</el-button>
+
+  <el-container>
+    <!--头部导航栏-->
+    <el-header>
+      <div class="flex flex6" >
+        <div style="">
+          <svg class="icon" aria-hidden="true" style="width:4em;height:4em">
+            <use xlink:href="#icon-wendang"></use>
+          </svg>
+        </div>
+        <div style="margin-left:20px;margin-right:30px">
+          <h1 class="change-color" style="font-weight:lighter "><li>个人文档</li></h1>
+        </div>
+        <el-button type="primary" plain>修改</el-button>
+        <el-button type="primary" plain @click="drawer = true">协作</el-button>
+
+        <el-button type="primary"  plain>分享</el-button>
       </div>
-    </el-col>
-    <el-col :span="24"><div class="grid-content"></div></el-col>
-    <el-col :span="24">
+    </el-header>
+    <!--drawer设置-->
+    <el-drawer
+      :visible.sync="drawer"
+      :with-header="false"
+      :direction="direction">
+      <h1 style="margin-left:100px">
+        <svg class="icon" aria-hidden="true" style="width:3em;height:3em">
+          <use xlink:href="#icon-quanxian"></use>
+        </svg>
+        <span style="margin-top:15px;margin-left:20px;position:absolute">协作权限管理</span>
+      </h1>
+      <div style="margin-top: 15px;">
+        <el-input placeholder="输入 邮箱/用户名 添加协作权限" v-model="search">
+          <template slot="prepend">
+            <el-button slot="reference">
+              <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
+                <use xlink:href="#icon-sousuo"></use>
+              </svg>
+            </el-button>
+          </template>
+        </el-input>
+        <!--协作者列表卡片-->
+        <div>
+          <el-card class="box-card" shadow="never">
+            <div slot="header" class="clearfix">
+              <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">协作者</span>
+              <el-popover
+                placement="bottom"
+                width="200"
+                trigger="click"
+                style="float: right">
+                <el-button slot="reference" style="float: right; padding: 3px 0" type="text">
+                  添加协作者
+                  <i class="el-icon-circle-plus-outline"></i>
+                </el-button>
+                <div v-if="searchItem.length>0">
+                  <ul v-for="(item,index) in searchItem" :key="index">
+                    <li style="position:relative">
+                      <!--头像-->
+                      <el-avatar size="medium" :src="item.img"></el-avatar>
+                      <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">
+                      {{item.name}}
+                      <el-button type="text" @click="invite(item.id)">
+                      <i class="el-icon-circle-plus-outline" style="font-size:20px"></i>
+                      </el-button>
+                    </span>
+                    </li>
+                  </ul>
+                </div>
+              </el-popover>
+            </div>
+            <div>
+              <div>
+                <ul v-for="(item,index) in searchItem" :key="index">
+                  <li style="position:relative">
+                    <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
+                      <use xlink:href="#icon-renwu2"></use>
+                    </svg>
+                    <el-avatar size="medium" :src="item.img" class="img"></el-avatar>
+                    <span class="user_name">
+                     {{item.name}}
+                    </span>
+                    <template>
+                      <el-select v-model="value" placeholder="请选择权限" style="float: right; padding: 3px 0" type="text">
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </template>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </el-card>
+        </div>
+        <!--管理者列表卡片-->
+        <div>
+          <el-card class="box-card" shadow="never">
+            <div slot="header" class="clearfix">
+              <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">管理者</span>
+            </div>
+            <div>
+              <div style="position:relative;margin-left:40px">
+                <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
+                  <use xlink:href="#icon-renwu1"></use>
+                </svg>
+                <el-avatar size="medium" :src="author.img" class="img"></el-avatar>
+                <span class="user_name">
+                  {{author.name}}
+                </span>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </div>
+    </el-drawer>
+    <!--中间编辑器-->
+    <el-main>
       <div class="editor">
         <div ref="toolbar" class="toolbar">
         </div>
         <div ref="editor" class="text">
         </div>
       </div>
-    </el-col>
-  </el-row>
+    </el-main>
+    <!--底部评论区-->
+    <el-footer>
+
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
@@ -29,9 +143,38 @@
         },
       data() {
         return {
-          // uploadPath,
+          //悬浮框
+          visible: false,
+          //权限下拉显示框
+          options: [{
+            value: '选项1',
+            label: '只能阅读'
+          }, {
+            value: '选项2',
+            label: '只能阅读和评论'
+          }, {
+            value: '选项3',
+            label: '可以编辑'
+          }],
+          value: '',
+          //查找协作者
+          search:"",
+          searchItem:[
+            {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"},
+            {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"},
+            {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"}
+          ],
+          author: {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"}
+          ,
+          //uploadPath,
           editor: null,
-          info_: null
+          info_: null,
+          //title
+          activeIndex: '1',
+          activeIndex2: '1',
+          //drawer
+          drawer: false,
+          direction: 'rtl',
         }
       },
       model: {
@@ -68,6 +211,22 @@
         this.editor.txt.html(this.value)
       },
       methods: {
+        handleClick() {
+          alert('button click');
+        },
+        handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+        },
+        handleSelect(key, keyPath) {
+          console.log(key, keyPath);
+        },
+        goBack() {
+          console.log('go back');
+        },
         seteditor() {
           // http://192.168.2.125:8080/admin/storage/create
           this.editor = new E(this.$refs.toolbar, this.$refs.editor)
