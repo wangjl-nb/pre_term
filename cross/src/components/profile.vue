@@ -10,16 +10,16 @@
 							<el-main>
 								<div class="center">
 									<div class="block" style="text-align: center"><el-avatar :size="100" :src="circleUrl"></el-avatar></div>
-									<el-button type="text" @click="$router.push('/profile/changeicon')">修改头像</el-button>
+									<el-button type="text" @click="$router.push('/diamond/profile/changeicon')">修改头像</el-button>
 									<el-row :gutter="20">
 										<el-col :span="24"><div class="grid-content">
 											<span>用户名：</span>
 											<span style="font-weight: 700; margin-right: 1rem">用户名</span>
-											<el-button type="text" @click="$router.push('/profile/changeusername')">修改用户名</el-button>
+											<el-button type="text" @click="$router.push('/diamond/profile/changeusername')">修改用户名</el-button>
 										</div></el-col>
 										<el-col :span="24"><div class="grid-content">
 											<span>密码：</span>
-											<el-button type="text" @click="$router.push('/profile/changepassword')">修改密码</el-button>
+											<el-button type="text" @click="$router.push('/diamond/profile/changepassword')">修改密码</el-button>
 										</div></el-col>
 										<el-col :span="24"><div class="grid-content" style="margin-top: 0.4rem">
 											<span>邮箱：</span>
