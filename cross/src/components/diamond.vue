@@ -26,7 +26,7 @@
             <el-menu-item index="/diamond/createTeam">
             <span slot="title">创建团队</span>
           </el-menu-item>
-           <el-menu-item index="/diamond/inbox">
+           <el-menu-item index="/diamond/inbox/invite">
             <span slot="title">消息通知</span>
           </el-menu-item>
           <el-menu-item index="/diamond/profile">
@@ -34,6 +34,9 @@
           </el-menu-item>
           <el-menu-item index="/diamond/searchteam">
             <span slot="title">搜索团队</span>
+          </el-menu-item>
+            <el-menu-item index="/diamond/searchDocument">
+            <span slot="title">搜索文档</span>
           </el-menu-item>
         </el-menu-item-group>
       </el-menu>

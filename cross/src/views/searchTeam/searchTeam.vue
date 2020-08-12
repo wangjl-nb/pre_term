@@ -29,7 +29,7 @@
 		<el-row :gutter="20" style="margin-top: 2rem; margin-right: 2rem" :key="index">
 			<el-col :span="6"
 							class="grid-content"
-							v-for="item in teams"
+							v-for="(item,index) in teams"
 							:key="index"
 							style="margin-bottom: 1rem">
 				<router-link :to="{path: 'dashboard/team/'+item.id}">

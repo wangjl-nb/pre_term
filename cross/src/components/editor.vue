@@ -14,8 +14,9 @@
         </div>
         <el-button type="primary" plain>修改</el-button>
         <el-button type="primary" plain @click="drawer = true">协作</el-button>
-
         <el-button type="primary"  plain>分享</el-button>
+        <el-button type="primary" plain >收藏</el-button>
+        <el-button type="primary" plain >删除</el-button>
       </div>
     </el-header>
     <!--drawer设置-->

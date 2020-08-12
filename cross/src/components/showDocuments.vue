@@ -7,9 +7,9 @@
                    <div style="margin-top:0px">  
                         <i class="iconfont icon-wenjian" style="font-size:40px"></i> 
                   </div> 
-                    <div style="margin-left:20px;margin-top:0px">  
+                    <div style="margin-left:20px;margin-top:0px">   
                         <a style="font-size:18px" :href="'document/'+item.id">{{item.name}}</a>
-                        <p style="color:gray;font-size:13px">于{{item.create}}  {{item.author}}创建    您上一次编辑于{{item.edit}}</p>
+                        <p style="color:gray;font-size:13px">于{{item.create}}  {{item.author}}创建   最后一次更新为{{item.user}}编辑于{{item.edit}} 时</p>
                     </div>
                </div>
                   
@@ -25,16 +25,20 @@ export default {
       props: {
     list: {
       default:
-        [{name:"jack",id:123,author:"mala",create:"2020/2/2",edit:"2020/2/4"},
-        {name:"jacasdk",id:12322,author:"masla",create:"2020/2/2",edit:"2020/2/4"},
-        {name:"jacsdak",id:12332,author:"malsa",create:"2020/2/2",edit:"2020/2/4"}
+        [{name:"jack",id:123,author:"mala",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
+        {name:"jacasdk",id:12322,author:"masla",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
+        {name:"jacsdak",id:12332,author:"malsa",create:"2020/2/2",edit:"2020/2/4",user:"222xs"}
         ]
     },
+ 
+  },
   data() {
     return {
- 
-    };
+    }
   },
+  methods: {
+
+  
 }};
 </script>
 <style scoped>

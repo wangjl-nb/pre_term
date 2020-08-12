@@ -1,6 +1,6 @@
 <template>
     <div>
-          <p><el-button plain @click="newDocument()">新建模板</el-button></p>
+          <p><el-button plain @click="newDocument()">新建文档</el-button></p>
           <p><el-button type="dark" plain @click="withDocument()">模板库</el-button> </p> 
     </div>
 </template>
@@ -36,7 +36,7 @@ export default {
       withDocument(){
            var that=this
           this.$router.push({
-        path:"/templates/"+that.teamId 
+        path:"/diamond/templates/"+that.teamId 
       });
       }
   }

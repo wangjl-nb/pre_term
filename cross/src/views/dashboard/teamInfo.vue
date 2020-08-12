@@ -11,7 +11,7 @@
                         <h1 class="change-color" style="font-weight:lighter "><i>{{name}}</i></h1> 
                     </div>
                      <el-button plain @click="drawer = true">管理成员</el-button> 
-                     <el-button plain @click="setpower()">设置团队权限</el-button>
+                      <el-button plain @click="allowShare(allow)">{{allow.name}}</el-button> 
                     <el-button type="danger" plain @click="dispose()">解散团队</el-button>
                     <el-button plain @click="join()">加入团队</el-button>
                     <el-button type="danger" plain @click="out()">退出团队</el-button>
@@ -110,15 +110,25 @@
         </span>
   </div>
   <div>
-     <ul v-for="(item,index) in searchItem" :key="index">
+     <ul v-for="(item,index) in userItem" :key="index">
     <li style="position:relative">
       <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
       <use xlink:href="#icon-zhanghaoguanli"></use>
       </svg>
       <el-avatar size="medium" :src="item.img" class="img"></el-avatar>
       <span class="user_name">
-        {{item.name}}       
+        {{item.name}} 
         </span>
+        <p style="positon:relative;margin-left:90px">
+          <el-select v-model="item.status.value" placeholder="请选择权限"  @change="((val)=>{powerChange(val,item.id)})">
+              <el-option v-for="(it,index) in item.optionA4" :key="index" :label="it.label" :value="it.value"/>
+          </el-select>
+            <el-button type="text" @click="tichu(item.id)" style="position:absolute;margin-top:-10px;margin-left:10px">
+            <svg class="icon" aria-hidden="true" style="color:red;width:2em;height:2em">
+            <use xlink:href="#icon-tiren"></use>
+            </svg>     
+        </el-button> 
+        </p>
     </li>
   </ul>
   </div>
@@ -140,6 +150,9 @@ export default {
   },
   data(){
       return{
+        tt:{power:true,name:"允许被分享"},
+        ff:{power:false,name:"仅允许团队内成员查看"},
+        allow:{power:true,name:"允许被分享"},
         teamId:134,
         name:"团队名字哈哈",
         editTeamInfo:"",
@@ -152,13 +165,76 @@ export default {
             {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"}   ,
              {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"}   
        ],
+      userItem:[
+           {id:12443,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasewrwrwrwed",
+              optionA4: [
+        {
+          value: '0',
+          label: '仅可查看'
+        },
+        {
+          value: '1',
+          label: '允许评论'
+        },
+        {
+          value: '2',
+          label: '允许评论编辑'
+        }
+      ],
+      status: {
+          value: '0',
+          label: '仅可查看'
+        },
+           },
+            {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd",
+            optionA4: [
+        {
+          value: '0',
+          label: '仅可查看'
+        },
+        {
+          value: '1',
+          label: '允许评论'
+        },
+        {
+          value: '2',
+          label: '允许评论编辑'
+        }
+      ],
+      status: {
+          value: '0',
+          label: '仅可查看'
+        },
+            }   ,
+             {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd",
+             optionA4: [
+        {
+          value: '0',
+          label: '仅可查看'
+        },
+        {
+          value: '1',
+          label: '允许评论'
+        },
+        {
+          value: '2',
+          label: '允许评论编辑'
+        }
+      ],
+      status: {
+          value: '0',
+          label: '仅可查看'
+        },
+             }   
+       ],
         drawer: false,
         search:"",
-        list:  [{name:"jac324kff",id:123243,author:"mala",create:"2020/2/2",edit:"2020/2/4"},
-        {name:"jac432asdk",id:12322342,author:"masla",create:"2020/2/2",edit:"2020/2/4"},
-        {name:"jac423sdak",id:12324332,author:"malsa",create:"2020/2/2",edit:"2020/2/4"}
-        ]  
-      } 
+        list:  [
+          {name:"jac324kff",id:123243,author:"mala",create:"2020/2/2",edit:"2020/2/4"},
+           {name:"jac324kff",id:123243,author:"mala",create:"2020/2/2",edit:"2020/2/4"},
+            {name:"jac324kff",id:123243,author:"mala",create:"2020/2/2",edit:"2020/2/4"},
+        ],
+      }
   },
   mounted(){
     var that=this
@@ -181,12 +257,31 @@ export default {
 
     },
     invite(id){
+      //无用
+      this.aa=id
+    },
+    tichu(id){
+      //无用
       this.aa=id
     },
     submitedit(text){
       this.dialogTableVisible=false
       this.teamInfo=text
-    }
+    },
+    powerChange(val,id) { 
+     // alert(id) 
+     alert(val+" "+id)
+    },
+    allowShare(allow){
+      if(allow.power){
+        // 发送禁止权限
+        this.allow=this.ff
+      }
+      else{
+        // 发送允许权限
+        this.allow=this.tt
+      }
+    }     
   }
 };
 </script>

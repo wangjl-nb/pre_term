@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2504909",
+      "name": "踢人",
+      "font_class": "tiren",
+      "unicode": "e68f",
+      "unicode_decimal": 59023
+    },
+    {
       "icon_id": "1510323",
       "name": "项目",
       "font_class": "project",

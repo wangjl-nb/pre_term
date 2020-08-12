@@ -14,9 +14,36 @@ const routes = [
   component: () => import("../components/diamond.vue"),
   children: [
     {
+      path: "inbox",
+      name: "Inbox",
+      component: () => import("../components/inbox.vue"),
+      children: [
+        {
+          path: "invite",
+          name: "Invite",
+          component: () => import("../views/inbox/invite.vue")
+        }, 
+        {
+          path: "teamRemind",
+          name: "TeamRemind",
+          component: () => import("../views/inbox/teamRemind.vue")
+        }, 
+        {
+          path: "documentRemind",
+          name: "DocumentRemind",
+          component: () => import("../views/inbox/documentRemind.vue")
+        }, 
+      ]
+    },
+    {
       path: "dashboard/team/:teamId",
       name: "TeamInfo",
       component: () => import("../views/dashboard/teamInfo.vue")
+    },
+    {
+      path:"searchDocument",
+      name: "SearchDocument",
+      component: () => import("../views/searchDocument.vue")
     },
     {
       path: "profile",
