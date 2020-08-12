@@ -13,8 +13,9 @@
 <div>
     <ul>
     {% for file in delete_files %}
-        <li>{{ file.title }}-{{ file.content }}</li></a>
+        <li>{{ file.title }}-{{ file.content }}--{{ file.delete_date_set.first.date }}</li></a>
         <a href="{% url 'app:recover_file' file_id=file.id %}"><button>恢复</button></a>
+        <a href="{% url 'app:destroy_file' %}?file_id={{ file.id }}"><button>删除</button></a>
     {% endfor %}
     {{ teams.number }}
     </ul>

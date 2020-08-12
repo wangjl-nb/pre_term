@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block ext_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'web/user/js/register.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/md5.js' %}"></script>
+{% endblock %}
+{% block ext_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'web/user/css/register.css' %}">
+
+{% endblock %}
+
+{% block content %}
+    <div class="banner_main">
+        <div class="overlay-w3pvt">
+            <div class="container">
+                <div class="text-center login">
+                    <div style="line-height: 100%">
+                        <h3>请输入团队信息</h3>
+                    </div>
+                    <div style="margin-top: 3rem; text-align: center">
+                        <form style="width: 100%; font-size: 1rem" method="post" enctype="multipart/form-data"
+                              action="{% url 'app:create_team' %}">
+                            {% csrf_token %}
+                            {#防跨站攻击#}
+                            <div class="form-group">
+                                <!--								<label for="username">用户名</label>-->
+                                <strong>团队名称：&emsp;&emsp;</strong>
+                                <input type="text" class="form-control" id="teamname" placeholder="Teamname"
+                                       style="display: inline-block;width: 50%" name="teamname">
+                            </div>
+                            <div class="form-group">
+                                <!--								<label for="username">用户名</label>-->
+                                <strong>团队描述：&emsp;&emsp;</strong>
+                                <input type="text" class="form-control" id="describe" placeholder="Descibe"
+                                       style="display: inline-block;width: 50%" name="describe">
+                            </div>
+
+                            <div class="form-group">
+                                <strong>&nbsp;头像：&emsp;&emsp;&emsp;</strong>
+                                <input name="icon" type="file" id="icon_input"
+                                       style=" display: inline-block;width: 50%">
+                            </div>
+                            <button type="submit" class="submit" id="submit">提交</button>
+                        </form>
+                        <div>
+                                <div style="width: 60%; margin: 1rem auto;text-align: center">
+                                    <p id="wrong" class="wrongText" style="font-size: 1.2rem"></p>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //banner -->
+{% endblock %}

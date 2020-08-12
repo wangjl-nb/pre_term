@@ -134,9 +134,11 @@ CACHES = {
 
 MEDIA_KEY_PREFIX = "/static/uploads/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, '/static/uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/uploads')
 
 STATIC_URL = '/static/'
+
+# MEDIA_URL = '/static/'
 
 EMAIL_HOST = 'smtp.qq.com'
 

@@ -21,4 +21,9 @@ urlpatterns = [
     path('file_log/',views.file_log,name='file_log'),
     path('delete_files_list/', views.delete_files_list, name='delete_files_list'),
     re_path('recover_file/(?P<file_id>\d+)', views.recover_file, name='recover_file'),
+    path('destroy_file/',views.destroy_file,name='destroy_file'),
+    path('create_team_file/',views.create_team_file,name='create_team_file'),
+    path('dissmiss_team/',views.dissmiss_team,name='dismiss_team'),
+    path('create_team/', views.create_team, name='create_team'),
+    path('user_info_change/', views.user_info_change, name='user_info_change'),
 ]

@@ -35,12 +35,6 @@ def register(request):
         icon = request.FILES.get("icon")
         if icon == None:
             icon = "suoluetubig.jpg"
-
-        # user = User.objects.filter(u_email=email)
-        # if user.exists():
-        #     return redirect(reverse("Web:register"))
-
-        # password = hash_str(password)
         password = make_password(password)
 
         user = User()
@@ -176,8 +170,7 @@ def teams_show(request):
 def team_info(request):
     team_id = request.GET.get('team_id', 4)
     team = Team.objects.get(pk=team_id)
-    # data = {'name': team.name, 'create_date': team.create_date, 'number_num': team.number_num,
-    #         'describe': team.describe, 'icon': team.icon}
+    # relation = Team_relation.objects.
     return render(request, 'team/teaminfo.html', context={'team': team})
 
 
@@ -252,6 +245,11 @@ def delete_file(request, file_id):
     file = File.objects.get(pk=file_id)
     file.is_delete = True
     file.save()
+    deletedate = delete_date()
+    deletedate.file = file
+    deletedate.user = request.user
+    deletedate.save()
+
     return redirect(reverse('app:my_files_list'))
 
 
@@ -275,3 +273,82 @@ def recover_file(request, file_id):
     file.is_delete = False
     file.save()
     return redirect(reverse('app:delete_files_list'))
+
+
+# 文档彻底删除
+def destroy_file(request):
+    file_id = request.GET.get('file_id')
+    file = File.objects.get(pk=file_id)
+    file.delete()
+    return redirect(reverse('app:delete_files_list'))
+
+
+# 团队文档建立
+def create_team_file(request):
+    if request.method == 'GET':
+        team_id = request.GET.get('team_id')
+        return render(request, 'team/create_team_file.html', context={'team_id': team_id})
+    elif request.method == 'POST':
+        content = request.POST.get('content')
+        title = request.POST.get('title')
+        file = File()
+        file.title = title
+        file.content = content
+        file.creator = request.user.u_username
+        file.save()
+        team_record = Team_record()
+        team_record.files = file
+        team_record.team_id = request.GET.get('team_id')
+        team_record.save()
+        return redirect(reverse('app:file_info', args={file.id}))
+
+
+def dissmiss_team(request):
+    team_id = request.GET['team_id']
+    team = Team.objects.get(pk=team_id)
+    team.delete()
+    return HttpResponse('解散成功')
+
+
+def create_team(request):
+    if request.method == 'GET':
+
+        data = {
+            "title": "创建团队",
+        }
+
+        return render(request, 'team/create_team.html', context=data)
+
+    elif request.method == 'POST':
+
+        name = request.POST.get("teamname")
+        describe = request.POST.get("describe")
+        icon = request.FILES.get("icon")
+        if icon == None:
+            icon = "suoluetubig.jpg"
+        team = Team()
+        team.name = name
+        team.describe = describe
+        team.icon = icon
+        team.save()
+        team_relation = Team_relation()
+        team_relation.user = request.user
+        team_relation.team = team
+        team_relation.level = 2
+        team_relation.change = True
+        team_relation.comment = True
+        team_relation.save()
+        return render(request, 'team/teaminfo.html', context={"team": team})
+
+
+def user_info_change(request):
+    username = request.POST.get("username")
+    icon = request.FILES.get("icon")
+
+    user = request.user
+
+    user.u_username = username
+    if icon != None:
+        user.u_icon = icon
+    user.save()
+    return HttpResponse('用户信息修改成功')

@@ -78,21 +78,21 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templetes/file" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../myproject" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
+      <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\file" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
       <recent name="D:\code\djcode\pre_term\pre_term" />
       <recent name="D:\code\djcode\pre_term\pre_term\App" />
-      <recent name="D:\code\djcode\pre_term\pre_term\templetes" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
-      <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />
     </key>
   </component>
   <component name="RunManager">
@@ -162,6 +162,8 @@
       <workItem from="1597075073274" duration="19000" />
       <workItem from="1597108118867" duration="13771000" />
       <workItem from="1597127566816" duration="6615000" />
+      <workItem from="1597159086239" duration="439000" />
+      <workItem from="1597194541507" duration="12493000" />
     </task>
     <servers />
   </component>
@@ -177,10 +179,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="609" y="221" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1596934748692" />
-    <state x="549" y="170" key="FileChooserDialogImpl" timestamp="1597110922259">
+    <state x="549" y="170" key="FileChooserDialogImpl" timestamp="1597204095151">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="170" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1597110922259" />
+    <state x="549" y="170" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1597204095151" />
     <state width="1515" height="210" key="GridCell.Tab.0.bottom" timestamp="1596939316869">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -209,20 +211,9 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="595" y="305" width="345" height="226" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.0.1536.824@0.0.1536.824" timestamp="1597120136288" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1597129363043">
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1597202295677">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1597129363043" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/views.py</url>
-          <line>272</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1597202295677" />
   </component>
 </project>

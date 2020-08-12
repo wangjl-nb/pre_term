@@ -12,24 +12,32 @@
     </style>
 </head>
 <body>
-<div>
-    <label>
-        <span>头像：<img src="/static/uploads/{{ icon }}"></span>
-    </label>
-</div>
+<form style=" font-size: 1rem" method="post" enctype="multipart/form-data"
+      action="{% url 'app:user_info_change' %}">
+    {% csrf_token %}
+    <div>
+        <label>
+            <span>头像：<img src="/static/uploads/{{ icon }}"></span><br>
+            <input name="icon" type="file" id="icon_input"
+                   style=" display: inline-block;width: 50%">
+        </label>
+    </div>
 
-<div>
-    <label>
-        <span>用户名：{{ username }}</span>
-    </label>
-</div>
+    <div>
+        <label>
+            用户名：<input type="text" name="username" value="{{ username }}">
+        </label>
+    </div>
 
 
-<div>
-    <label for="newPassword">
-        <span>邮箱：{{ email }}</span>
-    </label>
-</div>
+    <div>
+        <label for="newPassword">
+            <span>邮箱：{{ email }}</span>
+        </label>
+    </div>
+    <button type="submit" class="submit" id="submit">提交</button>
+</form>
+<br><br><br>
 <a href="{% url "app:logout" %}">
     <button>登出</button>
 </a>

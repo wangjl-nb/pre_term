@@ -31,10 +31,21 @@ class User(models.Model):
         db_table = "User"
 
 
+# 删除记录时间
+class delete_date(models.Model):
+    file = models.ForeignKey(File, CASCADE)
+    date = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, CASCADE)
+
+    class Meta:
+        db_table = "delete_date"
+
+
 # 个人文档创建记录
 class Personal_record(models.Model):
     files = models.ForeignKey(File, on_delete=CASCADE)
     user = models.ForeignKey(User, on_delete=CASCADE)
+
     class Meta:
         db_table = "personal_record"
 
@@ -81,14 +92,13 @@ class Personal_collection(models.Model):
 
 
 # 团队关系列表
-# 0 游客 1 普通成员 2 管理原 3 创建者
+# 0 游客 1 普通成员 2 创建者
 class Team_relation(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
     team = models.ForeignKey(Team, on_delete=CASCADE)
     level = models.IntegerField(default=1)
-    check = models.BooleanField(default=False)
+    comment = models.BooleanField(default=False)
     change = models.BooleanField(default=False)
-    delete = models.BooleanField(default=False)
 
     class Meta:
         db_table = "team_relation"
@@ -114,6 +124,7 @@ class Comment(models.Model):
 
     class Meta:
         db_table = 'comment'
+
 
 # 文档修改日志
 class File_log(models.Model):
