@@ -5,6 +5,10 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '',
+    redirect: '/diamond'
+  },
+  {
   path: "/diamond",
   name: "Diamond",
   component: () => import("../components/diamond.vue"),
@@ -86,6 +90,11 @@ const routes = [
           component: () => import("../views/dashboard/trash.vue")
         },
       ]
+    },
+    {
+      path:"searchteam",
+      name: "SearchTeam",
+      component: () => import("../views/searchTeam/searchTeam.vue")
     },
   ]
 },
