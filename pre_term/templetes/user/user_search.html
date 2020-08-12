@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <style>
+        div {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <form action="{% url 'app:user_search' %}?team_id={{ team_id }}" method="post">
+        {% csrf_token %}
+        <input type="text" name="search_content">
+        <button type="submit" class="submit" id="submit">提交</button>
+    </form>
+<ul>
+    {% for user in users %}
+        <li>{{ user.u_username }}--{{ user.u_email }}
+        <a href="{% url 'app:invite_teamworker' %}?team_id={{ team_id }}&user={{ user.id }}"><button>邀请该成员</button></a></li>
+    {% endfor %}
+
+</ul>
+</div>
+
+
+</body>
+</html>

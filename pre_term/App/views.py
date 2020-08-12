@@ -346,7 +346,10 @@ def create_team(request):
             team_relation.change = True
             team_relation.comment = True
             team_relation.save()
-            return render(request, 'team/teaminfo.html', context={"team": team})
+            team_relations = Team_relation.objects.filter(team_id=team.id)
+            level = team_relations.filter(user=request.user).first().level
+            return render(request, 'team/teaminfo.html',
+                          context={'team': team, 'team_relations': team_relations, 'level': level})
 
 
 def user_info_change(request):
@@ -391,7 +394,7 @@ def team_application(request):
 def deal_application(request):
     team_id = request.GET.get('team_id')
     applications = Team_application.objects.filter(team_id=team_id)
-    return render(request,'team/deal_application.html',context={'applications':applications})
+    return render(request, 'team/deal_application.html', context={'applications': applications})
 
 
 def process_application(request):
@@ -399,12 +402,12 @@ def process_application(request):
     application = Team_application.objects.get(pk=apply_id)
     if request.GET.get('type') == 'agree':
         team = Team.objects.get(pk=application.team_id)
-        team.number_num = team.number_num+1
+        team.number_num = team.number_num + 1
         team.save()
         team_relation = Team_relation()
-        team_relation.level=1
-        team_relation.team=team
-        team_relation.user=application.user
+        team_relation.level = 1
+        team_relation.team = team
+        team_relation.user = application.user
         team_relation.save()
         data = {
             "msg": "add success",
@@ -415,3 +418,53 @@ def process_application(request):
         }
     application.delete()
     return JsonResponse(data=data)
+
+
+def deal_change(request):
+    relation_id = request.GET.get('relation_id')
+    team_relation = Team_relation.objects.get(pk=relation_id)
+    team_relation.change = not team_relation.change
+    team_relation.save()
+    return JsonResponse(data={"msg": "修改文档修改权限成功"})
+
+
+def deal_comment(request):
+    relation_id = request.GET.get('relation_id')
+    team_relation = Team_relation.objects.get(pk=relation_id)
+    team_relation.comment = not team_relation.comment
+    team_relation.save()
+    return JsonResponse(data={"msg": "修改文档评论权限成功"})
+
+
+def invite_teamworker(request):
+    team_id = request.GET['team_id']
+    team = Team.objects.get(pk=team_id)
+    user = User.objects.get(pk=request.GET['user'])
+
+    team_relation = Team_relation.objects.filter(user=user).filter(team=team)
+    if team_relation.exists():
+        return HttpResponse("该用户已加入团队")
+
+    team.number_num = team.number_num + 1
+    team_relation = Team_relation()
+    team_relation.level = 1
+    team_relation.team = team
+    team_relation.user = user
+    team_relation.save()
+
+    return render(request, 'team/teaminfo.html', context={"team": team})
+
+
+# 搜索用户
+def user_search(request):
+    if request.method == 'GET':
+        team_id = request.GET['team_id']
+        return render(request, 'user/user_search.html', context={'team_id': team_id})
+    elif request.method == 'POST':
+        content = request.POST.get('search_content')
+        users = User.objects.filter(Q(u_email__icontains=content)|Q(u_username__icontains=content))
+        data = {
+            "team_id": request.GET['team_id'],
+            "users": users,
+        }
+        return render(request, 'user/user_search.html', context=data)

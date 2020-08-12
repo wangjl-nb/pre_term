@@ -78,21 +78,22 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templetes/team" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/static" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
-      <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\djcode\pre_term\pre_term\static" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\file" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
       <recent name="D:\code\djcode\pre_term\pre_term" />
-      <recent name="D:\code\djcode\pre_term\pre_term\App" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
+      <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />
     </key>
   </component>
   <component name="RunManager">
@@ -163,7 +164,8 @@
       <workItem from="1597108118867" duration="13771000" />
       <workItem from="1597127566816" duration="6615000" />
       <workItem from="1597159086239" duration="439000" />
-      <workItem from="1597194541507" duration="14275000" />
+      <workItem from="1597194541507" duration="21985000" />
+      <workItem from="1597236879833" duration="1239000" />
     </task>
     <servers />
   </component>

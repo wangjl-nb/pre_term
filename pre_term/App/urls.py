@@ -30,4 +30,8 @@ urlpatterns = [
     path('team_application/',views.team_application,name='team_application'),
     path('deal_application/',views.deal_application,name='deal_application'),
     path('process_application/',views.process_application,name='process_application'),
+    path('deal_change/',views.deal_change,name='deal_change'),
+    path('deal_comment/',views.deal_comment,name='deal_comment'),
+    path('user_search/', views.user_search, name='user_search'),
+    path('invite_teamworker/', views.invite_teamworker, name='invite_teamworker'),
 ]

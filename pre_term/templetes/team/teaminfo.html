@@ -51,9 +51,20 @@
                 团队创建者
             {% endif %}
             --
-            {#            {% if team_relation. %}#}
-            {##}
-            {#            {% endif %}#}
+            <button class="change" relation_id="{{ team_relation.id }}">
+            {% if team_relation.change %}
+                撤销修改权限
+                {% else %}
+                给予修改权限
+            {% endif %}--
+            </button>
+            <button class="comment" relation_id="{{ team_relation.id }}">
+            {% if team_relation.comment %}
+                撤销评论权限
+                {% else %}
+                给予评论权限
+            {% endif %}
+            </button>
         </li>
     {% endfor %}
 
@@ -66,10 +77,37 @@
     <a href="{% url 'app:dismiss_team' %}?team_id={{ team.id }}">
         <button>解散团队</button>
     </a>
+
     <br>
     <a href="{% url 'app:deal_application' %}?team_id={{ team.id }}">
         <button>查看团队申请</button>
     </a>
+    <br>
+    <a href="{% url 'app:user_search' %}?team_id={{ team.id }}">
+        <button>邀请新成员</button>
+    </a>
 {% endif %}
 </body>
+<script type="text/javascript" src="{% static 'web/main/js/jquery.min.js' %}"></script>
+<script>
+    $(function () {
+        $('.change').click(function () {
+            let $change = $(this);
+            let relation_id = $change.attr('relation_id');
+            $.getJSON("/app/deal_change/", {"relation_id": relation_id}, function (data) {
+                console.log(data);
+                window.location.reload();
+             })
+        });
+        $('.comment').click(function () {
+            let $comment = $(this);
+            let relation_id = $comment.attr('relation_id');
+            console.log(relation_id);
+            $.getJSON("/app/deal_comment/", {"relation_id": relation_id}, function (data) {
+                console.log(data);
+                window.location.reload();
+             })
+        })
+    });
+</script>
 </html>

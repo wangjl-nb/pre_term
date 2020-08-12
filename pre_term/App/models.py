@@ -68,6 +68,7 @@ class Team(models.Model):
 class Team_record(models.Model):
     files = models.ForeignKey(File, on_delete=CASCADE)
     team = models.ForeignKey(Team, on_delete=CASCADE)
+    is_share = models.BooleanField(default=True)
 
     class Meta:
         db_table = "team_record"

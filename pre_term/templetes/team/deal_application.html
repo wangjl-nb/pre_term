@@ -32,7 +32,6 @@
             let applyid = $agree.attr('applyid');
             $.getJSON("/app/process_application/", {"applyid": applyid, "type": "agree"}, function (data) {
                 console.log(data);
-                {#window.open('/web/groupdealrequest/' + data['groupid'], target = "_self");#}
                 window.location.reload();
              })
         });
@@ -41,7 +40,6 @@
             let applyid = $disagree.attr('applyid');
             $.getJSON("/app/process_application/", {"applyid": applyid, "type": "disagree"}, function (data) {
                 console.log(data);
-                {#window.open('/web/groupdealrequest/' + data['groupid'], target = "_self");#}
                 window.location.reload();
             })
         })
