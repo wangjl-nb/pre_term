@@ -8,13 +8,14 @@
 						class="demo-ruleForm"
 		>
 			<!--              修改头像-->
-				<el-form-item label="头像" prop="image">
+				<el-form-item label="头像" prop="dialogImage">
 					<el-upload
-									action="#"
+									action="https://jsonplaceholder.typicode.com/posts/"
 									list-type="picture-card"
 									:limit="1"
 									:file-list="ruleForm.icon"
 									:on-remove="handleRemove"
+									:on-preview="handlePictureCardPreview"
 									:before-upload="beforeImageUpload"
 									:http-request="uploadImage"
 									:on-exceed="handleExceed"
@@ -38,20 +39,20 @@
 		name: "ChangeIcon",
 		data() {
 			return {
+				dialogVisible: false,
 				ruleForm: {
-					ad_url: '',//上传后的图片或视频URL
-					icon:[] ,
+					dialogImage: false,
+					icon: [],
 				},
 				rules: {
-					icon: { required: true, message: "请上传头像", trigger: "change" }
+					dialogImage: { required: true, message: "请上传头像", trigger: "change" }
 				}
 			}
 		},
 		methods: {
 			//图片上传之前检验
 			beforeImageUpload(file) {
-				console.log(file)
-				var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+				let testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
 				const isJpg = testmsg === 'jpg' || testmsg === 'png'
 				if (!isJpg) {
 					this.$message.error('上传图片只能是 jpg 或 png 格式!')
@@ -62,20 +63,21 @@
 					this.$message.error('上传图片大小不能超过 2MB!')
 					return false
 				}
+				this.dialogImage = true;
+				return true
 				// return false // (返回false不会自动上传)
 			},
-			// handlePictureCardPreview(file) {
-			//   this.dialogImageUrl = file.url
-			//   this.dialogVisible = true
-			// },
+			handlePictureCardPreview(file) {
+				this.dialogImage = true
+				this.dialogVisible = true
+			},
 			handleRemove(file, fileList) {
-				this.aa=fileList
-				for(var i = 0; i < this.ruleForm.jpg.length; i++){
-					if(this.ruleForm.image[i].url === file.url){
+				for(var i = 0; i < this.ruleForm.icon.length; i++){
+					if(this.ruleForm.icon[i].url === file.url){
 						//      deleteImageReport(this.fileList[i].id).then(res =>{
 						//       this.$message.success('删除图片成功')
 						//      })
-						this.ruleForm.image.splice(i, 1)
+						this.ruleForm.icon.splice(i, 1)
 					}
 				}
 			},
@@ -86,15 +88,10 @@
 					url:"/upload/pic",
 					method:"get",
 					params:{
-						img:image.file
+						icon:image.file
 					}
-				}).then( res =>{
-					if(res.data.status == 200){
-						if(res.data.status == 0)
-							that.ruleForm.image.push({name:"头像",url:res.data.url})
-					}
-					else
-						that.$message("上传失败")
+				}).then(res =>{
+					// that.ruleForm.icon.push({name:"头像",url:res.data.url})
 				})
 			},
 			handleExceed: function () {
@@ -104,10 +101,10 @@
 			},
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
-					if (valid) {
+					if (valid && this.dialogImage) {
 						alert('修改成功');
 					} else {
-						console.log('修改失败');
+						alert('请上传头像');
 						return false;
 					}
 				});
