@@ -99,6 +99,11 @@ const routes = [
     name: "Register",
     component: () => import("../components/Register.vue")
   },
+  {
+    path:"/editor",
+    name: "editor",
+    component: () => import("../components/editor.vue")
+  },
 ];
 
 const router = new VueRouter({
