@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+		<el-form :model="ruleForm" :rules="ruless" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 			<el-form-item label="请输入原密码" prop="oldPassword">
 				<el-input v-model="ruleForm.oldPassword"></el-input>
 			</el-form-item>
@@ -57,7 +57,7 @@
 					password: '',
 					checkPassword: '',
 				},
-				rules: {
+				ruless: {
 					oldPassword: [
 						{ validator: validateOldPassword, trigger: 'blur' }
 					],
@@ -69,6 +69,10 @@
 					],
 				}
 			}
+		},
+		created() {
+			this.oldpwd = this.$route.params.oldpwd
+			console.log(this.$route.params.oldpwd)
 		},
 		methods: {
 			submitForm(formName) {

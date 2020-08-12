@@ -87,11 +87,6 @@ const routes = [
         },
       ]
     },
-    {
-      path: "searchteam",
-      name: "SearchTeam",
-      component: () => import("../views/searchTeam/searchTeam.vue")
-    },
   ]
 },
   {

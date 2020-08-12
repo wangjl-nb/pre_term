@@ -32,9 +32,6 @@
           <el-menu-item index="/diamond/profile">
             <span slot="title">个人信息</span>
           </el-menu-item>
-          <el-menu-item index="/diamond/searchteam">
-            <span slot="title">搜索团队</span>
-          </el-menu-item>
         </el-menu-item-group>
       </el-menu>
     </el-col>
