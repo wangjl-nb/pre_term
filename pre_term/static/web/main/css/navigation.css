@@ -1,0 +1,10 @@
+.main-top a:hover {
+    text-decoration: none;
+}
+
+.navul li {
+    font-size: 1.25rem;
+}
+.navul li a {
+    font-size: 1.6rem;
+}

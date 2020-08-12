@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.cache import cache
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
@@ -163,7 +164,7 @@ def teams_show(request):
 
     page_object = paginator.page(page)
     data = {'msg': '团队信息', 'teams': page_object, "page_range": paginator.page_range}
-    return render(request, 'team/teams_info.html', context=data)
+    return render(request, 'team/team_search.html', context=data)
 
 
 # 团队信息展示
@@ -171,7 +172,10 @@ def team_info(request):
     team_id = request.GET.get('team_id', 4)
     team = Team.objects.get(pk=team_id)
     # relation = Team_relation.objects.
-    return render(request, 'team/teaminfo.html', context={'team': team})
+    team_relations = Team_relation.objects.filter(team_id=team_id)
+    level = team_relations.filter(user=request.user).first().level
+    return render(request, 'team/teaminfo.html',
+                  context={'team': team, 'team_relations': team_relations, 'level': level})
 
 
 def create_file(request):
@@ -322,23 +326,27 @@ def create_team(request):
     elif request.method == 'POST':
 
         name = request.POST.get("teamname")
-        describe = request.POST.get("describe")
-        icon = request.FILES.get("icon")
-        if icon == None:
-            icon = "suoluetubig.jpg"
-        team = Team()
-        team.name = name
-        team.describe = describe
-        team.icon = icon
-        team.save()
-        team_relation = Team_relation()
-        team_relation.user = request.user
-        team_relation.team = team
-        team_relation.level = 2
-        team_relation.change = True
-        team_relation.comment = True
-        team_relation.save()
-        return render(request, 'team/teaminfo.html', context={"team": team})
+        tteam = Team.objects.filter(name=name)
+        if tteam.exists():
+            return HttpResponse('团队名已存在')
+        else:
+            describe = request.POST.get("describe")
+            icon = request.FILES.get("icon")
+            if icon == None:
+                icon = "suoluetubig.jpg"
+            team = Team()
+            team.name = name
+            team.describe = describe
+            team.icon = icon
+            team.save()
+            team_relation = Team_relation()
+            team_relation.user = request.user
+            team_relation.team = team
+            team_relation.level = 2
+            team_relation.change = True
+            team_relation.comment = True
+            team_relation.save()
+            return render(request, 'team/teaminfo.html', context={"team": team})
 
 
 def user_info_change(request):
@@ -352,3 +360,58 @@ def user_info_change(request):
         user.u_icon = icon
     user.save()
     return HttpResponse('用户信息修改成功')
+
+
+def team_search(request):
+    if request.method == 'GET':
+        return render(request, 'team/team_search.html')
+    elif request.method == 'POST':
+        content = request.POST.get('search_content')
+        teams = Team.objects.filter(Q(name__icontains=content) | Q(describe__icontains=content))
+        return render(request, 'team/team_search.html', context={'teams': teams})
+
+
+def team_application(request):
+    team_id = request.GET['team_id']
+    user_id = request.user.id
+    relation = Team.objects.filter(user_id=user_id).filter(team_id=team_id)
+    if relation.exists():
+        return HttpResponse('您已加入团队')
+    apply = Team_application.objects.filter(user_id=user_id).filter(team_id=team_id)
+    if apply.exists():
+        return HttpResponse('对不起，你已申请该团队，请耐心等待')
+    else:
+        apply = Team_application()
+        apply.team_id = team_id
+        apply.user_id = user_id
+        apply.save()
+    return HttpResponse('申请成功！')
+
+
+def deal_application(request):
+    team_id = request.GET.get('team_id')
+    applications = Team_application.objects.filter(team_id=team_id)
+    return render(request,'team/deal_application.html',context={'applications':applications})
+
+
+def process_application(request):
+    apply_id = request.GET.get('applyid')
+    application = Team_application.objects.get(pk=apply_id)
+    if request.GET.get('type') == 'agree':
+        team = Team.objects.get(pk=application.team_id)
+        team.number_num = team.number_num+1
+        team.save()
+        team_relation = Team_relation()
+        team_relation.level=1
+        team_relation.team=team
+        team_relation.user=application.user
+        team_relation.save()
+        data = {
+            "msg": "add success",
+        }
+    else:
+        data = {
+            "msg": "refuse success",
+        }
+    application.delete()
+    return JsonResponse(data=data)

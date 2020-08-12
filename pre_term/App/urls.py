@@ -26,4 +26,8 @@ urlpatterns = [
     path('dissmiss_team/',views.dissmiss_team,name='dismiss_team'),
     path('create_team/', views.create_team, name='create_team'),
     path('user_info_change/', views.user_info_change, name='user_info_change'),
+    path('team_search/',views.team_search,name='team_search'),
+    path('team_application/',views.team_application,name='team_application'),
+    path('deal_application/',views.deal_application,name='deal_application'),
+    path('process_application/',views.process_application,name='process_application'),
 ]

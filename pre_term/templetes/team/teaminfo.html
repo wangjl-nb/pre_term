@@ -42,8 +42,34 @@
     </label>
 </div>
 
-<a href="{% url 'app:create_team_file' %}?team_id={{ team.id }}"><button>创建团队文档</button></a>
+<ul>
+    {% for team_relation in team_relations %}
+        <li>{{ team_relation.user.u_username }}--
+            {% if team_relation.level <= 1 %}
+                团队成员
+            {% else %}
+                团队创建者
+            {% endif %}
+            --
+            {#            {% if team_relation. %}#}
+            {##}
+            {#            {% endif %}#}
+        </li>
+    {% endfor %}
 
-<a href="{% url 'app:dismiss_team' %}?team_id={{ team.id }}"><button>解散团队</button></a>
+</ul>
+<br>
+<a href="{% url 'app:create_team_file' %}?team_id={{ team.id }}">
+    <button>创建团队文档</button>
+</a>
+{% if level >= 2 %}
+    <a href="{% url 'app:dismiss_team' %}?team_id={{ team.id }}">
+        <button>解散团队</button>
+    </a>
+    <br>
+    <a href="{% url 'app:deal_application' %}?team_id={{ team.id }}">
+        <button>查看团队申请</button>
+    </a>
+{% endif %}
 </body>
 </html>

@@ -18,9 +18,9 @@ REQUIRE_LOGIN = [
 
 
 class LoginMiddleware(MiddlewareMixin):
-    def process_exception(self, request, exception):
-        print(request, exception)
-        return redirect(reverse('app:login'))
+    # def process_exception(self, request, exception):
+    #     print(request, exception)
+    #     return redirect(reverse('app:login'))
 
     def process_request(self, request):
         user_id = request.session.get('user_id')

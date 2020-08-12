@@ -78,7 +78,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../myproject" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/templetes/team" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -163,7 +163,7 @@
       <workItem from="1597108118867" duration="13771000" />
       <workItem from="1597127566816" duration="6615000" />
       <workItem from="1597159086239" duration="439000" />
-      <workItem from="1597194541507" duration="12493000" />
+      <workItem from="1597194541507" duration="14275000" />
     </task>
     <servers />
   </component>

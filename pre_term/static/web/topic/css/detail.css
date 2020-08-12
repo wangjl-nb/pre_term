@@ -1,0 +1,72 @@
+li {
+    list-style: none;
+}
+.sidebar-menu {
+    list-style-type: none;
+    padding-left: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.sidebar-menu li {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.sidebar-menu a:hover{
+    text-decoration: none;
+}
+
+.sidebar-link {
+    color: #ff627b;
+}
+
+.sidebar-link.active::before {
+    color: #ff7193;
+}
+
+.sidebar-link:hover::before {
+    color: #9055A2;
+}
+
+.sidebar-item {
+    margin-bottom: 0.85rem;
+}
+
+.sidebar-content {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+#sidebar {
+    padding-top: 2.5rem;
+}
+
+.fourButton button {
+    width: 6.8rem;
+    height: 3rem;
+    line-height: 1.6rem;
+    font-size: 1.25rem;
+}
+
+.wrongText {
+    font-size: 1.5rem;
+    color: red;
+}
+
+.smallPictureIntroduction {
+    display: inline-block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+}
+
+.nameIntroduction {
+    display: inline-block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:1;
+    -webkit-box-orient:vertical;
+}

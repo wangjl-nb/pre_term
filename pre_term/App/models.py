@@ -134,3 +134,14 @@ class File_log(models.Model):
 
     class Meta:
         db_table = 'file_log'
+
+
+# 团队加入申请
+class Team_application(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    team = models.ForeignKey(Team, on_delete=CASCADE)
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    reason = models.TextField(default='我想加入你们团队')
+
+    class Meta:
+        db_table = 'team_application'
