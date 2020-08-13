@@ -140,6 +140,11 @@ const routes = [
     name: "editor",
     component: () => import("../components/editor.vue")
   },
+  {
+    path:"/changefile",
+    name: "ChangeFile",
+    component: () => import("../components/changeFile.vue")
+  },
 ];
 
 const router = new VueRouter({
