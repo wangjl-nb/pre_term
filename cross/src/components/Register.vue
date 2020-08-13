@@ -15,9 +15,17 @@
                 <el-form-item label="用户名" prop="username">
                   <el-input v-model.number="ruleForm.username" placeholder="请输入用户名"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                  <el-input v-model.number="ruleForm.email" placeholder="请输入邮箱"></el-input>
-                </el-form-item>
+                <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="70px" class="demo-dynamic">
+                  <el-form-item
+                    :model="dynamicValidateForm"
+                    ref="dynamicValidateForm"
+                    prop="email"
+                    label="邮箱"
+                    :rules="[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },
+                              { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
+                    <el-input v-model="dynamicValidateForm.email" placeholder="请输入邮箱"></el-input>
+                  </el-form-item>
+                </el-form>
                 <el-form-item label="密码" prop="pass">
                   <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码"></el-input>
                 </el-form-item>
@@ -80,6 +88,13 @@
         }
       };
       return {
+        //邮箱
+        dynamicValidateForm: {
+          domains: [{
+            value: ''
+          }],
+          email: ''
+        },
         imageUrl: '',
         ruleForm: {
           pass: '',
