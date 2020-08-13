@@ -11,15 +11,21 @@
     </style>
 </head>
 <body>
+<form style=" font-size: 1rem" method="post" enctype="multipart/form-data"
+      action="{% url 'app:team_info_change' %}?team_id={{ team.id }}">
+    {% csrf_token %}
 <div>
     <label>
-        <span>团队头像：<img src="/static/uploads/{{ team.icon }}"></span>
+        <span>团队头像：<img src="/static/uploads/{{ team.icon }}"></span><br>
+        <input name="icon" type="file" id="icon_input"
+                   style=" display: inline-block;width: 50%">
     </label>
 </div>
 
 <div>
     <label>
-        <span>团队名称：{{ team.name }}</span>
+        <span>团队名称：<input type="text" name="teamname" value="{{ team.name }}"></span>
+
     </label>
 </div>
 
@@ -41,11 +47,13 @@
         <span>团队简介：{{ describe }}</span>
     </label>
 </div>
-
+<button type="submit" class="submit" id="submit">提交</button>
+</form>
 <ul>
     {% for team_relation in team_relations %}
         <li>{{ team_relation.user.u_username }}--
             {% if team_relation.level <= 1 %}
+                <a href="{% url 'app:kick'%}?relation_id={{ team_relation.id }}"><button>踢出</button></a>
                 团队成员
             {% else %}
                 团队创建者
@@ -73,11 +81,13 @@
 <a href="{% url 'app:create_team_file' %}?team_id={{ team.id }}">
     <button>创建团队文档</button>
 </a>
+<a href="{% url 'app:team_files_list' %}?team_id={{ team.id }}&level={{ level }}">
+    <button>查看团队文档列表</button>
+</a>
 {% if level >= 2 %}
     <a href="{% url 'app:dismiss_team' %}?team_id={{ team.id }}">
         <button>解散团队</button>
     </a>
-
     <br>
     <a href="{% url 'app:deal_application' %}?team_id={{ team.id }}">
         <button>查看团队申请</button>
@@ -86,6 +96,9 @@
     <a href="{% url 'app:user_search' %}?team_id={{ team.id }}">
         <button>邀请新成员</button>
     </a>
+    {% else %}
+    <br>
+    <a href="{% url 'app:exit_team'%}?team_id={{ team.id }}"><button>退出团队</button></a>
 {% endif %}
 </body>
 <script type="text/javascript" src="{% static 'web/main/js/jquery.min.js' %}"></script>

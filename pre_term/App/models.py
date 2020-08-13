@@ -12,6 +12,7 @@ class File(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     is_delete = models.BooleanField(default=False)
     creator = models.CharField(max_length=64)
+    is_share = models.BooleanField(default=True)
 
     class Meta:
         db_table = "file"
@@ -68,7 +69,6 @@ class Team(models.Model):
 class Team_record(models.Model):
     files = models.ForeignKey(File, on_delete=CASCADE)
     team = models.ForeignKey(Team, on_delete=CASCADE)
-    is_share = models.BooleanField(default=True)
 
     class Meta:
         db_table = "team_record"
@@ -146,3 +146,13 @@ class Team_application(models.Model):
 
     class Meta:
         db_table = 'team_application'
+
+
+class Team_invitation(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    team = models.ForeignKey(Team, on_delete=CASCADE)
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    reason = models.TextField(default='我想邀请你加入我们团队')
+
+    class Meta:
+        db_table = 'team_invitation'

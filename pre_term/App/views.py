@@ -361,6 +361,12 @@ def user_info_change(request):
     user.u_username = username
     if icon != None:
         user.u_icon = icon
+    if not check_password(request.POST.get("oldpwd"), user.u_password):
+        return HttpResponse("原密码输入有误")
+    if request.POST.get("newpwd1") != request.POST.get("newpwd2"):
+        return HttpResponse("两次密码输入不一致")
+    user.u_password = make_password(request.POST.get("newpwd1"))
+
     user.save()
     return HttpResponse('用户信息修改成功')
 
@@ -377,7 +383,7 @@ def team_search(request):
 def team_application(request):
     team_id = request.GET['team_id']
     user_id = request.user.id
-    relation = Team.objects.filter(user_id=user_id).filter(team_id=team_id)
+    relation = Team_relation.objects.filter(user_id=user_id).filter(team_id=team_id)
     if relation.exists():
         return HttpResponse('您已加入团队')
     apply = Team_application.objects.filter(user_id=user_id).filter(team_id=team_id)
@@ -462,9 +468,145 @@ def user_search(request):
         return render(request, 'user/user_search.html', context={'team_id': team_id})
     elif request.method == 'POST':
         content = request.POST.get('search_content')
-        users = User.objects.filter(Q(u_email__icontains=content)|Q(u_username__icontains=content))
+        users = User.objects.filter(Q(u_email__icontains=content) | Q(u_username__icontains=content))
         data = {
             "team_id": request.GET['team_id'],
             "users": users,
         }
         return render(request, 'user/user_search.html', context=data)
+
+
+# 修改团队信息
+def team_info_change(request):
+    teamname = request.POST.get("teamname")
+    icon = request.FILES.get("icon")
+
+    team = Team.objects.get(pk=request.GET['team_id'])
+
+    team.name = teamname
+    if icon != None:
+        team.icon = icon
+    team.save()
+    return HttpResponse('团队信息修改成功')
+
+
+# 搜索全部文档（在全部范围内搜索）
+def file_search(request):
+    if request.method == 'GET':
+        return render(request, 'file/file_search.html')
+    elif request.method == 'POST':
+        content = request.POST.get('search_content')
+        files = File.objects.filter(
+            Q(title__icontains=content) | Q(content__icontains=content) | Q(creator__icontains=content))
+        return render(request, 'file/file_search.html', context={'files': files})
+
+
+# 团队文件列表
+def team_files_list(request):
+    level = request.GET['level']
+    team = Team.objects.get(pk=request.GET['team_id'])
+    files = File.objects.filter(team_record__team=team).filter(is_delete=False).order_by('-id')
+    page = int(request.GET.get("page", 1))
+    perpage = int(request.GET.get('perpage', 10))
+    paginator = Paginator(files, perpage)
+    team_id = request.GET['team_id']
+
+    page_object = paginator.page(page)
+    data = {'msg': '团队文档列表', 'files': page_object, "page_range": paginator.page_range, "team_id": team_id,
+            "level": level}
+    return render(request, 'file/team_files_list.html', context=data)
+
+
+# 团队文档分享权限
+def deal_share(request):
+    team = Team.objects.get(pk=request.GET['team_id'])
+    file = File.objects.get(pk=request.GET['file_id'])
+    team_record = Team_record.objects.filter(team=team).filter(file=file)
+    team_record.is_share = not team_record.is_share
+    team_record.save()
+    return JsonResponse(data={"msg": "修改文档分享权限成功"})
+
+
+# 发送邀请加入团队
+def team_invitation(request):
+    team_id = request.GET['team_id']
+    user_id = request.GET['user_id']
+    relation = Team_relation.objects.filter(user_id=user_id).filter(team_id=team_id)
+    if relation.exists():
+        return HttpResponse('该用户已加入团队')
+    invite = Team_application.objects.filter(user_id=user_id).filter(team_id=team_id)
+    if invite.exists():
+        return HttpResponse('对不起，你已邀请该用户，请耐心等待')
+    else:
+        invite = Team_invitation()
+        invite.user_id = user_id
+        invite.team_id = team_id
+        invite.save()
+    return HttpResponse('邀请成功！')
+
+
+# 接收邀请函
+def deal_invitation(request):
+    team_id = request.GET.get('team_id')
+    invitations = Team_invitation.objects.filter(team_id=team_id)
+    return render(request, 'team/deal_invitation.html', context={'invitations': invitations})
+
+
+# 处理邀请
+def process_invitation(request):
+    invite_id = request.GET.get('inviteid')
+    invitation = Team_invitation.objects.get(pk=invite_id)
+    if request.GET.get('type') == 'agree':
+        team = Team.objects.get(pk=invitation.team_id)
+        team.number_num = team.number_num + 1
+        team.save()
+        team_relation = Team_relation()
+        team_relation.level = 1
+        team_relation.team = team
+        team_relation.user = invitation.user
+        team_relation.save()
+        data = {
+            "msg": "add success",
+        }
+    else:
+        data = {
+            "msg": "refuse success",
+        }
+    invitation.delete()
+    return JsonResponse(data=data)
+
+
+def exit_team(request):
+    team_id = request.GET['team_id']
+    team=Team.objects.get(pk=team_id)
+    team_relation = Team_relation.objects.filter(team_id=team_id).filter(user=request.user)
+    team_relation.delete()
+    team.number_num = team.number_num-1
+    team.save()
+    return HttpResponse('退出团队成功')
+
+
+def kick(request):
+    team_relation = Team_relation.objects.get(pk=request.GET['relation_id'])
+    team=team_relation.team
+    team.number_num = team.number_num - 1
+    team.save()
+    team_relation.delete()
+    return HttpResponse('踢出人员成功')
+
+
+def deal_collect(request):
+    user = request.user
+    file_id = request.GET['file_id']
+    print(file_id)
+    personal_collections = Personal_collection.objects.filter(user=user).filter(file_id=file_id)
+    if personal_collections.exists():
+        return JsonResponse(data={"msg": "已收藏"})
+    else:
+        personal_collections = Personal_collection()
+        personal_collections.user = user
+        personal_collections.file_id = file_id
+        personal_collections.save()
+        return JsonResponse(data={"msg": "收藏成功"})
+
+

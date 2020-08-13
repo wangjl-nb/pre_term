@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <style>
+        div {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <ul>
+        {% for invitation in invitations %}
+            <li>{{ invitation.user.u_username }}--{{ invitation.reason }}--{{ invitation.date }}--
+            <button class="agree" inviteid="{{ invitation.id }}">同意</button>
+            <button class="disagree" inviteid="{{ invitation.id }}">拒绝</button>
+        {% endfor %}
+
+    </ul>
+</div>
+
+
+</body>
+<script type="text/javascript" src="{% static 'web/main/js/jquery.min.js' %}"></script>
+<script>
+    $(function () {
+        $('.agree').click(function () {
+            let $agree = $(this);
+            let inviteid = $agree.attr('inviteid');
+            $.getJSON("/app/process_invitation/", {"inviteid": inviteid, "type": "agree"}, function (data) {
+                console.log(data);
+                {#window.open('/web/groupdealrequest/' + data['groupid'], target = "_self");#}
+                window.location.reload();
+             })
+        });
+        $('.disagree').click(function () {
+            let $disagree = $(this);
+            let inviteid = $disagree.attr('inviteid');
+            $.getJSON("/app/process_invitation/", {"inviteid": inviteid, "type": "disagree"}, function (data) {
+                console.log(data);
+                {#window.open('/web/groupdealrequest/' + data['groupid'], target = "_self");#}
+                window.location.reload();
+            })
+        })
+    });
+</script>
+</html>

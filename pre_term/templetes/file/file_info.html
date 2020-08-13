@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,8 +14,37 @@
 <div>
     {{ file.id }}--{{ file.title }}--{{ file.content }}--{{ file.file_log_set.last.change_date }}--{{ file.file_log_set.last.user.u_username }}
     <a href="{% url 'app:file_log' %}?file_id={{ file.id }}">修改日志</a>
+    <ul>
+        <li>
+            {% if level >= 2 %}
+        <button class="share" team_id="{{ team_id }}" file_id="{{ file.id }}">
+            {% if team_record.is_share %}
+                撤销分享权限
+                {% else %}
+                给予分享权限
+            {% endif %}--
+            </button>
+    {% endif %}
+        </li>
+    </ul>
+
 </div>
 {{ wrong }}
 
 </body>
+<script type="text/javascript" src="{% static 'web/main/js/jquery.min.js' %}"></script>
+<script>
+    $(function () {
+        $('.share').click(function () {
+            let $share = $(this);
+            let team_id = $share.attr('team_id');
+            let file_id = $share.attr('file_id');
+            console.log(team_id);
+            $.getJSON("/app/deal_share/", {"team_id": team_id,"file_id": file_id}, function (data) {
+                console.log(data);
+                window.location.reload();
+             })
+        })
+    });
+</script>
 </html>
