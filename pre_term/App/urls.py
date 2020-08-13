@@ -43,4 +43,5 @@ urlpatterns = [
     path('exit_team/',views.exit_team,name='exit_team'),
     path('kick/',views.kick,name='kick'),
     path('deal_collect/', views.deal_collect, name='deal_collect'),
+    path('change_name/',views.change_name,name='change_name'),
 ]

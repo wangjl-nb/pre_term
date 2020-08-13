@@ -57,7 +57,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'DIRS': ['templetes'],
+        # 'DIRS': ['templetes'],
+        'DIRS': ['appfront/dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,7 +122,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATICFILES_DIRS = [
-    #os.path.join(BASE_DIR, 'appfront/dist'),
+    os.path.join(BASE_DIR, 'appfront/dist'+'/static/'),
     os.path.join(BASE_DIR, 'static'),
 ]
 
@@ -132,9 +133,9 @@ CACHES = {
     }
 }
 
-MEDIA_KEY_PREFIX = "/static/uploads/"
+MEDIA_KEY_PREFIX = "/appfront/dist/static/uploads/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'appfront/dist/static/uploads')
 
 STATIC_URL = '/static/'
 

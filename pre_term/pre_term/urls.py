@@ -23,5 +23,9 @@ from pre_term import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('app/',include('App.urls',namespace='app')),
-    # path('', TemplateView.as_view(template_name='index.html')),
-]+ static(settings.STATIC_URL, document_root=settings.MEDIA_ROOT)
+    path('', TemplateView.as_view(template_name='index.html')),
+    path('diamond/',TemplateView.as_view(template_name='index.html')),
+    path('diamond/inbox/',TemplateView.as_view(template_name='index.html')),
+    path('login/',TemplateView.as_view(template_name='index.html')),
+    path('register/',TemplateView.as_view(template_name='index.html')),
+]

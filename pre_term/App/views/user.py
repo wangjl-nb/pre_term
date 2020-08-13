@@ -190,3 +190,13 @@ def deal_collect(request):
         personal_collections.file_id = file_id
         personal_collections.save()
         return JsonResponse(data={"msg": "收藏成功"})
+
+
+def change_name(request):
+    name = request.POST.get('name')
+    print(name)
+    data = {
+        "msg":"修改成功",
+        "status":200,
+    }
+    return JsonResponse(data=data,safe=False)
