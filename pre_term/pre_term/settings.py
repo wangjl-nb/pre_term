@@ -44,7 +44,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -137,6 +137,8 @@ MEDIA_KEY_PREFIX = "/static/uploads/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/uploads')
 
 STATIC_URL = '/static/'
+
+# APPEND_SLASH=False
 
 # MEDIA_URL = '/static/'
 
