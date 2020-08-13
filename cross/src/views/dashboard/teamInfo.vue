@@ -3,15 +3,16 @@
        <el-header style="background:#fafbfc;height:150px;padding-top:30px" >
                 <div class="flex flex6" >
                    <div style="">  
-                        <svg class="icon" aria-hidden="true" style="width:4em;height:4em">
-                            <use xlink:href="#icon-project"></use> 
-                        </svg> 
-                  </div>  
+                      <el-image
+                        style="width: 70px; height: 70px; border-radius: 50%;"
+                        :src="jpg"
+                        :fit="fits">
+                    </el-image>
+                   </div>  
                     <div style="margin-left:20px;margin-right:30px">       
                         <h1 class="change-color" style="font-weight:lighter "><i>{{name}}</i></h1> 
                     </div>
                      <el-button plain @click="drawer = true">管理成员</el-button> 
-                      <el-button plain @click="allowShare(allow)">{{allow.name}}</el-button> 
                     <el-button type="danger" plain @click="dispose()">解散团队</el-button>
                     <el-button plain @click="join()">加入团队</el-button>
                     <el-button type="danger" plain @click="out()">退出团队</el-button>
@@ -150,9 +151,7 @@ export default {
   },
   data(){
       return{
-        tt:{power:true,name:"允许被分享"},
-        ff:{power:false,name:"仅允许团队内成员查看"},
-        allow:{power:true,name:"允许被分享"},
+        jpg:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
         teamId:134,
         name:"团队名字哈哈",
         editTeamInfo:"",
@@ -246,12 +245,13 @@ export default {
       this.dialogTableVisible=false
     },
     dispose(){
+          this.$router.push({path:"/diamond/dashboard/desktop"})
     },
     join(){
 
     },
     out(){
-
+    this.$router.push({path:"/diamond/dashboard/desktop"})
     },
     setpower(){
 
@@ -271,17 +271,7 @@ export default {
     powerChange(val,id) { 
      // alert(id) 
      alert(val+" "+id)
-    },
-    allowShare(allow){
-      if(allow.power){
-        // 发送禁止权限
-        this.allow=this.ff
-      }
-      else{
-        // 发送允许权限
-        this.allow=this.tt
-      }
-    }     
+    },    
   }
 };
 </script>

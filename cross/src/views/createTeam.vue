@@ -27,6 +27,7 @@ export default {
   name: "CreateTeam",
   data(){
       return{
+        team_id:0,
             ruleForm: {
           name: '',
           desc: ''
@@ -46,9 +47,11 @@ export default {
   },
      methods: {
       submitForm(formName) {
+        var that=this
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            that.team_id=234
+            that.$router.push({path:"/diamond/dashboard/team/"+that.team_id})
           } else {
             console.log('error submit!!');
             return false;

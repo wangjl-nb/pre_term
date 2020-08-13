@@ -1,10 +1,12 @@
 <template>
   <div>
     <el-row :gutter="20">
-      <el-col :span="24"><div class="grid-content"></div></el-col>
-      <el-col :span="24"><div class="grid-content"></div></el-col>
-      <el-col :span="24"><div class="grid-content"></div></el-col>
-      <el-col :span="24"><div class="grid-content"></div></el-col>
+      <el-col :span="24">
+        <img :src="img" />  
+      </el-col> 
+      <el-col :span="4"><div class="grid-content"></div></el-col>
+      <el-col :span="16"> <img alt="Vue logo" style="width:920px;height:230px" src="http://www.diyiziti.com/Res/Images//Temp/119/3fac3f9573a04bc28c4d5525ca1a7097.PNG" /></el-col> 
+      <el-col :span="4"><div class="grid-content"></div></el-col>
       <el-col :span="12" :offset="6">
         <div class="grid-content">
             <!--card-->
@@ -34,7 +36,7 @@
   </div>
 </template>
 <script>
-  export default {
+  export default { 
     name:"Login",
     data() {
       // var checkEmail = (rule, value, callback) => {
@@ -97,6 +99,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log('legal')
+                this.$router.push({path:"/diamond/dashboard/desktop"})
             this.$axios.post('/app/login/',
               this.qs.stringify({
                 username: this.ruleForm.username,
@@ -104,11 +107,12 @@
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
                 console.log(res)
-                // if (res.data.status === 0) {
-                //   alert('提交成功')
-                // } else {
-                //   alert('提交失败')
-                // }
+
+                 if (res.data.status === 0) {
+               //    this.$router.push({path:"/diamond/dashboard/desktop"})
+                 } else {
+                  alert('登录失败')
+                 }
                 alert(res.data.msg)
               })
           } else {

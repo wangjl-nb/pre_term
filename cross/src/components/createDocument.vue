@@ -1,7 +1,23 @@
 <template>
     <div>
-          <p><el-button plain @click="newDocument()">新建文档</el-button></p>
-          <p><el-button type="dark" plain @click="withDocument()">模板库</el-button> </p> 
+          <p>
+               <el-button plain @click="dialogVisible = true">新建文档</el-button>
+<el-dialog
+  title="新建文档"
+  :visible.sync="dialogVisible"
+  width="30%">
+ <el-form ref="form" :model="form" label-width="80px">
+  <el-form-item label="文档名称">
+    <el-input v-model="form.name"></el-input>
+  </el-form-item>
+ </el-form>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false;form.name=''">取 消</el-button>
+    <el-button type="primary" @click="newDocument(form.name,0)">确 定</el-button>
+  </span>
+</el-dialog>
+          </p>
+         <p><el-button type="dark" plain @click="withDocument()">模板库</el-button> </p> 
     </div>
 </template>
 <script>
@@ -16,24 +32,24 @@ export default {
     ,
   data(){
       return{
-        list:  [{name:"jackff",id:123,author:"mala",create:"2020/2/2",edit:"2020/2/4"},
-        {name:"jacasdk66",id:12322666,author:"masla",create:"2020/2/2",edit:"2020/2/4"},
-        {name:"jacsdawek",id:1223432,author:"malsa",create:"2020/2/2",edit:"2020/2/4"}
-        ]  ,
         DocumentId:123,
+        dialogVisible: false,
+        form:{
+          name:""
+        }
       }
   },
   mounted:{
 
   },
   methods:{
-      newDocument(){
-          var that=this
-        this.$router.push({
-        path:"/Document/"+that.DocumentId+"/"+that.teamId 
-      });
+      newDocument(name,template_id){
+          this.aa=name
+           this.aa=template_id
+           var document_id=123
+           this.$router.push({path:"/editor/"+document_id})
       },
-      withDocument(){
+     withDocument(){
            var that=this
           this.$router.push({
         path:"/diamond/templates/"+that.teamId 

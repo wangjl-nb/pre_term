@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '',
-    redirect: '/diamond'
+    redirect: '/login'
   },
   {
   path: "/diamond",
@@ -136,7 +136,7 @@ const routes = [
     component: () => import("../components/Register.vue")
   },
   {
-    path:"/editor",
+    path:"/editor/:documentId",
     name: "editor",
     component: () => import("../components/editor.vue")
   },

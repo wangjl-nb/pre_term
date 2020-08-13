@@ -12,7 +12,7 @@
         <div style="margin-left:20px;margin-right:30px">
           <h1 class="change-color" style="font-weight:lighter "><li>个人文档</li></h1>
         </div>
-        <router-link :to="{path: 'changefile/', query: {fileId: fileId}}">
+        <router-link :to="{path: '/changefile/', query: {fileId: fileId}}">
           <el-button type="primary" plain>修改</el-button>
         </router-link>
         <el-button type="primary" plain @click="drawer = true" style="margin-left: 10px">协作</el-button>
