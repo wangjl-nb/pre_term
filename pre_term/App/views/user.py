@@ -56,47 +56,31 @@ def register(request):
 # 登录
 def login(request):
     user_id = request.session.get('user_id')
-    if user_id:
-        return redirect(reverse('app:user_info'))
-        # return HttpResponseRedirect(reverse('web:one_group',args=[7]))
-    else:
-        if request.method == "GET":
-            error_message = request.session.get('error_message')
-            data = {
-                "title": "登录",
-            }
-            if error_message:
-                del request.session['error_message']
-                data['error_message'] = error_message
-            return render(request, 'user/login.html', context=data)
-        elif request.method == "POST":
+    username = request.POST.get("username")
+    password = request.POST.get("password")
 
-            username = request.POST.get("username")
-            password = request.POST.get("password")
-
-            user = User.objects.filter(u_username=username).first()
-            if user:
-                if check_password(password, user.u_password):
-                    # if True:
-                    print("检查密码")
-                    if user.is_active:
-                        request.session['user_id'] = user.id
-                        request.session['user_name'] = user.u_username
-                        request.session['is_manager'] = user.is_manager
-                        return JsonResponse(data={"msg": '登陆成功'})
-                    else:
-                        print('用户未激活')
-                        request.session['error_message'] = '用户未激活'
-                        return JsonResponse(data={"msg": '用户未激活'})
-                else:
-                    print('密码错误')
-                    request.session['error_message'] = '密码错误'
-                    return JsonResponse(data={"msg": '密码错误'})
-            print('用户名不存在')
-            request.session['error_message'] = '用户不存在'
-            return redirect(reverse('app:login'))
+    user = User.objects.filter(u_username=username).first()
+    if user:
+        if check_password(password, user.u_password):
+            # if True:
+            print("检查密码")
+            if user.is_active:
+                request.session['user_id'] = user.id
+                request.session['user_name'] = user.u_username
+                request.session['is_manager'] = user.is_manager
+                return JsonResponse(data={"msg": '登陆成功'})
+            else:
+                print('用户未激活')
+                request.session['error_message'] = '用户未激活'
+                return JsonResponse(data={"msg": '用户未激活'})
         else:
-            return redirect(reverse('app:login'))
+            print('密码错误')
+            request.session['error_message'] = '密码错误'
+            return JsonResponse(data={"msg": '密码错误'})
+    else:
+        print('用户名不存在')
+        request.session['error_message'] = '用户不存在'
+        return JsonResponse(data={"msg": '用户名错误'})
 
 
 # 邮件激活
@@ -123,10 +107,10 @@ def activate(request):
 
 # 用户信息展示
 def user_info(request):
-    user_id = request.session.get('user_id')
-    user = User.objects.get(pk=user_id)
-    data = {'icon': user.u_icon, 'username': user.u_username, 'email': user.u_email}
-    return render(request, 'user/info.html', context=data)
+    user = request.user
+    data = {'u_icon': str(user.u_icon), 'u_username': user.u_username, 'u_email': user.u_email,
+            'u_password': user.u_password}
+    return JsonResponse(data=data)
 
 
 # 登出
@@ -135,23 +119,24 @@ def logout(request):
     return redirect(reverse('app:login'))
 
 
-def user_info_change(request):
-    username = request.POST.get("username")
-    icon = request.FILES.get("icon")
-
+def change_password(request):
+    new_password = request.POST['new_password']
+    old_password = request.POST['old_password']
     user = request.user
 
-    user.u_username = username
-    if icon != None:
-        user.u_icon = icon
-    if not check_password(request.POST.get("oldpwd"), user.u_password):
-        return HttpResponse("原密码输入有误")
-    if request.POST.get("newpwd1") != request.POST.get("newpwd2"):
-        return HttpResponse("两次密码输入不一致")
-    user.u_password = make_password(request.POST.get("newpwd1"))
-
-    user.save()
-    return HttpResponse('用户信息修改成功')
+    if not check_password(old_password, user.u_password):
+        data = {
+            "msg": "旧密码输入错误",
+            "status": 1,
+        }
+    else:
+        user.u_password = make_password(new_password)
+        user.save()
+        data = {
+            "msg": "修改成功",
+            "status": 0,
+        }
+    return JsonResponse(data=data)
 
 
 # 搜索用户
@@ -192,11 +177,44 @@ def deal_collect(request):
         return JsonResponse(data={"msg": "收藏成功"})
 
 
+# 修改用户名
 def change_name(request):
-    name = request.POST.get('name')
-    print(name)
-    data = {
-        "msg":"修改成功",
-        "status":200,
-    }
-    return JsonResponse(data=data,safe=False)
+    name = request.POST.get('u_username')
+    user = request.user
+    exist_user = User.objects.filter(u_username=name)
+    if not exist_user.exists():
+        user.u_username = name
+        user.save()
+        files = File.objects.filter(Q(personal_record__user=user) & Q(personal_record__is_creator=True))
+        for file in files:
+            file.creator = name
+            file.save()
+        data = {
+            "msg": "修改成功",
+            "status": 0,
+        }
+    else:
+        data = {
+            "msg": "修改失败",
+            "status": 1,
+        }
+    return JsonResponse(data=data)
+
+
+# 修改头像
+def change_icon(request):
+    user = request.user
+    try:
+        icon = request.FILES.get('u_icon')
+        user.u_icon = icon
+        user.save()
+        data = {
+            "msg": "修改头像成功",
+            "status": 0,
+        }
+    except:
+        data = {
+            "msg": "修改头像失败",
+            "status": 1,
+        }
+    return JsonResponse(data=data)

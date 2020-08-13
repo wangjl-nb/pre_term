@@ -25,7 +25,7 @@ urlpatterns = [
     path('create_team_file/',views.create_team_file,name='create_team_file'),
     path('dissmiss_team/',views.dissmiss_team,name='dismiss_team'),
     path('create_team/', views.create_team, name='create_team'),
-    path('user_info_change/', views.user_info_change, name='user_info_change'),
+    path('change_password/', views.change_password, name='user_info_change'),
     path('team_search/',views.team_search,name='team_search'),
     path('team_application/',views.team_application,name='team_application'),
     path('deal_application/',views.deal_application,name='deal_application'),
@@ -44,4 +44,5 @@ urlpatterns = [
     path('kick/',views.kick,name='kick'),
     path('deal_collect/', views.deal_collect, name='deal_collect'),
     path('change_name/',views.change_name,name='change_name'),
+    path('change_icon/',views.change_icon,name='change_icon'),
 ]

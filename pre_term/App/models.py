@@ -46,6 +46,7 @@ class delete_date(models.Model):
 class Personal_record(models.Model):
     files = models.ForeignKey(File, on_delete=CASCADE)
     user = models.ForeignKey(User, on_delete=CASCADE)
+    is_creator = models.BooleanField(default=True)
 
     class Meta:
         db_table = "personal_record"

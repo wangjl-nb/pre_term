@@ -98,12 +98,16 @@ def create_team(request):
 
 
 def team_search(request):
-    if request.method == 'GET':
-        return render(request, 'team/team_search.html')
-    elif request.method == 'POST':
-        content = request.POST.get('search_content')
-        teams = Team.objects.filter(Q(name__icontains=content) | Q(describe__icontains=content))
-        return render(request, 'team/team_search.html', context={'teams': teams})
+    content = request.POST.get('key')
+    teams = Team.objects.filter(Q(name__icontains=content) | Q(describe__icontains=content))
+    ids = []
+    for team in teams:
+        ids.append(team.id)
+    data = {
+        "msg": "团队id列表",
+        "ids": ids,
+    }
+    return JsonResponse(data=data)
 
 
 def team_application(request):

@@ -1,3 +1,4 @@
+import datetime
 import json
 import uuid
 
@@ -9,10 +10,10 @@ from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
-
 from django.urls import reverse
 from App.models import *
 from App.views_helper import send_email_activate
+
 
 def create_file(request):
     if request.method == 'GET':
@@ -55,18 +56,53 @@ def change_file(request, file_id):
 
 # 个人文档列表
 def my_files_list(request):
+    type = int(request.GET['type'])
     user = request.user
-    files = File.objects.filter(personal_record__user=user).filter(is_delete=False).order_by('-id')
+    if type == 0:
+        files = File.objects.filter(personal_record__user=user).filter(is_delete=False).filter(
+            personal_record__is_creator=False).order_by('-id')
+    elif type == 2:
+        files = File.objects.filter(personal_record__user=user).filter(is_delete=False).filter(
+            personal_record__is_creator=True).order_by('-id')
+    elif type == 3:
+        files = File.objects.filter(personal_collection__user=user).filter(is_delete=False).order_by('-id')
+    else:
+        files = []
+    # files = File.objects.all().order_by('-id')
+
     page = int(request.GET.get("page", 1))
-    perpage = int(request.GET.get('perpage', 1))
+    perpage = int(request.GET.get('perpage', 10))
     paginator = Paginator(files, perpage)
 
     page_object = paginator.page(page)
     res = []
     for file in page_object:
-        res.append(model_to_dict(file))
-    data = {'msg': '个人文档列表', 'files': res}
-    return HttpResponse(json.dumps(data), content_type='application/json')
+        dic = {
+            "id": file.id,
+            "title": file.title,
+            "create_date": file.create_date,
+            "creator": file.creator,
+        }
+        log = File_log.objects.filter(file=file).order_by("-change_date").first()
+        if log:
+            dic["change_date"] = log.change_date
+            dic["u_username"] = log.user.u_username
+        res.append(dic)
+    data = {'msg': '个人文档列表', "documentList": res}
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
+
+
+# 时间格式化
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+
+        elif isinstance(obj, datetime.date):
+            return obj.strftime("%Y-%m-%d")
+
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 
 # 文件信息
