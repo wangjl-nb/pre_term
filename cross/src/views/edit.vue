@@ -142,27 +142,7 @@ export default {
       }
     };
   },
-  
-  mounted(){
-    var that=this
-    this.$axios({
-      url:"user/user_info",
-      method:"get",
-      params:{
-        id:'123'
-        }
-        }).then(res=>{
-          if(res.status==200){
-            console.log(res);
-            that.ruleForm.jpg.push({name:"头像",url:res.data.img});
-            that.ruleForm.name=res.data.name
-            that.ruleForm.region=res.data.major
-            that.ruleForm.sex=res.data.sex.toString()
-            that.ruleForm.school=res.data.school 
-            that.ruleForm.date=res.data.birthday
-            }
-            })
-            },
+
   methods: {
       //图片上传之前检验
     beforeImageUpload(file) {

@@ -5,7 +5,7 @@
           <li>
               <el-card class="box-card" shadow="hover">
                   <div class="flex flex6" > 
-                     <p style="flex-grow:13"><strong style="font-size:20x">{{item.author}}</strong> <span>邀请您加入</span><strong style="font-size:20x">{{item.team}}</strong></p>
+                     <p style="flex-grow:13"><strong style="font-size:20px">{{item.author}}</strong> <span>邀请您加入</span><strong style="font-size:20x">{{item.team}}</strong></p>
                      <el-button style="flex-grow:1" plain @click="argee(item.id)">同意</el-button>
                      <el-button style="flex-grow:1" type="danger" plain  @click="refuse(item.id)">拒绝</el-button>
                   </div>

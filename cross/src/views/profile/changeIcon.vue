@@ -85,8 +85,8 @@
 			uploadImage(image){
 				var that=this
 				this.$axios({
-					url:"/upload/pic",
-					method:"get",
+					url:'/app/change_icon',
+					method:"post",
 					params:{
 						icon:image.file
 					}

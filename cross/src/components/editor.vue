@@ -15,13 +15,12 @@
         <router-link :to="{path: 'changefile/', query: {fileId: fileId}}">
           <el-button type="primary" plain>修改</el-button>
         </router-link>
-        <el-button type="primary" plain @click="drawer = true">协作</el-button>
+        <el-button type="primary" plain @click="drawer = true" style="margin-left: 10px">协作</el-button>
         <input type="text" v-model="localURL" style="display: none">
         <el-button class="copyURL"
-                   icon="el-icon-share"
                    :data-clipboard-text="localURL"
                    type="primary"
-                   @click="copy" plain>
+                   @click="copy" plain style="margin-left: 10px">
           分享</el-button>
         <el-button type="primary" plain >收藏</el-button>
         <el-button type="primary" plain >删除</el-button>

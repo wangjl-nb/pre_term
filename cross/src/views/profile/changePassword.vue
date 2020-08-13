@@ -1,14 +1,14 @@
 <template>
 	<div>
-		<el-form :model="ruleForm" :rules="ruless" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+		<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 			<el-form-item label="请输入原密码" prop="oldPassword">
-				<el-input v-model="ruleForm.oldPassword"></el-input>
+				<el-input v-model="ruleForm.oldPassword" show-password></el-input>
 			</el-form-item>
 			<el-form-item label="请输入新密码" prop="password">
-				<el-input v-model="ruleForm.password"></el-input>
+				<el-input v-model="ruleForm.password" show-password></el-input>
 			</el-form-item>
 			<el-form-item label="请确认新密码" prop="checkPassword">
-				<el-input v-model="ruleForm.checkPassword"></el-input>
+				<el-input v-model="ruleForm.checkPassword" show-password></el-input>
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
@@ -25,9 +25,11 @@
 			let validateOldPassword = (rule, value, callback) => {
 				if (value === '') {
 					callback(new Error('请输入原密码'));
-				} else if (value !== this.oldpwd) {
-					callback(new Error('原密码错误'))
-				} else {
+				}
+				// else if (value !== this.oldpwd) {
+				// 	callback(new Error('原密码错误'))
+				// }
+				else {
 					callback();
 				}
 			};
@@ -57,7 +59,7 @@
 					password: '',
 					checkPassword: '',
 				},
-				ruless: {
+				rules: {
 					oldPassword: [
 						{ validator: validateOldPassword, trigger: 'blur' }
 					],
@@ -78,9 +80,21 @@
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						alert('修改成功');
+						this.$axios.post('/app/change_password/',
+								this.qs.stringify({
+									old_password: this.ruleForm.oldPassword,
+									new_password: this.ruleForm.password,
+								}),
+								{headers: {'Content-Type':'application/x-www-form-urlencoded'}})
+								.then(res => {
+									if(res.data.status === 0){
+										alert(res.data.msg)
+									}
+									else {
+										alert(res.data.msg)
+									}
+								})
 					} else {
-						console.log('修改失败');
 						return false;
 					}
 				});

@@ -130,6 +130,7 @@
             deleteDate: '2020-08-08',
           },
         ],
+        ids: [],
         pageSize: 4,
         currentPage: 1,
         sortType: 'name',

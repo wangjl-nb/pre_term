@@ -10,6 +10,7 @@ import './assets/iconfontEditor/iconfont.css'
 import './assets/iconfontEditor/iconfont.js'
 import './assets/css/all.css'
 import Clipboard from 'clipboard';
+import qs from 'qs';
 
 axios.defaults.baseURL='http://127.0.0.1:8000'
 axios.defaults.headers={'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }
@@ -17,6 +18,7 @@ axios.defaults.headers={'Content-Type': 'application/x-www-form-urlencoded; char
 Vue.use(Element);
 Vue.prototype.Clipboard = Clipboard;
 Vue.prototype.$axios = axios;
+Vue.prototype.qs = qs;
 
 Vue.config.productionTip = false;
 
