@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms import model_to_dict
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from django.urls import reverse
@@ -16,20 +16,11 @@ from App.views_helper import send_email_activate
 
 # 注册
 def register(request):
-    if request.method == 'GET':
-
-        data = {
-            "title": "注册",
-        }
-
-        return render(request, 'user/register.html', context=data)
-
-    elif request.method == 'POST':
-
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        icon = request.FILES.get("icon")
+    try:
+        username = request.POST.get("u_username")
+        email = request.POST.get("u_email")
+        password = request.POST.get("u_password")
+        icon = request.FILES.get("u_icon")
         if icon == None:
             icon = "suoluetubig.jpg"
         password = make_password(password)
@@ -50,14 +41,15 @@ def register(request):
         # 发送邮箱
         send_email_activate(username, email, u_token)
 
-        return redirect(reverse('app:login'))
+        return JsonResponse(data={"msg": "注册成功", "status": 0})
+    except:
+        return JsonResponse(data={"msg": "注册失败", "status": 1})
 
 
 # 登录
 def login(request):
-    user_id = request.session.get('user_id')
-    username = request.POST.get("username")
-    password = request.POST.get("password")
+    username = request.POST.get("u_username")
+    password = request.POST.get("u_password")
 
     user = User.objects.filter(u_username=username).first()
     if user:
@@ -100,9 +92,9 @@ def activate(request):
 
         user.save()
 
-        return redirect(reverse('app:login'))
+        return HttpResponseRedirect("/login")
 
-    return render(request, 'user/activate_fail.html')
+    return JsonResponse(data={"msg": "用户激活失败", "status": 1})
 
 
 # 用户信息展示
@@ -115,8 +107,11 @@ def user_info(request):
 
 # 登出
 def logout(request):
-    request.session.flush()
-    return redirect(reverse('app:login'))
+    try:
+        request.session.flush()
+        return JsonResponse(data={"msg": "用户登出成功", "status": 0})
+    except:
+        return JsonResponse(data={"msg": "用户登出失败", "status": 0})
 
 
 def change_password(request):
@@ -152,13 +147,6 @@ def user_search(request):
             "users": users,
         }
         return render(request, 'user/user_search.html', context=data)
-
-
-# 接收邀请函
-def deal_invitation(request):
-    team_id = request.GET.get('team_id')
-    invitations = Team_invitation.objects.filter(team_id=team_id)
-    return render(request, 'team/deal_invitation.html', context={'invitations': invitations})
 
 
 # 收藏文件

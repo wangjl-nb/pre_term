@@ -78,23 +78,23 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/appfront/dist" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="two.files.diff.last.used.file" value="D:/Program Files (x86)/qq下载/teaminfo(1).html" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
-      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
-      <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\djcode\pre_term\pre_term\appfront\dist" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\file" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
       <recent name="D:\code\djcode\pre_term\pre_term\static" />
-      <recent name="D:\code\djcode\pre_term\pre_term" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
+      <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />
     </key>
   </component>
   <component name="RunManager">
@@ -171,6 +171,7 @@
       <workItem from="1597289897228" duration="5974000" />
       <workItem from="1597300281729" duration="385000" />
       <workItem from="1597300668673" duration="38000" />
+      <workItem from="1597322872413" duration="8106000" />
     </task>
     <servers />
   </component>

@@ -10,13 +10,11 @@ def send_email_activate(username, receive, u_token):
     from_email = EMAIL_HOST_USER
 
     recipient_list = [receive, ]
-
     data = {
         'username': username,
         'activate_url': 'http://{}:{}/app/activate/?u_token={}'.format(SERVER_HOST, SERVER_PORT, u_token),
     }
 
-    html_message = loader.get_template('user/activate.html').render(data)
-
+    html_message = loader.get_template('activate.html').render(data)
     send_mail(subject=subject, message="", html_message=html_message, from_email=from_email,
               recipient_list=recipient_list)

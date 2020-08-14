@@ -1,3 +1,4 @@
+import datetime
 import json
 import uuid
 
@@ -43,13 +44,50 @@ def teams_show(request):
 
 # 团队信息展示
 def team_info(request):
-    team_id = request.GET.get('team_id', 4)
-    team = Team.objects.get(pk=team_id)
-    # relation = Team_relation.objects.
-    team_relations = Team_relation.objects.filter(team_id=team_id)
-    level = team_relations.filter(user=request.user).first().level
-    return render(request, 'team/teaminfo.html',
-                  context={'team': team, 'team_relations': team_relations, 'level': level})
+    try:
+        team_id = int(request.GET['team_id'])
+        team = Team.objects.get(pk=team_id)
+        user = request.user
+        team_relations = Team_relation.objects.filter(team=team)
+        list = []
+        for team_relation in team_relations:
+            if team_relation.level == 2:
+                user2 = team_relation.user
+            elif team_relation.level == 1:
+                dic2 = {
+                    "id": team_relation.user.id,
+                    "u_icon": str(team_relation.user.u_icon),
+                    "u_username": team_relation.user.u_username,
+                    "change": team_relation.change,
+                    "comment": team_relation.comment
+                }
+                list.append(dic2)
+        dic = {
+
+        }
+
+        if Team_relation.objects.filter(Q(team=team) & Q(user=user)).first().level == 2:
+            type = 0
+        elif Team_relation.objects.filter(Q(team=team) & Q(user=user)).first().level == 1:
+            type = 1
+        else:
+            type = 2
+        data = {'msg': '团队信息介绍',
+                'name': team.name,
+                'icon': str(team.icon),
+                'describe': team.describe,
+                'create_date': team.create_date,
+                'number_num': team.number_num,
+                'u_id': user2.id,
+                'u_icon': str(user2.u_icon),
+                'u_username': user2.u_username,
+                'type': type,
+                'list': list}
+    except:
+        data = {
+            'msg': '获取团队介绍失败，团队id不存在'
+        }
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
 def dissmiss_team(request):
@@ -207,18 +245,43 @@ def team_info_change(request):
 
 # 团队文件列表
 def team_files_list(request):
-    level = request.GET['level']
-    team = Team.objects.get(pk=request.GET['team_id'])
+    team_id = int(request.GET['team_id'])
+    team = Team.objects.get(pk=team_id)
     files = File.objects.filter(team_record__team=team).filter(is_delete=False).order_by('-id')
+
     page = int(request.GET.get("page", 1))
     perpage = int(request.GET.get('perpage', 10))
     paginator = Paginator(files, perpage)
-    team_id = request.GET['team_id']
 
     page_object = paginator.page(page)
-    data = {'msg': '团队文档列表', 'files': page_object, "page_range": paginator.page_range, "team_id": team_id,
-            "level": level}
-    return render(request, 'file/team_files_list.html', context=data)
+    res = []
+    for file in page_object:
+        dic = {
+            "id": file.id,
+            "title": file.title,
+            "create_date": file.create_date,
+            "creator": file.creator,
+        }
+        log = File_log.objects.filter(file=file).order_by("-change_date").first()
+        if log:
+            dic["change_date"] = log.change_date
+            dic["u_username"] = log.user.u_username
+        res.append(dic)
+    data = {'msg': '团队文档列表', "documentList": res}
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
+
+
+# 时间格式化
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+
+        elif isinstance(obj, datetime.date):
+            return obj.strftime("%Y-%m-%d")
+
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 
 # 团队文档分享权限
@@ -251,12 +314,21 @@ def team_invitation(request):
 
 # 踢出成员
 def kick(request):
-    team_relation = Team_relation.objects.get(pk=request.GET['relation_id'])
-    team = team_relation.team
-    team.number_num = team.number_num - 1
-    team.save()
-    team_relation.delete()
-    return HttpResponse('踢出人员成功')
+    try:
+        team_id = request.POST['id']
+        user_id = request.POST['u_id']
+        user_level = Team_relation.objects.filter(user=request.user).filter(team_id=team_id).first().level
+        print(user_level)
+        if user_level < 2:
+            return JsonResponse(data={"msg": "踢人权限不够", "status": 1})
+        team_relation = Team_relation.objects.filter(user_id=user_id).filter(team_id=team_id).first()
+        team = team_relation.team
+        team.number_num = team.number_num - 1
+        team.save()
+        team_relation.delete()
+        return JsonResponse(data={"msg": "踢出成员成功", "status": 0})
+    except:
+        return JsonResponse(data={"msg": "踢出成员失败", "status": 1})
 
 
 # 处理邀请
@@ -284,10 +356,69 @@ def process_invitation(request):
 
 
 def exit_team(request):
-    team_id = request.GET['team_id']
-    team = Team.objects.get(pk=team_id)
-    team_relation = Team_relation.objects.filter(team_id=team_id).filter(user=request.user)
-    team_relation.delete()
-    team.number_num = team.number_num - 1
-    team.save()
-    return HttpResponse('退出团队成功')
+    try:
+        team_id = request.POST['id']
+        team = Team.objects.get(pk=team_id)
+        team_relation = Team_relation.objects.filter(team_id=team_id).filter(user=request.user)
+        team_relation.delete()
+        team.number_num = team.number_num - 1
+        team.save()
+        return JsonResponse(data={"msg": "退出成功", "status": 0})
+    except:
+        return JsonResponse(data={"msg": "退出失败", "status": 1})
+
+
+# 我所参加的团队
+def my_teams(request):
+    user = request.user
+    teams = Team.objects.filter(team_relation__user=user)
+    if teams.exists:
+        ids = []
+        for team in teams:
+            ids.append(team.id)
+        data = {
+            'msg': '我加入的团队',
+            'ids': ids
+        }
+    else:
+        data = {
+            'msg': '没有加入任何团队'
+        }
+    return JsonResponse(data=data)
+
+
+def change_teamname(request):
+    team = Team.objects.get(pk=request.POST['team_id'])
+    name = request.POST.get('team_name')
+    exist_team = Team.objects.filter(name=name)
+    if not exist_team.exists():
+        team.name = name
+        team.save()
+        data = {
+            "msg": "修改成功",
+            "status": 0,
+        }
+    else:
+        data = {
+            "msg": "修改失败",
+            "status": 1,
+        }
+    return JsonResponse(data=data)
+
+
+def change_team_describe(request):
+    try:
+        team = Team.objects.get(pk=request.POST['team_id'])
+        describe = request.POST.get('describe')
+        team.describe = describe
+        team.save()
+        data = {
+            "msg": "修改成功",
+            "status": 0,
+        }
+    except:
+        data = {
+            "msg": "修改失败",
+            "status": 1,
+        }
+    return JsonResponse(data=data)
