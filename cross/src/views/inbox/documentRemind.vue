@@ -1,14 +1,14 @@
 <template>
   <el-container >
-  <el-main class="dashboard"> 
+  <el-main class="dashboard">
       <ul v-for="(item,index) in list" :key="index">
           <li>
               <el-card class="box-card" shadow="hover">
                     <p style="flex-grow:13"><strong style="font-size:20x">{{item.author}}</strong> <span>于{{item.time}}时评论了</span><strong style="font-size:20x">{{item.document}}</strong>文档</p>
               </el-card>
           </li>
-      </ul> 
-  </el-main> 
+      </ul>
+  </el-main>
   <el-aside>
       <info :info="infoo"></info>
   </el-aside>
@@ -38,8 +38,14 @@ export default {
       }
   },
   mounted(){
+    this.$axios.post('', ).then(res => {
+      //接收数据
+      this.list = res.data.list;
+
+    })
   },
   methods:{
+
   }
 };
 </script>

@@ -1,26 +1,26 @@
 <template>
   <el-container >
-  <el-main class="dashboard"> 
+  <el-main class="dashboard">
       <ul v-for="(item,index) in list" :key="index">
           <li>
               <el-card class="box-card" shadow="hover">
-                     <div class="flex flex6" > 
+                     <div class="flex flex6" >
                         <p style="flex-grow:13"><strong style="font-size:20px">{{item.author}}</strong> <span>邀请您加入</span><strong style="font-size:20x">{{item.team}}</strong></p>
                         <el-button style="flex-grow:1" plain @click="argee(item.id)">同意</el-button>
                         <el-button style="flex-grow:1" type="danger" plain  @click="refuse(item.id)">拒绝</el-button>
                      </div>
                      <el-divider content-position="left">邀请理由</el-divider>
-                  <div>
-                      <el-row>
-  <el-col :span="2"><div class="grid-content"></div></el-col> 
-  <el-col :span="20"><div class="grid-content"><p>{{item.reason}}</p></div></el-col>
-  <el-col :span="2"><div class="grid-content"></div></el-col>
-</el-row>
-                  </div>
+                     <div>
+                       <el-row>
+                        <el-col :span="2"><div class="grid-content"></div></el-col>
+                        <el-col :span="20"><div class="grid-content"><p>{{item.reason}}</p></div></el-col>
+                        <el-col :span="2"><div class="grid-content"></div></el-col>
+                       </el-row>
+                     </div>
               </el-card>
           </li>
-      </ul> 
-  </el-main> 
+      </ul>
+  </el-main>
   <el-aside>
        <info :info="infoo"></info>
   </el-aside>
@@ -45,13 +45,36 @@ export default {
       }
   },
   mounted(){
+    this.$axios.post('/app/application_list/', ).then(res => {
+      //接收数据
+      this.list = res.data.list;
+
+    })
   },
   methods:{
       argee(id){
-          this.aa=id
+        this.$axios.post('/app/process_application/',{id:id, type:0
+        }).then(res => {
+            if(res.data.status === 0){
+              alert("加入团队成功！")
+            }
+            else{
+              alert("加入团队失败！")
+            }
+        })
+        // this.aa=id
       },
       refuse(id){
-           this.aa=id
+        this.$axios.post('/app/process_application/',{id:id, type:1
+        }).then(res => {
+          if(res.data.status === 0){
+            alert("拒绝消息成功！")
+          }
+          else{
+            alert("拒绝消息失败！")
+          }
+        })
+        // this.aa=id
       }
   }
 };

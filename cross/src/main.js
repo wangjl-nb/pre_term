@@ -8,6 +8,8 @@ import './assets/iconfont/iconfont.css'
 import './assets/iconfont/iconfont.js'
 import './assets/iconfontEditor/iconfont.css'
 import './assets/iconfontEditor/iconfont.js'
+import './assets/iconfontRegister/iconfont.css'
+import './assets/iconfontRegister/iconfont.js'
 import './assets/css/all.css'
 import Clipboard from 'clipboard';
 import qs from 'qs';

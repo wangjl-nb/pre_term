@@ -7,7 +7,16 @@
           <!--card-->
           <el-card class="box-card" style="margin:0px auto; top:50%">
             <div slot="header" class="clearfix">
-              <span>注册</span>
+              <div>
+                <h1 class="change-color" style="font-weight:lighter ">
+                  <li>
+                    <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
+                      <use xlink:href="#icon-rengongzhinengjiqiren"></use>
+                    </svg>
+                    注册
+                  </li>
+                </h1>
+              </div>
             </div>
             <!--form-->
             <div>

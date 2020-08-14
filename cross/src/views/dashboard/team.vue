@@ -5,18 +5,18 @@
           <el-col :span="24" v-for="(item,index) in teams" :key="index">
                <el-divider></el-divider>
               <div class="flex flex7">
-                   <div style="margin-top:-10px;flex-grow: 1;">  
+                   <div style="margin-top:-10px;flex-grow: 1;">
                         <svg class="icon" aria-hidden="true" style="width:3em;height:3em">
                             <use :xlink:href="item.icon" ></use>
                         </svg>
-                  </div> 
+                  </div>
                     <div style="margin-left:0px;margin-top:-14px;flex-grow:32;"  >
                  <a style="font-size:18px" :href="'team/'+item.id">{{item.name}}</a>
-                <el-card shadow="never" style="margin-top:10px" > 
+                <el-card shadow="never" style="margin-top:10px" >
                 <p style="margin:-6px 0">{{item.description}}</p>
                </el-card>
 
-                        
+
                     </div>
                </div>
           </el-col>
@@ -42,8 +42,7 @@ export default {
       }
   },
   mounted() {
-    this.$axios.post('/app/my_teams', )
-            .then(res => {
+    this.$axios.post('/app/my_teams/', ).then(res => {
       this.teams = res.data.teams;
       for(let i = 0;i < this.teams.length;i++){
         if(this.teams[i].level === 1){

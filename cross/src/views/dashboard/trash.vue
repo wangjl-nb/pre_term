@@ -177,6 +177,7 @@
           this.ids.push(row[index].id)
           // alert(row[index].name)
           this.$axios.post('recoverurl', {
+            //key(接口):value
             ids: this.ids
           }).then(res => {
             if(res.data.status === 0){
@@ -184,6 +185,7 @@
                 message: '恢复成功',
                 type: 'success',
               })
+              //
               this.reload()
             }
           })

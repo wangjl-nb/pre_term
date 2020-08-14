@@ -2,17 +2,26 @@
   <div>
     <el-row :gutter="20">
       <el-col :span="24">
-        <img :src="img" />  
-      </el-col> 
+        <img :src="img" />
+      </el-col>
       <el-col :span="4"><div class="grid-content"></div></el-col>
-      <el-col :span="16"> <img alt="Vue logo" style="width:920px;height:230px" src="http://www.diyiziti.com/Res/Images//Temp/119/3fac3f9573a04bc28c4d5525ca1a7097.PNG" /></el-col> 
+      <el-col :span="16"> <img alt="Vue logo" style="width:920px;height:230px" src="http://www.diyiziti.com/Res/Images//Temp/119/3fac3f9573a04bc28c4d5525ca1a7097.PNG" /></el-col>
       <el-col :span="4"><div class="grid-content"></div></el-col>
       <el-col :span="12" :offset="6">
         <div class="grid-content">
             <!--card-->
             <el-card class="box-card" style="margin:0px auto; top:50%">
               <div slot="header" class="clearfix">
-                <span>登录</span>
+                <div>
+                  <h1 class="change-color" style="font-weight:lighter ">
+                    <li>
+                      <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
+                        <use xlink:href="#icon-rengongzhinengjiqiren"></use>
+                      </svg>
+                      登录
+                    </li>
+                  </h1>
+                </div>
               </div>
               <!--form-->
               <div>
@@ -36,7 +45,7 @@
   </div>
 </template>
 <script>
-  export default { 
+  export default {
     name:"Login",
     data() {
       // var checkEmail = (rule, value, callback) => {
