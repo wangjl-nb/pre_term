@@ -99,21 +99,17 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log('legal')
-                this.$router.push({path:"/diamond/dashboard/desktop"})
+                // this.$router.push({path:"/diamond/dashboard/desktop"})
             this.$axios.post('/app/login/',
               this.qs.stringify({
                 username: this.ruleForm.username,
                 password: this.ruleForm.pass}),
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
-                console.log(res)
-
-                 if (res.data.status === 0) {
-               //    this.$router.push({path:"/diamond/dashboard/desktop"})
-                 } else {
-                  alert('登录失败')
-                 }
                 alert(res.data.msg)
+                 if (res.data.msg === '登陆成功') {
+                  this.$router.push({path:"/diamond/dashboard/desktop"})
+                 }
               })
           } else {
             console.log('error submit!!');

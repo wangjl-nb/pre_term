@@ -15,6 +15,7 @@
 <script>
     export default {
         name: "ChangeUsername",
+        inject: ['reload'],
         data() {
             return {
                 ruleForm: {
@@ -37,11 +38,9 @@
                                 this.qs.stringify({u_username: this.ruleForm.username}),
                             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
                             .then(res => {
-                                console.log(res)
+                                alert(res.data.msg)
                                 if (res.data.status === 0) {
-                                    alert(res.data.msg)
-                                } else {
-                                    alert(res.data.msg)
+                                    this.reload()
                                 }
                             })
                     } else {

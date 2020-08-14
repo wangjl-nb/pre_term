@@ -8,8 +8,8 @@
                         <i class="iconfont icon-wenjian" style="font-size:40px"></i> 
                   </div> 
                     <div style="margin-left:20px;margin-top:0px">   
-                        <a style="font-size:18px" :href="'/editor/'+item.id">{{item.name}}</a>
-                        <p style="color:gray;font-size:13px">于{{item.create}}  {{item.author}}创建   最后一次更新为{{item.user}}编辑于{{item.edit}} 时</p>
+                        <a style="font-size:18px" :href="'/editor/'+item.id">{{item.title}}</a>
+                        <p style="color:gray;font-size:13px">于{{item.create_date}}  {{item.creator}}创建   最后一次更新为{{item.u_username}}编辑于{{item.change_date}} 时</p>
                     </div>
                </div>
                   
@@ -25,9 +25,9 @@ export default {
       props: {
     list: {
       default:
-        [{name:"jack",id:123,author:"mala",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
-        {name:"jacasdk",id:12322,author:"masla",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
-        {name:"jacsdak",id:12332,author:"malsa",create:"2020/2/2",edit:"2020/2/4",user:"222xs"}
+        [{title:"jack",id:123,creator:"mala",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
+        {title:"jacasdk",id:12322,creator:"masla",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
+        {title:"jacsdak",id:12332,creator:"malsa",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"}
         ]
     },
  

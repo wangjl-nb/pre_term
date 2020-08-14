@@ -57,7 +57,8 @@
 				url:'/app/user_info/',
 				method:"post",
 			}).then(res=>{
-					console.log(res);
+					// console.log(res);
+					that.icon = '/media/' + res.data.u_icon
 					that.username = res.data.u_username
 					that.password = res.data.u_password
 					that.email = res.data.u_email
