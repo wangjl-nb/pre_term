@@ -44,10 +44,19 @@ export default {
   },
   methods:{
       newDocument(name,template_id){
-          this.aa=name
-           this.aa=template_id
-           var document_id=123
-           this.$router.push({path:"/editor/"+document_id})
+            //4 不基于模板创建文档
+     this.$axios.post('/app/create_file/',
+              this.qs.stringify({
+                template_id:template_id,
+                title:name,
+                content:"",
+                team_id:this.teamId
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                  this.$router.push({path:"/editor/"+res.data.id})
+              })
       },
      withDocument(){
            var that=this

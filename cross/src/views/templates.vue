@@ -5,14 +5,14 @@
     <el-card :body-style="{ padding: '0px' }">
     <div class="demo-image__preview">
   <el-image 
-    :src="item.jpg" 
+    :src="item.img" 
         style="width:100%;height:150px" 
-    :preview-src-list="item.srcList">
+    :preview-src-list="[item.img]">
   </el-image>
 </div>
       <div style="padding: 14px;">
         <span>
-          <el-button type="text" style="color:black" plain @click="dialogVisible = true">{{item.name}}</el-button>
+          <el-button type="text" style="color:black" plain @click="dialogVisible = true">{{item.title}}</el-button>
           <el-dialog
   title="新建文档"
   :visible.sync="dialogVisible"
@@ -24,7 +24,7 @@
  </el-form>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false;form.name=''">取 消</el-button>
-    <el-button type="primary" @click="newDocument(form.name,item.id)">确 定</el-button>
+    <el-button type="primary" @click="newDocument(form.name,item.id,item.content)">确 定</el-button>
   </span>
 </el-dialog>
         </span>
@@ -32,7 +32,7 @@
           <div class="flex flex6">
             <div> 
               <el-rate
-  v-model="item.value"
+  v-model="item.score"
   disabled
   show-score
   text-color="#ff9900"
@@ -56,7 +56,7 @@
 </el-popover>
             </div>
           </div>
-          <p style="color:gray;font-size:13px">已经被{{item.number}}位作者采纳</p>
+          <p style="color:gray;font-size:13px">已经被{{item.accept_num}}位作者采纳</p>
         </div>
       </div>
     </el-card>
@@ -78,29 +78,61 @@ export default {
         },
         visible:false,
         list:[ 
-          {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]},
-           {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]},
-            {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]},
-             {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]},
-              {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]},
-               {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]},
-                {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]},
-                 {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]},
-                  {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]}
-                  , {id:123,jpg:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',name:"模板名字",value:3.45,value2:null,number:11,srcList:["https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"]}
+          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
+          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
+          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
+          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
+          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
         ]
       }
   },
+  mounted(){
+    this.team_id=this.$route.params.teamId
+//15 初始化模板信息
+     this.$axios.post('/app/get_templetes/',
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                    this.list=res.data.templetes_list
+
+              })
+  },
   methods:{
-      newDocument(name,template_id){
-          this.aa=name
-           this.aa=template_id
-           var document_id=123
-           this.$router.push({path:"/editor/"+document_id})
+      newDocument(name,template_id,content){
+                  //4 不基于模板创建文档
+     this.$axios.post('/app/create_file/',
+              this.qs.stringify({
+                template_id:template_id,
+                title:name,
+                content:content,
+                team_id:this.team_id
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                  this.$router.push({path:"/editor/"+res.data.id})
+              })
+        this.form.name=""
       },
     pingfen(id,value){
-      this.aa=id
-      this.aa=value
+         //6 给模板评分
+     this.$axios.post('/app/grade_templetes/',
+              this.qs.stringify({
+                id:id,
+                score:value
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                if(res.data.status){
+                   this.$message({
+          message: '评分成功',
+          type: 'success'
+        });
+                }else{
+                   this.$message.error('评分失败，请检查是否存在什么问题');
+                }
+              })
       this.visible=false
     }
   }

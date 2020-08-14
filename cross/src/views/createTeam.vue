@@ -50,8 +50,21 @@ export default {
         var that=this
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            that.team_id=234
-            that.$router.push({path:"/diamond/dashboard/team/"+that.team_id})
+                  //21 创建团队
+     this.$axios.post('',
+              this.qs.stringify({
+                name:this.ruleForm.name,
+                discribe:this.ruleForm.desc
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                if(res.data.status==0)
+                   that.$router.push({path:"/diamond/dashboard/team/"+res.data.id})
+                else{
+                    this.$message.error('创建团队失败');
+                }
+              })
           } else {
             console.log('error submit!!');
             return false;
