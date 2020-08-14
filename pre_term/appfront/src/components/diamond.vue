@@ -12,11 +12,20 @@
         <el-menu-item-group >
           <template slot="title"> 
             <span>
-               <el-image
+              <img src="http://www.diyiziti.com/Res/Images//Temp/427/0fe585ae15824c298a4d979a2d235df5.PNG" style="width:150px;margin-left:-45px;margin-top:30px">
+               <el-popover
+  placement="right"
+  width="10"  
+  trigger="hover">
+  <el-button @click="zhuxiao">注销</el-button>
+  <el-button slot="reference" type="text"> <el-image
                         style="width: 70px; height: 70px; border-radius: 50%;"
                         :src="jpg"
                         :fit="fits">
                     </el-image>
+                    </el-button>
+</el-popover>
+       
             </span>
             </template
           >
@@ -68,6 +77,9 @@
         console.log(this.$route.path)
         console.log(key, keyPath);
       },
+      zhuxiao(){
+         this.$router.push({path:"/login"})
+      }
     }
   }
 </script>

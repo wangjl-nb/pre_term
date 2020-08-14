@@ -32,15 +32,16 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        console.log('legal')
                         this.$axios.post('/app/change_name/',
-                                this.qs.stringify({name: this.ruleForm.username})
-                            ,
+                                this.qs.stringify({u_username: this.ruleForm.username}),
                             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
                             .then(res => {
-                                if (res.data.status === 200) {
-                                    alert('修改成功')
+                                console.log(res)
+                                if (res.data.status === 0) {
+                                    alert(res.data.msg)
                                 } else {
-                                    alert('修改失败')
+                                    alert(res.data.msg)
                                 }
                             })
                     } else {

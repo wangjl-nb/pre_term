@@ -124,6 +124,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             alert('submit!');
+              this.$router.push({path:"/login"})
           } else {
             console.log('error submit!!');
             return false;

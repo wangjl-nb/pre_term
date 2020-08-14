@@ -15,17 +15,34 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
+from django.views.static import serve
 
 from pre_term import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('app/',include('App.urls',namespace='app')),
+    path('app/', include('App.urls', namespace='app')),
     path('', TemplateView.as_view(template_name='index.html')),
-    path('diamond/',TemplateView.as_view(template_name='index.html')),
-    path('diamond/inbox/',TemplateView.as_view(template_name='index.html')),
-    path('login/',TemplateView.as_view(template_name='index.html')),
-    path('register/',TemplateView.as_view(template_name='index.html')),
+    path('diamond', TemplateView.as_view(template_name="index.html")),
+    path('diamond/inbox', TemplateView.as_view(template_name="index.html")),
+    path('diamond/invite', TemplateView.as_view(template_name="index.html")),
+    path('diamond/teamRemind', TemplateView.as_view(template_name="index.html")),
+    path('diamond/documentRemind', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard/team/<teamId>', TemplateView.as_view(template_name="index.html")),
+    path('diamond/searchDocument', TemplateView.as_view(template_name="index.html")),
+    path('diamond/templates/<teamId>', TemplateView.as_view(template_name="index.html")),
+    path('diamond/createTeam', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard/used', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard/desktop', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard/favorites', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard/own', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard/team', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard/trash', TemplateView.as_view(template_name="index.html")),
+    path('diamond/dashboard', TemplateView.as_view(template_name="index.html")),
+    path('login/', TemplateView.as_view(template_name='index.html')),
+    path('register/', TemplateView.as_view(template_name='index.html')),
+    re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

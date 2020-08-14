@@ -50,7 +50,7 @@ def register(request):
 def login(request):
     username = request.POST.get("u_username")
     password = request.POST.get("u_password")
-
+    print(username)
     user = User.objects.filter(u_username=username).first()
     if user:
         if check_password(password, user.u_password):
@@ -60,19 +60,19 @@ def login(request):
                 request.session['user_id'] = user.id
                 request.session['user_name'] = user.u_username
                 request.session['is_manager'] = user.is_manager
-                return JsonResponse(data={"msg": '登陆成功'})
+                return JsonResponse(data={"msg": '登陆成功', "status": 0})
             else:
                 print('用户未激活')
                 request.session['error_message'] = '用户未激活'
-                return JsonResponse(data={"msg": '用户未激活'})
+                return JsonResponse(data={"msg": '用户未激活', "status": 1})
         else:
             print('密码错误')
             request.session['error_message'] = '密码错误'
-            return JsonResponse(data={"msg": '密码错误'})
+            return JsonResponse(data={"msg": '密码错误', "status": 1})
     else:
         print('用户名不存在')
         request.session['error_message'] = '用户不存在'
-        return JsonResponse(data={"msg": '用户名错误'})
+        return JsonResponse(data={"msg": '用户名错误', "status": 1})
 
 
 # 邮件激活
@@ -111,7 +111,7 @@ def logout(request):
         request.session.flush()
         return JsonResponse(data={"msg": "用户登出成功", "status": 0})
     except:
-        return JsonResponse(data={"msg": "用户登出失败", "status": 0})
+        return JsonResponse(data={"msg": "用户登出失败", "status": 1})
 
 
 def change_password(request):
@@ -132,21 +132,6 @@ def change_password(request):
             "status": 0,
         }
     return JsonResponse(data=data)
-
-
-# 搜索用户
-def user_search(request):
-    if request.method == 'GET':
-        team_id = request.GET['team_id']
-        return render(request, 'user/user_search.html', context={'team_id': team_id})
-    elif request.method == 'POST':
-        content = request.POST.get('search_content')
-        users = User.objects.filter(Q(u_email__icontains=content) | Q(u_username__icontains=content))
-        data = {
-            "team_id": request.GET['team_id'],
-            "users": users,
-        }
-        return render(request, 'user/user_search.html', context=data)
 
 
 # 收藏文件
@@ -191,9 +176,12 @@ def change_name(request):
 
 # 修改头像
 def change_icon(request):
+    print(request.FILES)
+    print(request)
     user = request.user
     try:
-        icon = request.FILES.get('u_icon')
+        icon = request.FILES.get('icon')
+
         user.u_icon = icon
         user.save()
         data = {
@@ -206,3 +194,30 @@ def change_icon(request):
             "status": 1,
         }
     return JsonResponse(data=data)
+
+
+# 用户搜索
+def search_person(request):
+    key = request.POST['key']
+    users = User.objects.filter(Q(u_email__icontains=key) | Q(u_username__icontains=key)).order_by("id")
+    res = []
+    for user in users:
+        dic = {
+            "id": user.id,
+            "u_icon": str(user.u_icon),
+            "u_username": user.u_username,
+        }
+        res.append(dic)
+    data = {'msg': '用户搜索列表', "list": res}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def is_login(request):
+    user_id = request.session.get("user_id")
+    if user_id:
+        user = User.objects.get(pk=user_id)
+        if user.is_manager:
+            return JsonResponse(data={"type": 2, "user_id": user.id})
+        else:
+            return JsonResponse(data={"type": 1, "user_id": user.id})
+    return JsonResponse(data={"type": 0})

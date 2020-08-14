@@ -78,23 +78,25 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/appfront/dist" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/media/uploads" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="two.files.diff.last.used.file" value="D:/Program Files (x86)/qq下载/teaminfo(1).html" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\code\djcode\pre_term\pre_term\media" />
+      <recent name="D:\code\djcode\pre_term\pre_term" />
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
+      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
+      <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\djcode\pre_term\pre_term\media\uploads" />
       <recent name="D:\code\djcode\pre_term\pre_term\appfront\dist" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\file" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
       <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
-      <recent name="D:\code\djcode\pre_term\pre_term\static" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\code\djcode\pre_term\pre_term\templetes\user" />
-      <recent name="D:\code\djcode\pre_term\pre_term\templetes\team" />
-      <recent name="D:\College\大三上\小学期\pre_term-master\pre_term\appfront\dist\static" />
     </key>
   </component>
   <component name="RunManager">
@@ -172,6 +174,7 @@
       <workItem from="1597300281729" duration="385000" />
       <workItem from="1597300668673" duration="38000" />
       <workItem from="1597322872413" duration="8106000" />
+      <workItem from="1597365567991" duration="15125000" />
     </task>
     <servers />
   </component>
@@ -183,10 +186,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="74" key="#Notifications/0.0.1536.824@0.0.1536.824" timestamp="1597290026122" />
-    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597051586032">
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597388237945">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1597051586032" />
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1597388237945" />
     <state x="609" y="221" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597300301037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -227,9 +230,9 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="595" y="305" width="345" height="226" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.0.1536.824@0.0.1536.824" timestamp="1597120136288" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1597300684702">
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1597375575583">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1597300684702" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1597375575583" />
   </component>
 </project>

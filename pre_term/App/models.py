@@ -23,7 +23,7 @@ class User(models.Model):
     u_username = models.CharField(max_length=32, unique=True)
     u_password = models.CharField(max_length=64)
     u_email = models.EmailField(blank=False, unique=True)
-    u_icon = models.ImageField(upload_to='icons/%Y/%m/%d/')
+    u_icon = models.ImageField(upload_to='icons/%Y/%m/%d/',null=True,blank=True)
     is_active = models.BooleanField(default=False)
     is_delete = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
@@ -43,10 +43,13 @@ class delete_date(models.Model):
 
 
 # 个人文档创建记录
+# 个人文档创建记录
 class Personal_record(models.Model):
     files = models.ForeignKey(File, on_delete=CASCADE)
     user = models.ForeignKey(User, on_delete=CASCADE)
     is_creator = models.BooleanField(default=True)
+    comment = models.BooleanField(default=True)
+    change = models.BooleanField(default=True)
 
     class Meta:
         db_table = "personal_record"
@@ -58,7 +61,7 @@ class Team(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     number_num = models.IntegerField(default=1)
     describe = models.TextField()
-    icon = models.ImageField(upload_to='team_icons/%Y/%m/%d/')
+    icon = models.ImageField(upload_to='team_icons/%Y/%m/%d/',null=True,blank=True)
 
     # 头像上传路径
 
@@ -112,6 +115,7 @@ class Template(models.Model):
     content = models.TextField()
     score = models.DecimalField(max_digits=3, decimal_places=1)
     accept_num = models.IntegerField(default=0)
+    img = models.ImageField(upload_to='templates/%Y/%m/%d/', null=True,blank=True)
 
     class Meta:
         db_table = "templete"
@@ -157,3 +161,5 @@ class Team_invitation(models.Model):
 
     class Meta:
         db_table = 'team_invitation'
+
+

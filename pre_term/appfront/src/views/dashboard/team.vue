@@ -41,6 +41,9 @@ export default {
               {icon:"#icon-zhanghaoguanli",name:"sddsdfgdss",context:"团队描述",id:3463345}
           ]
       }
+  },
+  mounted() {
+
   }
 };
 </script>

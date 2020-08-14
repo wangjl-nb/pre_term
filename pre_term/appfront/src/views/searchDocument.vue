@@ -34,7 +34,7 @@
                         <i class="iconfont icon-wenjian" style="font-size:40px"></i> 
                   </div> 
                     <div style="margin-left:20px;margin-top:0px">  
-                        <a style="font-size:18px" :href="'document/'+item.id">{{item.name}}</a>
+                        <a style="font-size:18px" :href="'/editor/'+item.id">{{item.name}}</a>
                         <p style="color:gray;font-size:13px">于{{item.create}}  {{item.author}}创建   最后一次更新为{{item.user}}编辑于{{item.edit}} 时</p>
                     </div>
                </div>

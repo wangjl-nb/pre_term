@@ -21,14 +21,20 @@ export default {
   },
   data(){
       return{
-        list:  [{name:"jac324kff",id:34123,author:"mala",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
-        {name:"jaca324sdk",id:134322,author:"masla",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
-        {name:"jacsda423k",id:1234332,author:"malsa",create:"2020/2/2",edit:"2020/2/4",user:"222xs"}
-        ]  
+        list:  [{title:"jac324kff",id:123243,creator:"mala",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
+          {title:"jac432asdk",id:12322342,creator:"masla",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
+          {title:"jac423sdak",id:12324332,creator:"malsa",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"}
+        ]
       }
   },
   mounted(){
-
+// this.$axios.post('/app/my_files_list/', {
+    //   type: 3,
+    //   page: 1,
+    //   perpage: 5,
+    // }).then(res => {
+    //   this.list = res.data.list
+    // })
   }
 };
 </script>

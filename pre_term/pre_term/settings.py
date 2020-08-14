@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -123,7 +124,6 @@ USE_TZ = False
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'appfront/dist'+'/static/'),
-    os.path.join(BASE_DIR, 'static'),
 ]
 
 CACHES = {
@@ -133,15 +133,15 @@ CACHES = {
     }
 }
 
-MEDIA_KEY_PREFIX = "/appfront/dist/static/uploads/"
+MEDIA_KEY_PREFIX = "/media/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'appfront/dist/static/uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
 
 # APPEND_SLASH=False
 
-# MEDIA_URL = '/static/'
+MEDIA_URL = '/media/'
 
 EMAIL_HOST = 'smtp.qq.com'
 
