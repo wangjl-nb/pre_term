@@ -151,8 +151,8 @@
         </el-menu> 
     <div style="position:relative">
        <div class="flex flex6" style="position:absolute;right:20px;top:-70px">
-          <el-button type="text" icon="el-icon-star-off" v-show="star==1" @click="favorite()" style="color:gray;font-size:30px"></el-button>
-           <el-button type="text" icon="el-icon-star-on" v-show="star==0" @click="del_favorite()" style="color:#ede159;font-size:30px"></el-button>
+          <el-button type="text" icon="el-icon-star-off" v-show="star==1" @click="set_favorite(0)" style="color:gray;font-size:30px"></el-button>
+           <el-button type="text" icon="el-icon-star-on" v-show="star==0" @click="set_favorite(1)" style="color:#ede159;font-size:30px"></el-button>
          <span style="color:gray;font-size:12px;margin-left:20px">{{creator}}创建于{{create_date}}</span>
          </div>
     </div>   
@@ -224,7 +224,7 @@
           inviteId:-1,
           reason:"",
           document_type:"个人文档",
-          type:1,
+          type:0,
           change_power:0,
           comment_power:1,
           is_team:1,
@@ -365,37 +365,25 @@
         getURL() {
           this.localURL = location.href
         },
-        favorite(){
+        set_favorite(type){
             //40 收藏文档
      this.$axios.post('/app/deal_collect/',
               this.qs.stringify({
-                id:this.fileId
+                id:this.fileId,
+                type:type
               }),
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
                 console.log(res)
                 if(res.data.status==0){
-                  this.star=0
+                  this.star=type
                 }
                 else{
+                  if(type==0)
                   this.$message.error('收藏失败');
-                }
-              })
-        },
-        del_favorite(){
-          //50 取消收藏文档
-     this.$axios.post('',
-              this.qs.stringify({
-                id:this.fileId
-              }),
-              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-              .then(res => {
-                console.log(res)
-                if(res.data.status==0){
-                  this.star=1
-                }
-                else{
-                  this.$message.error('取消收藏失败');
+                  else{
+                     this.$message.error('取消收藏失败');
+                  }
                 }
               })
         },
