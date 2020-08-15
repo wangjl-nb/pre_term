@@ -22,17 +22,22 @@ const routes = [
           path: "invite",
           name: "Invite",
           component: () => import("../views/inbox/invite.vue")
-        }, 
+        },
         {
           path: "teamRemind",
           name: "TeamRemind",
           component: () => import("../views/inbox/teamRemind.vue")
-        }, 
+        },
         {
           path: "documentRemind",
           name: "DocumentRemind",
           component: () => import("../views/inbox/documentRemind.vue")
-        }, 
+        },
+        {
+          path: "collaboratorRemind",
+          name: "CollaboratorRemind",
+          component: () => import("../views/inbox/collaboratorRemind.vue")
+        },
       ]
     },
     {

@@ -9,12 +9,12 @@
             <div slot="header" class="clearfix">
               <div>
                 <h1 class="change-color" style="font-weight:lighter ">
-                  <li>
+<!--                  <li>-->
                     <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
                       <use xlink:href="#icon-rengongzhinengjiqiren"></use>
                     </svg>
                     注册
-                  </li>
+<!--                  </li>-->
                 </h1>
               </div>
             </div>

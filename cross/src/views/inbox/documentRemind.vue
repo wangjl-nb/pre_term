@@ -38,7 +38,7 @@ export default {
       }
   },
   mounted(){
-    this.$axios.post('', ).then(res => {
+    this.$axios.post('').then(res => {
       //接收数据
       this.list = res.data.list;
 
