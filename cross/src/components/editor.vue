@@ -1,37 +1,13 @@
 <template>
 
-  <el-container>
-    <!--头部导航栏-->
-    <el-header>
-      <div class="flex flex6" >
-        <div style="">
-          <svg class="icon" aria-hidden="true" style="width:4em;height:4em">
-            <use xlink:href="#icon-wendang"></use>
-          </svg>
-        </div>
-        <div style="margin-left:20px;margin-right:30px">
-          <h1 class="change-color" style="font-weight:lighter "><li>个人文档</li></h1>
-        </div>
-        <router-link :to="{path: '/changefile/', query: {fileId: fileId}}">
-          <el-button type="primary" plain>修改</el-button>
-        </router-link>
-        <el-button type="primary" plain @click="drawer = true" style="margin-left: 10px">协作</el-button>
-        <input type="text" v-model="localURL" style="display: none">
-        <el-button class="copyURL"
-                   :data-clipboard-text="localURL"
-                   type="primary"
-                   @click="copy" plain style="margin-left: 10px">
-          分享</el-button>
-        <el-button type="primary" plain >收藏</el-button>
-        <el-button type="primary" plain >删除</el-button>
-      </div>
-    </el-header>
-    <!--drawer设置-->
-    <el-drawer
+  <el-container style="position:relative">
+      <el-drawer
+      
       :visible.sync="drawer"
       :with-header="false"
-      :direction="direction">
-      <h1 style="margin-left:100px">
+      :direction="direction"> 
+    <div style="height:700px">
+       <h1 style="margin-left:100px">
         <svg class="icon" aria-hidden="true" style="width:3em;height:3em">
           <use xlink:href="#icon-quanxian"></use>
         </svg>
@@ -40,11 +16,33 @@
       <div style="margin-top: 15px;">
         <el-input placeholder="输入 邮箱/用户名 添加协作权限" v-model="search">
           <template slot="prepend">
-            <el-button slot="reference">
-              <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
-                <use xlink:href="#icon-sousuo"></use>
-              </svg>
-            </el-button>
+             <el-popover
+  placement="bottom-start"
+  width="400"
+  trigger="click">
+  <div v-if="searchItem.length>0">
+ <ul v-for="(item,index) in searchItem" :key="index">
+    <li style="position:relative">
+      <el-avatar size="medium" :src="item.u_icon"></el-avatar>
+      <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">
+        {{item.u_username}}
+        <el-button type="text" @click="dialogVisible = true;inviteId=item.id"> 
+           <i class="el-icon-circle-plus-outline" style="font-size:20px"></i> 
+        </el-button>
+       
+        </span>
+    </li>
+  </ul>
+  </div>
+   <div v-else> 
+      <pre style="color:#gray;font-size:15px;font-weight:normal">                 当前搜索结果为0</pre>
+    </div>
+      <el-button slot="reference" @click="searchUser(search)"> 
+         <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
+             <use xlink:href="#icon-sousuo"></use>
+         </svg>
+      </el-button>
+        </el-popover>
           </template>
         </el-input>
         <!--协作者列表卡片-->
@@ -52,52 +50,24 @@
           <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
               <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">协作者</span>
-              <el-popover
-                placement="bottom"
-                width="200"
-                trigger="click"
-                style="float: right">
-                <el-button slot="reference" style="float: right; padding: 3px 0" type="text">
-                  添加协作者
-                  <i class="el-icon-circle-plus-outline"></i>
-                </el-button>
-                <div v-if="searchItem.length>0">
-                  <ul v-for="(item,index) in searchItem" :key="index">
-                    <li style="position:relative">
-                      <!--头像-->
-                      <el-avatar size="medium" :src="item.img"></el-avatar>
-                      <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">
-                      {{item.name}}
-                      <el-button type="text" @click="invite(item.id)">
-                      <i class="el-icon-circle-plus-outline" style="font-size:20px"></i>
-                      </el-button>
-                    </span>
-                    </li>
-                  </ul>
-                </div>
-              </el-popover>
             </div>
             <div>
               <div>
-                <ul v-for="(item,index) in searchItem" :key="index">
+                <ul v-for="(item,index) in userItem" :key="index">
                   <li style="position:relative">
                     <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
                       <use xlink:href="#icon-renwu2"></use>
                     </svg>
-                    <el-avatar size="medium" :src="item.img" class="img"></el-avatar>
+                    <el-avatar size="medium" :src="item.u_icon" class="img"></el-avatar>
                     <span class="user_name">
-                     {{item.name}}
+                     {{item.u_username}}
                     </span>
-                    <template>
-                      <el-select v-model="value" placeholder="请选择权限" style="float: right; padding: 3px 0" type="text">
-                        <el-option
-                          v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </template>
+                     <p style="positon:relative;margin-left:70px">
+            <el-button v-show="item.comment==1" @click="changePower(index,item.id,0,item.change)">享有评论权限</el-button>
+            <el-button v-show="item.comment==0" @click="changePower(index,item.id,1,item.change)">无评论权限</el-button>
+            <el-button v-show="item.change==1" @click="changePower(index,item.id,item.comment,0)">享有修改权限</el-button>
+            <el-button v-show="item.change==0" @click="changePower(index,item.id,item.comment,0)">无修改权限</el-button>
+        </p>
                   </li>
                 </ul>
               </div>
@@ -124,45 +94,115 @@
           </el-card>
         </div>
       </div>
+    </div>
+     
     </el-drawer>
+<el-dialog
+  title="发送协作者邀请"
+  :visible.sync="dialogVisible"
+  width="30%"
+  :before-close="handleClose">
+  <el-input
+  type="textarea"
+  autosize
+  placeholder="请输入内容"
+  v-model="reason">
+</el-input>
+  <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="invite(inviteId,reason)">确 定</el-button>
+  </span>
+</el-dialog>
+    <!--头部导航栏-->
+    <el-header>
+       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+          <div class="flex flex6" >
+        <div style="">
+          <svg class="icon" aria-hidden="true" style="width:4em;height:4em">
+            <use xlink:href="#icon-wendang"></use>
+          </svg>
+        </div>
+        <div style="margin-left:20px;margin-right:30px">
+          <h1 class="change-color" style="font-weight:lighter ">{{document_type}}</h1>
+        </div>
+        <router-link :to="{path: '/changefile/', query: {fileId: fileId}}">
+          <el-button type="primary" v-show="change_power==0&&allow_edit==0" plain>修改</el-button>
+          <el-button type="danger" v-show="change_power==0&&allow_edit==1" plain disabled>当前有人正在修改 禁止修改</el-button>
+           <el-button type="danger" v-show="change_power==1" plain disabled>您没有修改的权限</el-button>
+        </router-link>
+        <el-button type="primary" v-show="type==1&&is_team==1" plain @click="drawer = true" style="margin-left: 10px">协作</el-button> 
+        <el-button type="primary" v-show="type==1&&allowShare==0" @click="set_allowShare(1)" plain >允许分享</el-button>
+        <el-button type="primary" v-show="type==1&&allowShare==1" @click="set_allowShare(0)" plain >禁止分享</el-button>
+        <input type="text" v-model="localURL" style="display: none">
+        <el-button class="copyURL"
+                   v-if="allowShare==0"
+                   :data-clipboard-text="localURL"
+                   type="primary"
+                   @click="copy" plain style="margin-left: 10px">
+                   分享</el-button>
+          <el-button class="copyURL"
+                   v-else
+                   :data-clipboard-text="localURL"
+                   type="primary"
+                   @click="copy" plain style="margin-left: 10px" disabled>
+                   分享
+          </el-button>
+        <el-button type="primary" v-show="type==1" @click="del()" plain >删除</el-button>
+      </div>
+        </el-menu> 
+    <div style="position:relative">
+       <div class="flex flex6" style="position:absolute;right:20px;top:-70px">
+          <el-button type="text" icon="el-icon-star-off" v-show="star==1" @click="favorite()" style="color:gray;font-size:30px"></el-button>
+           <el-button type="text" icon="el-icon-star-on" v-show="star==0" @click="del_favorite()" style="color:#ede159;font-size:30px"></el-button>
+         <span style="color:gray;font-size:12px;margin-left:20px">{{creator}}创建于{{create_date}}</span>
+         </div>
+    </div>   
+    </el-header>
+    <!--drawer设置-->
+  
     <!--中间文件内容-->
-    <el-main>
-<!--      <div class="editor">-->
-<!--        <div ref="toolbar" class="toolbar">-->
-<!--        </div>-->
-<!--        <div ref="editor" class="text">-->
-<!--        </div>-->
-<!--      </div>-->
-      <h2>标题</h2>
-      <h3>创建者：xxx 创建时间：xxx</h3>
-      <p>文档内容</p>
+    <el-main> 
+      <el-row>
+        <el-col :span="3" class="grid-content"></el-col>
+        <el-col :span="18">
+          <h2>{{title}}</h2>
+          <p>{{content}}</p>
+        </el-col>
+        <el-col :span="3" class="grid-content"></el-col>
+      </el-row>
     </el-main>
     <!--底部评论区-->
     <el-footer>
-      <el-col :span="24" v-if="">
-        <el-col :span="2" class="grid-content"></el-col>
-        <el-col :span="20">
+      <el-row >
+        <el-col :span="2" class="grid-content">
+        </el-col>
+        <el-col :span="20" style="position:relative">
+           <div class="mengban" style="opacity: 0.5; background-color:#ededed"> 
+           </div> 
+           <div class="mengban"> 
+             <p class="change-color" style="margin-top:70px;font-size:23px">您没有评论的权限</p>
+           </div> 
           <el-form action="#" ref="commentTextarea" label-width="100px">
             <el-form-item label="评论">
               <el-input type="textarea" placeholder="请在此发表评论"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">提交</el-button>
+              <el-button type="primary" @click="onSubmit(textarea)">提交</el-button>
             </el-form-item>
           </el-form>
+         
         </el-col>
+           
         <el-col :span="2" class="grid-content"></el-col>
-      </el-col>
-
+      </el-row>
       <div style="text-align: center">
         <h2 style="font-size: 2rem">评论区</h2>
       </div>
 
-      <el-row  v-for="(item, index) in comment" :key="index">
+      <el-row  v-for="(item, index) in comments" :key="index">
         <el-col :span="3" class="grid-content"></el-col>
         <el-col :span="19">
           <el-card shadow="always" style="margin-bottom: 1rem">
-            <el-col :span="12"><span>用户名：{{item.userName}}</span></el-col>
+            <el-col :span="12"><span>用户名：{{item.u_username}}</span></el-col>
             <el-col :span="12"><span>评论时间：{{item.time}}</span></el-col>
             <el-col :span="24" class="grid-content"></el-col>
             <el-col :span="24" style="margin-bottom: 1rem"><span>{{item.content}}</span></el-col>
@@ -175,37 +215,36 @@
 </template>
 
 <script>
-  import wangEnduit from "./wangEnduit";
-  import E from 'wangeditor';
     export default {
         name: "editor",
-        components:{
-          wangEnduit
-        },
       data() {
         return {
+          allow_edit:1,
+          dialogVisible: false,
+          inviteId:-1,
+          reason:"",
+          document_type:"个人文档",
+          type:1,
+          change_power:0,
+          comment_power:1,
+          is_team:1,
+          team_id:3242,
+          title:"今天的交互",
+          content:"sdas",
+          creator:"ZZZ飘",
+          create_date:"2020/1/1",
+          allowShare:1,
+          star:1,
+          textarea:"",
           //悬浮框
           visible: false,
           isComment: false,
           localURL: '',
-          //权限下拉显示框
-          options: [{
-            value: '选项1',
-            label: '只能阅读'
-          }, {
-            value: '选项2',
-            label: '只能阅读和评论'
-          }, {
-            value: '选项3',
-            label: '可以编辑'
-          }],
           value: '',
           //查找协作者
           search:"",
           searchItem:[
-            {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"},
-            {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"},
-            {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"}
+           {id:123,u_icon:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',u_username:"sadasd"}   ,
           ],
           author: {id:123,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasd"}
           ,
@@ -218,60 +257,73 @@
           //drawer
           drawer: false,
           direction: 'rtl',
-          comment: [
-            {userName: '用户1', content: '评论内容1', time: '2020-08-10'},
-            {userName: '用户2', content: '评论内容2', time: '2020-08-13'},
-            {userName: '用户3', content: '评论内容3', time: '2020-08-12'},
-            {userName: '用户4', content: '评论内容4', time: '2020-08-15'},
-            {userName: '用户5', content: '评论内容5', time: '2020-08-09'},
+          comments: [
+            {u_username: '用户1', content: '评论内容1', time: '2020-08-10',id:123},
           ],
           fileId: 123,
+          userItem:[
+           {id:12443,u_icon:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',u_username:"sadasewrwrwrwed",
+            change:0, comment:0,
+           },
+           {id:12443,u_icon:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',u_username:"sadasewrwrwrwed",
+            change:1, comment:0,
+           },
+       ],
         }
       },
-      model: {
-        // prop: 'value',
-        // event: 'change'
-      },
-      props: {
-        // value: {
-        //   type: String,
-        //   default: ''
-        // },
-        // isClear: {
-        //   type: Boolean,
-        //   default: false
-        // }
-      },
-      watch: {
-        // isClear(val) {
-        //   // 触发清除文本域内容
-        //   if (val) {
-        //     this.editor.txt.clear()
-        //     this.info_ = null
-        //   }
-        // },
-        // value: function(value) {
-        //   if (value !== this.editor.txt.html()) {
-        //     this.editor.txt.html(this.value)
-        //   }
-        // }
-        //value为编辑框输入的内容，这里我监听了一下值，当父组件调用得时候，如果给value赋值了，子组件将会显示父组件赋给的值
-      },
       mounted() {
-        // this.seteditor()
-        // this.editor.txt.html(this.value)
+        this.fileId=this.$route.params.documentId
         this.getURL()
+             //35 获取文档信息
+     this.$axios.post('',
+              this.qs.stringify({
+                id:this.fileId
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                this.type=res.data.type
+                if(this.type==-1&&this.allowShare==1){
+                   this.$router.push({path:"/error"})
+                }
+                else if(this.type==-2){
+                  this.$router.push({path:"/login"})
+                }
+                this.change_power=res.data.change,
+                this.comment_power=res.data.comment,
+                this.is_team=res.data.is_team
+                if (this.is_team==0){
+                  this.document_type="团队文档"
+                }
+                else{
+                  this.document_type="个人文档"
+                }
+                this.team_id=res.data.team_id,
+                this.title=res.data.title,
+                this.content=res.data.content,
+                this.comment=res.data.comments,
+                this.allowShare=res.data.allowShare,
+                this.star=res.data.star,
+                this.userItem=res.data.list
+              })
+          //定时器 数据库轮询 查看是否可以修改文档
+          self.setInterval(       
+          function(){
+            //37 数据库轮询 查看是否可以修改文档
+     this.$axios.post('',
+              this.qs.stringify({
+                id:this.fileId
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                this.allow_edit=res.data.status
+              })
+          },1000);
       },
       methods: {
         handleClick() {
           alert('button click');
-        },
-        handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then(_ => {
-              done();
-            })
-            .catch(_ => {});
         },
         handleSelect(key, keyPath) {
           console.log(key, keyPath);
@@ -279,77 +331,25 @@
         goBack() {
           console.log('go back');
         },
-        // seteditor() {
-        //   // http://192.168.2.125:8080/admin/storage/create
-        //   this.editor = new E(this.$refs.toolbar, this.$refs.editor)
-        //   this.editor.customConfig.uploadImgShowBase64 = false // base 64 存储图片
-        //   this.editor.customConfig.uploadImgServer = 'http://otp.cdinfotech.top/file/upload_images'// 配置服务器端地址
-        //   this.editor.customConfig.uploadImgHeaders = { }// 自定义 header
-        //   this.editor.customConfig.uploadFileName = 'file' // 后端接受上传文件的参数名
-        //   this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024 // 将图片大小限制为 2M
-        //   this.editor.customConfig.uploadImgMaxLength = 6 // 限制一次最多上传 3 张图片
-        //   this.editor.customConfig.uploadImgTimeout = 3 * 60 * 1000 // 设置超时时间
-        //
-        //   // 配置菜单
-        //   this.editor.customConfig.menus = [
-        //     'head', // 标题
-        //     'bold', // 粗体
-        //     'fontSize', // 字号
-        //     'fontName', // 字体
-        //     'italic', // 斜体
-        //     'underline', // 下划线
-        //     'strikeThrough', // 删除线
-        //     'foreColor', // 文字颜色
-        //     'backColor', // 背景颜色
-        //     'link', // 插入链接
-        //     'list', // 列表
-        //     'justify', // 对齐方式
-        //     'quote', // 引用
-        //     'emoticon', // 表情
-        //     'image', // 插入图片
-        //     'table', // 表格
-        //     'video', // 插入视频
-        //     'code', // 插入代码
-        //     'undo', // 撤销
-        //     'redo', // 重复
-        //     'fullscreen' // 全屏
-        //   ]
-        //
-        //   this.editor.customConfig.uploadImgHooks = {
-        //     fail: (xhr, editor, result) => {
-        //       // 插入图片失败回调
-        //     },
-        //     success: (xhr, editor, result) => {
-        //       // 图片上传成功回调
-        //     },
-        //     timeout: (xhr, editor) => {
-        //       // 网络超时的回调
-        //     },
-        //     error: (xhr, editor) => {
-        //       // 图片上传错误的回调
-        //     },
-        //     customInsert: (insertImg, result, editor) => {
-        //       // 图片上传成功，插入图片的回调
-        //       //result为上传图片成功的时候返回的数据，这里我打印了一下发现后台返回的是data：[{url:"路径的形式"},...]
-        //       // console.log(result.data[0].url)
-        //       //insertImg()为插入图片的函数
-        //       //循环插入图片
-        //       // for (let i = 0; i < 1; i++) {
-        //       // console.log(result)
-        //       let url = "http://otp.cdinfotech.top"+result.url
-        //       insertImg(url)
-        //       // }
-        //     }
-        //   }
-        //   this.editor.customConfig.onchange = (html) => {
-        //     this.info_ = html // 绑定当前逐渐地值
-        //     this.$emit('change', this.info_) // 将内容同步到父组件中
-        //   }
-        //   // 创建富文本编辑器
-        //   this.editor.create()
-        // },
-        onSubmit() {
-          alert('评论成功')
+        onSubmit(content) {
+           //45 评论文档
+     this.$axios.post('',
+              this.qs.stringify({
+                id:this.fileId,
+                content:content
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                if(res.data.status==0){
+                  this.textarea=""
+                  var com={id:res.data.id,time:res.data.time,u_username:res.data.u_username,content:content}
+                  this.comments.push(com)
+                }
+                else{
+                  this.$message.error('评论失败');
+                }
+              })
         },
         copy() {
           let clipboard = new this.Clipboard('.copyURL');
@@ -358,17 +358,144 @@
               type: 'success',
               message: '链接已复制到剪贴板'
             });
+            this.aa=e
             clipboard.destroy()
           })
         },
         getURL() {
           this.localURL = location.href
         },
-      }
+        favorite(){
+            //40 收藏文档
+     this.$axios.post('/app/deal_collect/',
+              this.qs.stringify({
+                id:this.fileId
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                if(res.data.status==0){
+                  this.star=0
+                }
+                else{
+                  this.$message.error('收藏失败');
+                }
+              })
+        },
+        del_favorite(){
+          //50 取消收藏文档
+     this.$axios.post('',
+              this.qs.stringify({
+                id:this.fileId
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                if(res.data.status==0){
+                  this.star=1
+                }
+                else{
+                  this.$message.error('取消收藏失败');
+                }
+              })
+        },
+        del(){
+//40 删除文档
+     this.$axios.post('/app/delete_file/',
+              this.qs.stringify({
+                id:this.fileId
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                if(res.data.status==0){
+                  this.$router.push({path:"/diamond/dashboard/desktop"})
+                }
+                else{
+                  this.$message.error('删除文档失败');
+                }
+              })
+        },
+          changePower(index,id,comment,change){
+         //15 分配个人文档权限
+     this.$axios.post('/app/grant_power/',
+              this.qs.stringify({
+                u_id:id,
+                id:this.teamId,
+                comment:comment,
+                change:change
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                    if(res.data.status==0){
+                      this.userItem[index].change=change
+                      this.userItem[index].comment=comment
+                    }
+              })
+    },
+    searchUser(search){
+      //13 搜索用户
+     this.$axios.post('/app/search_person/',
+              this.qs.stringify({
+                key:search,
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                    this.searchItem=res.data.list
+              })
+    },
+        invite(id,reason){
+         //47 邀请加入协作者
+     this.$axios.post('/app/cooperate_invitation/',
+              this.qs.stringify({
+                id:this.fileId,
+                u_id:id,
+                reason:reason
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                 if (res.data.status === 0) {
+                     //更新数据
+                 }else{
+                   this.$message.error("邀请失败，请检查是否存在网络问题");
+                 }
+              })
+      this.reason=""
+      this.dialogVisible = false
+    },
+    handleClose(done) {
+        done();
+        this.reason="" 
+    },
+    set_allowShare(allowShare){
+       this.allowShare=allowShare
+        //38 设置分享权限
+     this.$axios.post('/app/set_is_share/',
+              this.qs.stringify({
+                id:this.fileId,
+                type:allowShare
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                 if (res.data.status === 0) {
+                     this.allowShare=allowShare
+                 }else{
+                   this.$message.error("邀请失败，请检查是否存在网络问题");
+                 }
+              })
     }
+    }
+}
 </script>
 
 <style>
+.mengban{
+  position:absolute;height:170px;text-align:center;width:100%;margin-left:3%;;margin-top:-20px;z-index:100
+}
   .editor {
     width: 100%;
     margin: 0 auto;
