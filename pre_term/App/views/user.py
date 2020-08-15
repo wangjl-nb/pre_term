@@ -180,11 +180,9 @@ def change_name(request):
 
 # 修改头像
 def change_icon(request):
-    print(request.FILES)
-    print(request)
     user = request.user
     try:
-        icon = request.FILES.get('icon')
+        icon = request.FILES.get('u_icon')
 
         user.u_icon = icon
         user.save()
