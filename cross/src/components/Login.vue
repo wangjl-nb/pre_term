@@ -101,21 +101,27 @@
         },
       }
     },
+    mounted() {
+      this.$axios.post('/app/is_login/',)
+      .then(res => {
+        if(res.data.type > 0){
+          this.$router.push({path: '/diamond/dashboard/desktop'})
+        }
+      })
+    },
     methods: {
       // submit button
       submitForm(formName) {
-        console.log('submit')
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log('legal')
                 // this.$router.push({path:"/diamond/dashboard/desktop"})
             this.$axios.post('/app/login/',
               this.qs.stringify({
-                username: this.ruleForm.username,
-                password: this.ruleForm.pass}),
+                u_username: this.ruleForm.username,
+                u_password: this.ruleForm.pass}),
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
-                alert(res.data.msg)
+                this.$message(res.data.msg)
                  if (res.data.msg === '登陆成功') {
                   this.$router.push({path:"/diamond/dashboard/desktop"})
                  }

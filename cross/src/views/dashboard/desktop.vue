@@ -28,13 +28,18 @@ export default {
       }
   },
   mounted(){
-    // this.$axios.post('/app/my_files_list/', {
-    //   type: 0,
-    //   page: 1,
-    //   perpage: 5,
-    // }).then(res => {
-    //   this.list = res.data.list
-    // })
+    this.$axios.get('/app/my_files_list/', {
+      params: {
+        type: 0,
+        page: 1,
+        perpage: 5,
+      },
+      // headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    })
+        .then(res => {
+          console.log(res)
+      this.list = res.data.documentList
+    })
   }
 };
 </script>

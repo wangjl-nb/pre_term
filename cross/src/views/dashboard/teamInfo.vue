@@ -226,18 +226,18 @@ export default {
    /// 获取团队信息
      this.$axios.post('/app/team_info/',
               this.qs.stringify({
-                id: that.teamId,
+                team_id: that.teamId,
               }),
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
                 console.log(res)
                 that.name=res.data.name
-                that.img=res.data.icon
+                that.img= '/media/' + res.data.icon
                 that.type=res.data.type
                 that.teamInfo=res.data.discribe
                 that.author.id=res.data.u_id
-                that.author.img=res.data.u_icon
-                that.author.name==res.data.u_username
+                that.author.img= '/media/' + res.data.u_icon
+                that.author.name=res.data.u_username
                 that.userItem=res.data.list
                 //权限按钮显示？？？
                 that.create_data=res.data.create_date
@@ -246,7 +246,7 @@ export default {
     //获取团队文档信息
        this.$axios.get('/app/team_files_list',{
                 params:{
-                   id: that.teamId,
+                   team_id: that.teamId,
                 }
               }     ,
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
