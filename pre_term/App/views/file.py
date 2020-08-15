@@ -15,27 +15,6 @@ from App.models import *
 from App.views_helper import send_email_activate
 
 
-# 修改文件
-def change_file(request, file_id):
-    if request.method == 'GET':
-        file = File.objects.get(pk=file_id)
-        return render(request, 'file/change_file.html', context={'file': file})
-    elif request.method == 'POST':
-        file = File.objects.get(pk=file_id)
-        content = request.POST.get('content')
-        title = request.POST.get('title')
-        file.title = title
-        file.content = content
-        file.save()
-
-        file_log = File_log()
-        file_log.file = file
-        file_log.user = request.user
-        file_log.save()
-
-        return redirect(reverse('app:file_info', args={file.id}))
-
-
 # 个人文档列表
 def my_files_list(request):
     type = int(request.GET['type'])
@@ -99,6 +78,25 @@ def file_info(request, file_id):
         }
     return render(request, 'file/file_info.html', context=data)
 
+
+# def file_info(request):
+#     try:
+#         id = int(request.GET['id'])
+#         file = File.objects.get(pk=id)
+#         if file.is_delete == True:
+#             data = {
+#                 'msg':'文件已被删除'
+#             }
+#         else:
+#             data = {
+#                 'msg': '文件获取成功',
+#                 'file_content': file.content
+#             }
+#     except:
+#         data = {
+#             'msg':'文件获取失败',
+#         }
+#     return JsonResponse(data = data)
 
 # 文件删除
 def delete_file(request):
@@ -178,12 +176,12 @@ def recover_file(request, file_id):
 def destroy_file(request):
     try:
         ids = json.loads(request.body)["ids"]
-        res=[]
+        res = []
         for id in ids:
             delete_date.objects.filter(file_id=id).delete()
             file = File.objects.get(pk=id)
             file.delete()
-        return JsonResponse(data={"msg": "彻底删除文档", "status" : 0})
+        return JsonResponse(data={"msg": "彻底删除文档", "status": 0})
     except:
         return JsonResponse(data={"msg": "文档删除失败", "status": 1})
 
@@ -273,10 +271,10 @@ def grade_templetes(request):
 # 新建文档
 def create_file(request):
     try:
-        templete_id = int(request.POST.get('templete_id',0))
+        templete_id = int(request.POST.get('templete_id', 0))
         title = request.POST['title']
         content = request.POST['content']
-        team_id = int(request.POST.get('team_id',0))
+        team_id = int(request.POST.get('team_id', 0))
         if templete_id == 0 and team_id == 0:
             file = File()
             file.creator = request.user.u_username
@@ -398,3 +396,143 @@ def grant_power(request):
             'status': 1
         }
     return JsonResponse(data=data)
+
+
+def set_is_share(request):
+    try:
+        id = int(request.GET['id'])
+        type = int(request.GET['type'])
+        file = File.objects.get(pk=id)
+        if type == 0:
+            file.is_share = True
+            file.save()
+            data = {'msg': '开启分享权限', 'status': 0}
+        elif type == 1:
+            file.is_share = False
+            file.save()
+            data = {'msg': '关闭分享权限', 'status': 0}
+        else:
+            data = {
+                'msg': 'wrong',
+                'status': 1
+            }
+    except:
+        data = {'msg': 'wrong', 'status': 1}
+    return JsonResponse(data=data)
+
+
+def cooperate_invitation(request):
+    try:
+        file_id = int(request.POST['id'])
+        user_id = int(request.POST['u_id'])
+        reason = request.POST['reason']
+        personal_record = Personal_record.objects.filter(files_id=file_id).filter(user_id=user_id)
+        if personal_record.exists():
+            data = {
+                'msg': '该用户已是该文档的协作者',
+                'status': 1
+            }
+            return JsonResponse(data=data)
+        invite = Cooperate_invitation.objects.filter(user_id=user_id).filter(file_id=file_id)
+        if invite.exists():
+            data = {
+                'msg': '对不起，你已邀请该用户，请耐心等待',
+                'status': 1
+            }
+            return JsonResponse(data=data)
+        invite = Cooperate_invitation()
+        invite.user_id = user_id
+        invite.file_id = file_id
+        invite.reason = reason
+        invite.save()
+        data = {
+            'msg': '邀请成功！',
+            'status': 0
+        }
+    except:
+        data = {
+            'msg': 'wrong',
+            'status': 1
+        }
+    return JsonResponse(data=data)
+
+
+def coinvitation_list(request):
+    try:
+        cooperate_invitations = Cooperate_invitation.objects.filter(user=request.user)
+        res = []
+        for cooperate_invitation in cooperate_invitations:
+            file = File.objects.get(pk=cooperate_invitation.file_id)
+            user = User.objects.filter(personal_record__files=file).filter(personal_record__is_creator=True).first()
+            dic = {
+                "id": cooperate_invitation.id,
+                "name": user.u_username,
+                "title": file.title,
+                "reason": cooperate_invitation.reason
+            }
+            res.append(dic)
+        data = {
+            'msg': '查看成功',
+            'list': res
+        }
+    except:
+        data = {
+            'msg': '查看失败'
+        }
+    return JsonResponse(data=data)
+
+
+def process_coinvitation(request):
+    try:
+        invitation_id = request.POST.get('id')
+        invitation = Cooperate_invitation.objects.get(pk=invitation_id)
+        type = int(request.POST['type'])
+        if type == 0:
+            personal_record = Personal_record()
+            personal_record.user_id = invitation.user_id
+            personal_record.files_id = invitation.file_id
+            personal_record.is_creator = False
+            personal_record.save()
+            invitation.delete()
+            data = {
+                "msg": "已接受邀请",
+                'status': 0
+            }
+        elif type == 1:
+            data = {
+                "msg": "已拒绝邀请",
+                'status': 0
+            }
+            invitation.delete()
+        else:
+            data = {
+                'msg': '请输入0或1',
+                'status': 1
+            }
+    except:
+        data = {
+            'msg': 'wrong',
+            'status': 1
+        }
+    return JsonResponse(data=data)
+
+
+# 修改文件
+def change_file(request):
+    try:
+        id = request.POST.get('id')
+        file = File.objects.get(pk=id)
+        content = request.POST.get('content')
+        title = request.POST.get('title')
+        file.title = title
+        file.content = content
+        file.save()
+
+        file_log = File_log()
+        file_log.file = file
+        file_log.user = request.user
+        file_log.save()
+
+        return JsonResponse(data={"msg": "修改成功", "status": 0})
+    except:
+        return JsonResponse(data={"msg": "修改失败", "status": 1})

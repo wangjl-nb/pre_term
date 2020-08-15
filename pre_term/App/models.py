@@ -163,3 +163,11 @@ class Team_invitation(models.Model):
         db_table = 'team_invitation'
 
 
+class Cooperate_invitation(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    file = models.ForeignKey(File, on_delete=CASCADE)
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    reason = models.TextField(default='我想邀请你成为协作者')
+
+    class Meta:
+        db_table = 'cooperate_invitation'

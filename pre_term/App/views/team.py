@@ -100,44 +100,6 @@ def dismiss_team(request):
         return JsonResponse(data={"msg": "解散失败", "status": 1})
 
 
-def create_team(request):
-    if request.method == 'GET':
-
-        data = {
-            "title": "创建团队",
-        }
-
-        return render(request, 'team/create_team.html', context=data)
-
-    elif request.method == 'POST':
-
-        name = request.POST.get("teamname")
-        tteam = Team.objects.filter(name=name)
-        if tteam.exists():
-            return HttpResponse('团队名已存在')
-        else:
-            describe = request.POST.get("describe")
-            icon = request.FILES.get("icon")
-            if icon == None:
-                icon = "suoluetubig.jpg"
-            team = Team()
-            team.name = name
-            team.describe = describe
-            team.icon = icon
-            team.save()
-            team_relation = Team_relation()
-            team_relation.user = request.user
-            team_relation.team = team
-            team_relation.level = 2
-            team_relation.change = True
-            team_relation.comment = True
-            team_relation.save()
-            team_relations = Team_relation.objects.filter(team_id=team.id)
-            level = team_relations.filter(user=request.user).first().level
-            return render(request, 'team/teaminfo.html',
-                          context={'team': team, 'team_relations': team_relations, 'level': level})
-
-
 def team_search(request):
     content = request.POST.get('key')
     teams = Team.objects.filter(Q(name__icontains=content) | Q(describe__icontains=content))
@@ -542,3 +504,105 @@ def process_application(request):
                 'status': 1
             }
     return JsonResponse(data=data)
+
+#修改团队头像
+def change_team_icon(request):
+    try:
+        icon = request.FILES.get('icon')
+        team_id = int(request.POST['team_id'])
+        team = Team.objects.get(pk=team_id)
+        team.icon = icon
+        team.save()
+
+        data = {
+            'msg':'修改成功',
+            'status':0
+        }
+    except:
+        data = {
+            'msg':'修改失败',
+            'status':1
+        }
+    return JsonResponse(data=data)
+
+def grant_team_power(request):
+    try:
+        u_id = int(request.GET['u_id'])
+        team_id = int(request.GET['team_id'])
+        comment = int(request.GET['comment'])
+        change = int(request.GET['change'])
+        team_relation = Team_relation.objects.filter(team_id=team_id).filter(user_id=u_id).first()
+        if comment == 0:
+            team_relation.comment = True
+            team_relation.save()
+        elif comment == 1:
+            team_relation.comment = False
+            team_relation.save()
+        else:
+            data = {
+                'msg': '设置评论权限失败'
+            }
+            return JsonResponse(data=data)
+        if change == 0:
+            team_relation.change = True
+            team_relation.save()
+        elif change == 1:
+            team_relation.change = False
+            team_relation.save()
+        else:
+            data = {
+                'msg': '设置修改权限失败'
+            }
+            return JsonResponse(data=data)
+        data = {
+            'msg': '设置成功',
+            'status': 0
+        }
+    except:
+        data = {
+            'msg':'设置失败',
+            'status':1
+        }
+    return JsonResponse(data=data)
+
+def create_team(request):
+    try:
+        name = request.POST.get("name")
+        tteam = Team.objects.filter(name=name)
+        if tteam.exists():
+            data = {
+                'msg':'团队名重复',
+                'status':1,
+                'id':0
+            }
+            return JsonResponse(data=data)
+        else:
+            describe = request.POST.get("describe")
+            icon = request.FILES.get("icon")
+            if icon == None:
+                icon = "suoluetubig.jpg"
+            team = Team()
+            team.name = name
+            team.describe = describe
+            team.icon = icon
+            team.save()
+            team_relation = Team_relation()
+            team_relation.user = request.user
+            team_relation.team = team
+            team_relation.level = 2
+            team_relation.change = True
+            team_relation.comment = True
+            team_relation.save()
+            data = {
+                'msg':'创建成功',
+                'status':0,
+                'id':0
+            }
+    except:
+        data = {
+            'msg':'wrong',
+            'status':1,
+            'id':0
+        }
+    return JsonResponse(data=data)
+

@@ -136,18 +136,22 @@ def change_password(request):
 
 # 收藏文件
 def deal_collect(request):
-    user = request.user
-    file_id = request.GET['file_id']
-    print(file_id)
-    personal_collections = Personal_collection.objects.filter(user=user).filter(file_id=file_id)
-    if personal_collections.exists():
-        return JsonResponse(data={"msg": "已收藏"})
-    else:
-        personal_collections = Personal_collection()
-        personal_collections.user = user
-        personal_collections.file_id = file_id
-        personal_collections.save()
-        return JsonResponse(data={"msg": "收藏成功"})
+    try:
+        user = request.user
+        file_id = request.GET['id']
+        personal_collections = Personal_collection.objects.filter(user=user).filter(file_id=file_id)
+        if personal_collections.exists():
+            data = {'msg': '已收藏', 'status': 1}
+        else:
+            personal_collections = Personal_collection()
+            personal_collections.user = user
+            personal_collections.file_id = file_id
+            personal_collections.save()
+            data = {'msg': '收藏成功', 'status': 0}
+    except:
+        data = {'msg':'收藏失败','status':1}
+    return JsonResponse(data=data)
+
 
 
 # 修改用户名
