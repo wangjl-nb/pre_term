@@ -148,10 +148,22 @@ def file_log(request):
 
 
 # 垃圾箱（回收站）
-def delete_files_list(request):
+def personal_delete_files(request):
     user = request.user
-    delete_files = File.objects.filter(personal_record__user=user).filter(is_delete=True)
-    return render(request, 'file/delete_files_list.html', context={'delete_files': delete_files})
+    delete_files = File.objects.filter(Q(personal_record__user=user) & Q(personal_record__is_creator=True)).filter(
+        is_delete=True)
+    res = []
+    for file in delete_files:
+        end_date = delete_date.objects.filter(file=file).first().date
+        dic = {
+            "id": file.id,
+            "title": file.title,
+            "create_date": file.create_date,
+            "delete_date": end_date,
+        }
+        res.append(dic)
+    data = {"msg": "个人回收站列表", "list": res}
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
 # 恢复文档
@@ -164,10 +176,16 @@ def recover_file(request, file_id):
 
 # 文档彻底删除
 def destroy_file(request):
-    file_id = request.GET.get('file_id')
-    file = File.objects.get(pk=file_id)
-    file.delete()
-    return redirect(reverse('app:delete_files_list'))
+    try:
+        ids = json.loads(request.body)["ids"]
+        res=[]
+        for id in ids:
+            delete_date.objects.filter(file_id=id).delete()
+            file = File.objects.get(pk=id)
+            file.delete()
+        return JsonResponse(data={"msg": "彻底删除文档", "status" : 0})
+    except:
+        return JsonResponse(data={"msg": "文档删除失败", "status": 1})
 
 
 # 团队文档建立
@@ -255,10 +273,10 @@ def grade_templetes(request):
 # 新建文档
 def create_file(request):
     try:
-        templete_id = int(request.POST['templete_id'])
+        templete_id = int(request.POST.get('templete_id',0))
         title = request.POST['title']
         content = request.POST['content']
-        team_id = int(request.POST['team_id'])
+        team_id = int(request.POST.get('team_id',0))
         if templete_id == 0 and team_id == 0:
             file = File()
             file.creator = request.user.u_username

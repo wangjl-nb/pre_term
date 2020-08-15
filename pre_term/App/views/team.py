@@ -90,11 +90,14 @@ def team_info(request):
     return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
-def dissmiss_team(request):
-    team_id = request.GET['team_id']
-    team = Team.objects.get(pk=team_id)
-    team.delete()
-    return HttpResponse('解散成功')
+def dismiss_team(request):
+    try:
+        team_id = request.POST['id']
+        team = Team.objects.get(pk=team_id)
+        team.delete()
+        return JsonResponse(data={"msg": "解散成功", "status": 0})
+    except:
+        return JsonResponse(data={"msg": "解散失败", "status": 1})
 
 
 def create_team(request):
@@ -148,50 +151,10 @@ def team_search(request):
     return JsonResponse(data=data)
 
 
-def team_application(request):
-    team_id = request.GET['team_id']
-    user_id = request.user.id
-    relation = Team_relation.objects.filter(user_id=user_id).filter(team_id=team_id)
-    if relation.exists():
-        return HttpResponse('您已加入团队')
-    apply = Team_application.objects.filter(user_id=user_id).filter(team_id=team_id)
-    if apply.exists():
-        return HttpResponse('对不起，你已申请该团队，请耐心等待')
-    else:
-        apply = Team_application()
-        apply.team_id = team_id
-        apply.user_id = user_id
-        apply.save()
-    return HttpResponse('申请成功！')
-
-
 def deal_application(request):
     team_id = request.GET.get('team_id')
     applications = Team_application.objects.filter(team_id=team_id)
     return render(request, 'team/deal_application.html', context={'applications': applications})
-
-
-def process_application(request):
-    apply_id = request.GET.get('applyid')
-    application = Team_application.objects.get(pk=apply_id)
-    if request.GET.get('type') == 'agree':
-        team = Team.objects.get(pk=application.team_id)
-        team.number_num = team.number_num + 1
-        team.save()
-        team_relation = Team_relation()
-        team_relation.level = 1
-        team_relation.team = team
-        team_relation.user = application.user
-        team_relation.save()
-        data = {
-            "msg": "add success",
-        }
-    else:
-        data = {
-            "msg": "refuse success",
-        }
-    application.delete()
-    return JsonResponse(data=data)
 
 
 def deal_change(request):
@@ -294,23 +257,6 @@ def deal_share(request):
     return JsonResponse(data={"msg": "修改文档分享权限成功"})
 
 
-# 发送邀请加入团队
-def team_invitation(request):
-    team_id = request.GET['team_id']
-    user_id = request.GET['user_id']
-    relation = Team_relation.objects.filter(user_id=user_id).filter(team_id=team_id)
-    if relation.exists():
-        return HttpResponse('该用户已加入团队')
-    invite = Team_application.objects.filter(user_id=user_id).filter(team_id=team_id)
-    if invite.exists():
-        return HttpResponse('对不起，你已邀请该用户，请耐心等待')
-    else:
-        invite = Team_invitation()
-        invite.user_id = user_id
-        invite.team_id = team_id
-        invite.save()
-    return HttpResponse('邀请成功！')
-
 
 # 踢出成员
 def kick(request):
@@ -331,29 +277,6 @@ def kick(request):
         return JsonResponse(data={"msg": "踢出成员失败", "status": 1})
 
 
-# 处理邀请
-def process_invitation(request):
-    invite_id = request.GET.get('inviteid')
-    invitation = Team_invitation.objects.get(pk=invite_id)
-    if request.GET.get('type') == 'agree':
-        team = Team.objects.get(pk=invitation.team_id)
-        team.number_num = team.number_num + 1
-        team.save()
-        team_relation = Team_relation()
-        team_relation.level = 1
-        team_relation.team = team
-        team_relation.user = invitation.user
-        team_relation.save()
-        data = {
-            "msg": "add success",
-        }
-    else:
-        data = {
-            "msg": "refuse success",
-        }
-    invitation.delete()
-    return JsonResponse(data=data)
-
 
 def exit_team(request):
     try:
@@ -373,18 +296,25 @@ def my_teams(request):
     user = request.user
     teams = Team.objects.filter(team_relation__user=user)
     if teams.exists:
-        ids = []
+        res = []
         for team in teams:
-            ids.append(team.id)
+            level = Team_relation.objects.filter(team=team).filter(user=user).first().level
+            dic = {
+                "id": team.id,
+                "name": team.name,
+                "description": str(team.describe),
+                "level": str(level),
+            }
+            res.append(dic)
         data = {
             'msg': '我加入的团队',
-            'ids': ids
+            'teams': res,
         }
     else:
         data = {
             'msg': '没有加入任何团队'
         }
-    return JsonResponse(data=data)
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
 def change_teamname(request):
@@ -421,4 +351,194 @@ def change_team_describe(request):
             "msg": "修改失败",
             "status": 1,
         }
+    return JsonResponse(data=data)
+
+# 发送邀请加入团队
+def team_invitation(request):
+    try:
+        team_id = int(request.POST['team_id'])
+        user_id = int(request.POST['user_id'])
+        reason = request.POST['reason']
+        team = Team.objects.get(pk=team_id)
+        relation = Team_relation.objects.filter(user_id=user_id).filter(team_id=team_id)
+        if relation.exists():
+            data = {
+                'msg': '该用户已加入团队',
+                'status': 1
+            }
+            return JsonResponse(data=data)
+        invite = Team_invitation.objects.filter(user_id=user_id).filter(team_id=team_id)
+        if invite.exists():
+            data = {
+                'msg': '对不起，你已邀请该用户，请耐心等待',
+                'status': 1
+            }
+            return JsonResponse(data=data)
+        invite = Team_invitation()
+        invite.user_id = user_id
+        invite.team_id = team_id
+        invite.reason = reason
+        invite.save()
+        data = {
+            'msg': '邀请成功！',
+            'status': 0
+        }
+    except:
+        data = {
+            'msg':'wrong',
+            'status':1
+        }
+    return JsonResponse(data=data)
+
+#查看邀请
+def invitation_list(request):
+    try:
+        team_invitations = Team_invitation.objects.filter(user=request.user)
+        res = []
+        for team_invitation in team_invitations:
+            team = Team.objects.get(pk=team_invitation.team_id)
+            user = User.objects.filter(team_relation__team=team).filter(team_relation__level=2).first()
+            dic = {
+                "invitation_id":team_invitation.id,
+                "u_username":user.u_username,
+                "name":team.name,
+                "reason":team_invitation.reason
+            }
+            res.append(dic)
+        data = {
+            'msg':'查看成功',
+            'list':res
+        }
+    except:
+        data = {
+            'msg':'查看失败'
+        }
+    return JsonResponse(data=data)
+
+# 处理邀请
+def process_invitation(request):
+    try:
+        invitation_id = request.POST.get('id')
+        invitation = Team_invitation.objects.get(pk=invitation_id)
+        type = int(request.POST['type'])
+        if type == 0:
+            team = Team.objects.get(pk=invitation.team_id)
+            team.number_num = team.number_num + 1
+            team.save()
+            team_relation = Team_relation()
+            team_relation.level = 1
+            team_relation.team = team
+            team_relation.user = invitation.user
+            team_relation.save()
+            invitation.delete()
+            data = {
+                "msg": "已接受邀请",
+                'status': 0
+            }
+        elif type == 1:
+            data = {
+                "msg": "已拒绝邀请",
+                'status': 0
+            }
+            invitation.delete()
+        else:
+            data = {
+                'msg': '请输入0或1',
+                'status': 1
+            }
+    except:
+        data = {
+                'msg': 'wrong',
+                'status': 1
+            }
+    return JsonResponse(data=data)
+
+
+#发送申请
+def team_application(request):
+    try:
+        team_id = request.POST['id']
+        user_id = request.user.id
+        reason = request.POST['reason']
+        relation = Team_relation.objects.filter(user_id=user_id).filter(team_id=team_id)
+        if relation.exists():
+            return JsonResponse(data={"msg": "您已是成员", "status": 1})
+        apply = Team_application.objects.filter(user_id=user_id).filter(team_id=team_id)
+        if apply.exists():
+            return JsonResponse(data={"msg": "您已发送申请", "status": 1})
+        else:
+            apply = Team_application()
+            apply.team_id = team_id
+            apply.user_id = user_id
+            apply.reason = reason
+            apply.save()
+        return JsonResponse(data={"msg": "申请成功", "status": 0})
+    except:
+        return JsonResponse(data={"msg": "发生了未知错误", "status": 1})
+
+
+#查看申请
+def application_list(request):
+    try:
+        team_id = int(request.GET['team_id'])
+        team_applications = Team_application.objects.filter(team_id=team_id)
+        res = []
+        for team_application in team_applications:
+            user = User.objects.get(pk=team_application.user_id)
+            dic = {
+                "application_id":team_application.id,
+                "u_username":user.u_username,
+                "reason":team_application.reason
+            }
+            res.append(dic)
+        data = {
+            'msg':'查看成功',
+            'status':0,
+            'list':res
+        }
+    except:
+        data = {
+            'msg':'查看失败',
+            'status':1
+        }
+    return JsonResponse(data=data)
+
+#处理申请
+def process_application(request):
+    try:
+        application_id = request.POST.get('id')
+        print(application_id)
+        application = Team_application.objects.get(pk=application_id)
+        print(application)
+        type = int(request.POST['type'])
+        if type == 0:
+            team = Team.objects.get(pk=application.team_id)
+            team.number_num = team.number_num + 1
+            team.save()
+            team_relation = Team_relation()
+            team_relation.level = 1
+            team_relation.team = team
+            team_relation.user = application.user
+            team_relation.save()
+            application.delete()
+            data = {
+                "msg": "已同意申请",
+                'status': 0
+            }
+        elif type == 1:
+            data = {
+                "msg": "已拒绝申请",
+                'status': 0
+            }
+            application.delete()
+        else:
+            data = {
+                'msg': '请输入0或1',
+                'status': 1
+            }
+    except:
+        data = {
+                'msg': 'wrong',
+                'status': 1
+            }
     return JsonResponse(data=data)
