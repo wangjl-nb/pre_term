@@ -165,11 +165,18 @@ def personal_delete_files(request):
 
 
 # 恢复文档
-def recover_file(request, file_id):
-    file = File.objects.get(pk=file_id)
-    file.is_delete = False
-    file.save()
-    return redirect(reverse('app:delete_files_list'))
+def recover_file(request):
+    try:
+        ids = json.loads(request.body)["ids"]
+        res = []
+        for id in ids:
+            delete_date.objects.filter(file_id=id).delete()
+            file = File.objects.get(pk=id)
+            file.is_delete = False
+            file.save()
+        return JsonResponse(data={"msg": "文档恢复成功", "status": 0})
+    except:
+        return JsonResponse(data={"msg": "文档恢复失败", "status": 1})
 
 
 # 文档彻底删除

@@ -29,18 +29,6 @@ def add_team(request):
     return JsonResponse(data={'code': 'ok'})
 
 
-# 加入团队
-def teams_show(request):
-    user = request.user
-    teams = Team.objects.filter(team_relation__user=user).order_by('-id')
-    page = int(request.GET.get("page", 1))
-    perpage = int(request.GET.get('perpage', 10))
-    paginator = Paginator(teams, perpage)
-
-    page_object = paginator.page(page)
-    data = {'msg': '团队信息', 'teams': page_object, "page_range": paginator.page_range}
-    return render(request, 'team/team_search.html', context=data)
-
 
 # 团队信息展示
 def team_info(request):
