@@ -1,31 +1,34 @@
 <template>
   <div class="Manage">
-    <el-col :span="4"> 
+    <el-col :span="4">
       <el-menu
         :default-active="activeIndex"
         class="el-menu-vertical-demo"
         @select="handleSelect"
         router
         background-color="#ffffff "
-        text-color="#24292e" 
+        text-color="#24292e"
       >
+        <span style="margin: 30px">
+              <img src="../assets/logo/logo01_small.png" style="width:6em;height:4em">
+        </span>
         <el-menu-item-group >
-          <template slot="title"> 
+          <template slot="title">
+
             <span>
-              <img src="http://www.diyiziti.com/Res/Images//Temp/427/0fe585ae15824c298a4d979a2d235df5.PNG" style="width:150px;margin-left:-45px;margin-top:30px">
-               <el-popover
-  placement="right"
-  width="10"  
-  trigger="hover">
-  <el-button @click="zhuxiao">注销</el-button>
-  <el-button slot="reference" type="text"> <el-image
-                        style="width: 70px; height: 70px; border-radius: 50%;"
-                        :src="jpg"
-                        :fit="fits">
-                    </el-image>
-                    </el-button>
-</el-popover>
-       
+                <el-popover
+                placement="right"
+                width="10"
+                trigger="hover">
+                <el-button @click="zhuxiao">注销</el-button>
+                <el-button slot="reference" type="text"> <el-image
+                                      style="width: 70px; height: 70px; border-radius: 50%;"
+                                      :src="jpg"
+                                      :fit="fits">
+                                  </el-image>
+                                  </el-button>
+                </el-popover>
+
             </span>
             </template
           >
@@ -54,7 +57,7 @@
       <router-view></router-view>
     </el-col>
   </div>
-</template> 
+</template>
 
 <script>
 /* eslint-disable */
@@ -86,9 +89,9 @@
 
 <style scoped>
 .el-menu-item.is-active {
-  position:relative; 
+  position:relative;
   left:'-20px';
-　　text-color:#aa67aa  !important; 
+　　text-color:#aa67aa  !important;
    background-image: linear-gradient(to right, #aa67aa, #1682dc) !important;
         -webkit-background-clip: text;
         color: transparent;

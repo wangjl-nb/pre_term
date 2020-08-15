@@ -1,29 +1,25 @@
 <template>
   <div>
+    <el-header style="height: 130px"></el-header>
+    <el-main>
     <el-row :gutter="20">
-      <el-col :span="24">
-        <img :src="img" />
+      <el-col :span="11" style="height: 18em;text-align: right">
+        <img src="../assets/logo/logo01.png" style="width:35em;height:25em">
       </el-col>
-      <el-col :span="4"><div class="grid-content"></div></el-col>
-      <el-col :span="16"> <img alt="Vue logo" style="width:920px;height:230px" src="http://www.diyiziti.com/Res/Images//Temp/119/3fac3f9573a04bc28c4d5525ca1a7097.PNG" /></el-col>
-      <el-col :span="4"><div class="grid-content"></div></el-col>
-      <el-col :span="12" :offset="6">
+      <el-col :span="6" >
         <div class="grid-content">
             <!--card-->
             <el-card class="box-card" style="margin:0px auto; top:50%">
               <div slot="header" class="clearfix">
                 <div>
-                  <h1 class="change-color" style="font-weight:lighter ">
-                    <li>
+                  <h1 class="change-color" style="font-weight:lighter;font-size: 25px" >
                       <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
                         <use xlink:href="#icon-rengongzhinengjiqiren"></use>
                       </svg>
                       登录
-                    </li>
                   </h1>
                 </div>
               </div>
-              <!--form-->
               <div>
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="70px" class="demo-ruleForm">
                   <el-form-item label="用户名" prop="username">
@@ -42,6 +38,8 @@
         </div>
       </el-col>
     </el-row>
+    </el-main>
+    <el-footer></el-footer>
   </div>
 </template>
 <script>

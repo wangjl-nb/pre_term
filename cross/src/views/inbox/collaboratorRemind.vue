@@ -5,7 +5,7 @@
           <li>
               <el-card class="box-card" shadow="hover">
                      <div class="flex flex6" >
-                        <p style="flex-grow:13"><strong style="font-size:20px">{{item.author}}</strong> <span>邀请您加入</span><strong style="font-size:20x">{{item.team}}</strong></p>
+                        <p style="flex-grow:13"><strong style="font-size:20px">{{item.author}}</strong> <span>邀请您成为</span><strong style="font-size:20x">{{item.team}}</strong>的协作者</p>
                         <el-button style="flex-grow:1" plain @click="argee(item.id)">同意</el-button>
                         <el-button style="flex-grow:1" type="danger" plain  @click="refuse(item.id)">拒绝</el-button>
                      </div>
@@ -53,19 +53,19 @@ export default {
   },
   methods:{
       argee(id){
-        this.$axios.post('/app/process_application/',this.qs.stringify({id:id, type:0
+        this.$axios.post('/app/coinvitation_list/',this.qs.stringify({id:id, type:0
         }),{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => {
             if(res.data.status === 0){
-              alert("加入团队成功！")
+              alert("协作者加入成功！")
             }
             else{
-              alert("加入团队失败！")
+              alert("协作者加入失败！")
             }
         })
         // this.aa=id
       },
       refuse(id){
-        this.$axios.post('/app/process_application/',this.qs.stringify({id:id, type:1
+        this.$axios.post('/app/coinvitation_list/',this.qs.stringify({id:id, type:1
         }),{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => {
           if(res.data.status === 0){
             alert("拒绝消息成功！")
