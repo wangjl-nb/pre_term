@@ -1,138 +1,6 @@
 <template>
   <el-container class="router" style="position:relative">
-
-    <el-header style="background:#fafbfc;height:150px;padding-top:30px;position:relative">
-      <div v-show="type==0" style="position:absolute;top:10px;z-index:1000000;width:40%;right:0px">
-        <ul v-for="(item,index) in teamRemind" :key="index">
-          <li>
-            <el-card class="box-card" shadow="hover">
-              <div>
-                <p style="flex-grow:13"><strong style="font-size:20px">{{ item.u_username }}</strong>
-                  <span>申请加入团队</span></p>
-              </div>
-              <div>
-
-              </div>
-              <el-divider content-position="right">
-                申请理由
-                <el-button style="flex-grow:1;margin-left:20px" plain
-                           @click="manageTeamRemind(index,item.application_id,0)">同意
-                </el-button>
-                <el-button style="flex-grow:1" type="danger" plain
-                           @click="manageTeamRemind(index,item.application_id,1)">拒绝
-                </el-button>
-              </el-divider>
-              <div>
-                <el-row style="margin-bottom:-10px;margin-top:-10px">
-                  <el-col :span="2">
-                    <div class="grid-content"></div>
-                  </el-col>
-                  <el-col :span="20">
-                    <div class="grid-content"><p>{{ item.reason }}</p></div>
-                  </el-col>
-                  <el-col :span="2">
-                    <div class="grid-content"></div>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-card>
-          </li>
-        </ul>
-      </div>
-      <div class="flex flex6">
-        <div style="">
-          <el-image
-              style="width: 70px; height: 70px; border-radius: 50%;"
-              :src="jpg"
-              :fit="fits">
-          </el-image>
-        </div>
-        <div style="margin-left:20px;margin-right:30px">
-          <h1 class="change-color" style="font-weight:lighter "><i>{{ name }}</i></h1>
-        </div>
-        <el-button plain v-show="type==0" @click="drawer = true">管理成员</el-button>
-        <el-button type="danger" plain v-show="type==0" @click="dispose()">解散团队</el-button>
-        <el-button plain v-show="type==2" @click="join()">加入团队</el-button>
-        <el-button type="danger" v-show="type==1" plain @click="out()">退出团队</el-button>
-        <el-button type="primary" v-show="type==0" plain @click="changeTeamIcon()">修改团队头像</el-button>
-        <el-button type="warning" v-show="type==0" plain @click="changeTeamName()">修改团队名称</el-button>
-        <el-button type="primary" v-show="type==0" plain @click="dialogTableVisible=true"
-                   style="background-color: #d7d557;">修改团队描述
-        </el-button>
-      </div>
-
-    </el-header>
-    <el-container>
-      <el-container>
-        <el-main>
-          <show-documents :list="list"></show-documents>
-        </el-main>
-        <el-aside width="200px">
-          <create-document :teamId="teamId"></create-document>
-        </el-aside>
-      </el-container>
-      <el-footer>
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>README</span>
-            <el-dialog title="修改团队描述" :visible.sync="dialogTableVisible" center :append-to-body='true'
-                       :lock-scroll="false" width="50%" @closed="handleClose">
-              <el-input
-                  type="textarea"
-                  :rows="5"
-                  autosize
-                  placeholder="请输入内容"
-                  v-model="editTeamInfo">
-              </el-input>
-              <el-button class="medium" style="margin-left:40%;position:relative;margin-top:30px" plain
-                         @click="submitedit(editTeamInfo)">提交修改
-              </el-button>
-            </el-dialog>
-
-            <el-dialog title="修改团队头像" :visible.sync="isChangeTeamIcon" center :append-to-body='true'
-                       :lock-scroll="false" width="50%" @closed="teamIconClose">
-              <el-upload ref="upload"
-									 action="#"
-									 accept="image/png,image/gif,image/jpg,image/jpeg"
-									 list-type="picture-card"
-									 :limit=1
-									 :auto-upload="false"
-									 :on-exceed="handleExceed"
-									 :before-upload="handleBeforeUpload"
-									 :on-preview="handlePictureCardPreview"
-									 :on-remove="handleRemove"
-									 :on-change="imgChange">
-					<i class="el-icon-plus"></i>
-				</el-upload>
-              <el-button class="medium" style="margin-left:40%;position:relative;margin-top:30px" plain
-                         @click="uploadFile">提交修改
-              </el-button>
-            </el-dialog>
-
-            <el-dialog title="修改团队名称" :visible.sync="isChangeTeamName" center :append-to-body='true'
-                       :lock-scroll="false" width="50%" @closed="teamNameClose">
-              <el-input
-                  type="textarea"
-                  :rows="5"
-                  autosize
-                  placeholder="请输入内容"
-                  v-model="newName">
-              </el-input>
-              <el-button class="medium" style="margin-left:40%;position:relative;margin-top:30px" plain
-                         @click="submitName(newName)">提交修改
-              </el-button>
-            </el-dialog>
-          </div>
-          <pre style="font-size:20px">
-    这里是团队信息
-    写下想说的话
-    {{ teamInfo }}
-  </pre>
-        </el-card>
-
-      </el-footer>
-    </el-container>
-    <el-drawer
+ <el-drawer
         title="我是标题"
         :visible.sync="drawer"
         direction="rtl"
@@ -217,6 +85,137 @@
 
       </div>
     </el-drawer>
+    <el-header style="background:#fafbfc;height:150px;padding-top:30px;position:relative">
+      <div v-show="type==0" style="position:absolute;top:10px;z-index:100;width:40%;right:0px">
+        <ul v-for="(item,index) in teamRemind" :key="index">
+          <li>
+            <el-card class="box-card" shadow="hover">
+              <div>
+                <p style="flex-grow:13"><strong style="font-size:20px">{{ item.u_username }}</strong>
+                  <span>申请加入团队</span></p>
+              </div>
+              <div>
+
+              </div>
+              <el-divider content-position="right">
+                申请理由
+                <el-button style="flex-grow:1;margin-left:20px" plain
+                           @click="manageTeamRemind(index,item.application_id,0)">同意
+                </el-button>
+                <el-button style="flex-grow:1" type="danger" plain
+                           @click="manageTeamRemind(index,item.application_id,1)">拒绝
+                </el-button>
+              </el-divider>
+              <div>
+                <el-row style="margin-bottom:-10px;margin-top:-10px">
+                  <el-col :span="2">
+                    <div class="grid-content"></div>
+                  </el-col>
+                  <el-col :span="20">
+                    <div class="grid-content"><p>{{ item.reason }}</p></div>
+                  </el-col>
+                  <el-col :span="2">
+                    <div class="grid-content"></div>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+          </li>
+        </ul>
+      </div>
+      <div class="flex flex6">
+        <div style="">
+          <el-image
+              style="width: 70px; height: 70px; border-radius: 50%;"
+              :src="jpg"
+              :fit="fits">
+          </el-image>
+        </div>
+        <div style="margin-left:20px;margin-right:30px">
+          <h1 class="change-color" style="font-weight:lighter "><i>{{ name }}</i></h1>
+        </div>
+        <el-button plain v-show="type==0" @click="drawer = true">管理成员</el-button>
+        <el-button type="danger" plain v-show="type==0" @click="dispose()">解散团队</el-button>
+        <el-button plain v-show="type==2" @click="join()">加入团队</el-button>
+        <el-button type="danger" v-show="type==1" plain @click="out()">退出团队</el-button>
+        <el-button type="primary" v-show="type==0" plain @click="changeTeamIcon()">修改团队头像</el-button>
+        <el-button type="warning" v-show="type==0" plain @click="changeTeamName()">修改团队名称</el-button>
+        <el-button type="primary" v-show="type==0" plain @click="dialogTableVisible=true"
+                   style="background-color: #ffc107;">修改团队描述
+        </el-button>
+      </div>
+
+    </el-header>
+    <el-container>
+      <el-container>
+        <el-main>
+          <show-documents :list="list"></show-documents>
+        </el-main>
+        <el-aside width="200px">
+          <create-document :teamId="teamId"></create-document>
+        </el-aside>
+      </el-container>
+      <el-footer>
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>README</span>
+            <el-dialog title="修改团队描述" :visible.sync="dialogTableVisible" center :append-to-body='true'
+                       :lock-scroll="false" width="50%" @closed="handleClose">
+              <el-input
+                  type="textarea"
+                  :rows="5"
+                  autosize
+                  placeholder="请输入内容"
+                  v-model="editTeamInfo">
+              </el-input>
+              <el-button class="medium" style="margin-left:40%;position:relative;margin-top:30px" plain
+                         @click="submitedit(editTeamInfo)">提交修改
+              </el-button>
+            </el-dialog>
+
+            <el-dialog title="修改团队头像" :visible.sync="isChangeTeamIcon" center :append-to-body='true'
+                       :lock-scroll="false" width="50%" @closed="teamIconClose">
+              <el-upload ref="upload"
+									 action="#"
+									 accept="image/png,image/gif,image/jpg,image/jpeg"
+									 list-type="picture-card"
+									 :limit=1
+									 :auto-upload="false"
+									 :on-exceed="handleExceed"
+									 :before-upload="handleBeforeUpload"
+									 :on-preview="handlePictureCardPreview"
+									 :on-remove="handleRemove"
+									 :on-change="imgChange">
+					<i class="el-icon-plus"></i>
+				</el-upload>
+              <el-button class="medium" style="margin-left:40%;position:relative;margin-top:30px" plain
+                         @click="uploadFile">提交修改
+              </el-button>
+            </el-dialog>
+
+            <el-dialog title="修改团队名称" :visible.sync="isChangeTeamName" center :append-to-body='true'
+                       :lock-scroll="false" width="50%" @closed="teamNameClose">
+              <el-input
+                  type="textarea"
+                  :rows="5"
+                  autosize
+                  placeholder="请输入内容"
+                  v-model="newName">
+              </el-input>
+              <el-button class="medium" style="margin-left:40%;position:relative;margin-top:30px" plain
+                         @click="submitName(newName)">提交修改
+              </el-button>
+            </el-dialog>
+          </div>
+          <pre style="font-size:20px">
+    这里是团队信息
+    写下想说的话
+    {{ teamInfo }}
+  </pre>
+        </el-card>
+
+      </el-footer>
+    </el-container>
   </el-container>
 </template>
 
@@ -285,11 +284,10 @@ export default {
       ],
       drawer: false,
       search: "",
-      list: [
-        {name: "jac324kff", id: 123243, author: "mala", create: "2020/2/2", edit: "2020/2/4"},
-        {name: "jac324kff", id: 123243, author: "mala", create: "2020/2/2", edit: "2020/2/4"},
-        {name: "jac324kff", id: 123243, author: "mala", create: "2020/2/2", edit: "2020/2/4"},
-      ],
+       list:  [{title:"jac324kff",id:123243,creator:"mala",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
+        {title:"jac432asdk",id:12322342,creator:"masla",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
+        {title:"jac423sdak",id:12324332,creator:"malsa",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"}
+        ],
       teamRemind: [
         {application_id: 12331, u_username: "你太厉害", reason: "你太厉害了！！！"},
         {application_id: 12331, u_username: "叽叽喳喳害", reason: "你太厉害了！！！"},
@@ -573,13 +571,19 @@ export default {
 				})
 			},
 		handleExceed (files, fileList) {
-
+      //防报错
+      this.aa=files
+      this.aa=fileList
 			},
 		handleRemove (file, fileList) {
 				this.hideUpload = fileList.length >= this.limitNum;
-
+ //防报错
+      this.aa=file
+      this.aa=fileList
 			},
 		handlePictureCardPreview (file) {
+       //防报错
+      this.aa=file
 				// this.dialogImageUrl = file.url;
 				// this.dialogVisible = true;
 			},
@@ -588,6 +592,8 @@ export default {
         this.isChangeTeamIcon = false
 			},
 		imgChange (files, fileList) {
+       //防报错
+      this.aa=files
 				this.hideUpload = fileList.length >= this.limitNum;
 				if (fileList) {
 					this.$refs.uploadElement.clearValidate();

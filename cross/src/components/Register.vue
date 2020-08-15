@@ -109,7 +109,8 @@
           pass: '',
           checkPass: '',
           username: '',
-          email: ''
+          email: '',
+          u_icon:"https://p1.ssl.qhimgs1.com/sdr/400__/t0160546366d509d2eb.jpg" 
         },
         rules: {
           pass: [
@@ -132,7 +133,26 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+               this.$axios.post('/app/login/',
+              this.qs.stringify({
+                u_username: this.ruleForm.username,
+                u_password: this.ruleForm.pass,
+                u_email:this.ruleForm.email,
+                u_icon:this.ruleForm.u_icon
+                }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                 if (res.data.status ===0) {
+                   this.$message({
+          message: '注册成功',
+          type: 'success'
+        })
+                 }
+                 else{
+                   this.$message.error('注册失败');
+                 }
+              })
               this.$router.push({path:"/login"})
           } else {
             console.log('error submit!!');

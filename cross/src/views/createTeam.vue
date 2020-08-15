@@ -51,10 +51,11 @@ export default {
         this.$refs[formName].validate((valid) => {
           if (valid) {
                   //21 创建团队
-     this.$axios.post('',
+     this.$axios.post('/app/create_team/',
               this.qs.stringify({
                 name:this.ruleForm.name,
-                discribe:this.ruleForm.desc
+                discribe:this.ruleForm.desc,
+                icon:"https://p1.ssl.qhimgs1.com/sdr/400__/t0160546366d509d2eb.jpg" 
               }),
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
