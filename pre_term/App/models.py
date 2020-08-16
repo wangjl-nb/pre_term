@@ -90,7 +90,7 @@ class Team_collection(models.Model):
 # 文档收藏
 class Personal_collection(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
-    file = models.ForeignKey(File, on_delete=CASCADE)
+    files = models.ForeignKey(File, on_delete=CASCADE)
 
     class Meta:
         db_table = "personal_collection"

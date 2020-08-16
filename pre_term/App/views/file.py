@@ -20,34 +20,39 @@ def my_files_list(request):
     type = int(request.GET['type'])
     user = request.user
     if type == 0:
-        files = File.objects.filter(personal_record__user=user).filter(is_delete=False).filter(
-            personal_record__is_creator=False).order_by('-id')
+        records = Personal_record.objects.filter(user=user).filter(is_creator=False).order_by('-id')
+    elif type ==1:
+        records = File_log.objects.filter(user=user).order_by('-change_date')
     elif type == 2:
-        files = File.objects.filter(personal_record__user=user).filter(is_delete=False).filter(
-            personal_record__is_creator=True).order_by('-id')
+        records = Personal_record.objects.filter(user=user).filter(is_creator=True).order_by('-id')
     elif type == 3:
-        files = File.objects.filter(personal_collection__user=user).filter(is_delete=False).order_by('-id')
+        records = Personal_collection.objects.filter(user=user).order_by('-id')
     else:
-        files = []
+        records = []
 
     page = int(request.GET.get("page", 1))
     perpage = int(request.GET.get('perpage', 10))
-    paginator = Paginator(files, perpage)
+    paginator = Paginator(records, perpage)
 
     page_object = paginator.page(page)
     res = []
-    for file in page_object:
-        dic = {
-            "id": file.id,
-            "title": file.title,
-            "create_date": file.create_date,
-            "creator": file.creator,
-        }
-        log = File_log.objects.filter(file=file).order_by("-change_date").first()
-        if log:
-            dic["change_date"] = log.change_date
-            dic["u_username"] = log.user.u_username
-        res.append(dic)
+    for record in page_object:
+        try:
+            file = record.files
+        except:
+            file = record.file
+        if not file.is_delete:
+            dic = {
+                "id": file.id,
+                "title": file.title,
+                "create_date": file.create_date,
+                "creator": file.creator,
+            }
+            log = File_log.objects.filter(file=file).order_by("-change_date").first()
+            if log:
+                dic["change_date"] = log.change_date
+                dic["u_username"] = log.user.u_username
+            res.append(dic)
     data = {'msg': '个人文档列表', "documentList": res}
     return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
@@ -66,17 +71,89 @@ class DateEncoder(json.JSONEncoder):
 
 
 # 文件信息
-def file_info(request, file_id):
+def file_info(request):
+    file_id = request.GET['id']
     file = File.objects.get(pk=file_id)
-    if file.is_delete:
-        data = {
-            'wrong': '文档被删除',
-        }
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return JsonResponse(data={"type": -2})
+    user = request.user
+    record = Personal_record.objects.filter(files=file)
+    data = {}
+    data['allow_Share'] = 0 if file.is_share else 1
+    if record.exists():
+        data['team_id'] = -1
+        record = record.filter(user=user)
+        data['is_team'] = 0
+        collection = Personal_collection.objects.filter(files=file).filter(user=user)
+        if collection.exists():
+            data['star'] = 0
+        else:
+            data['star'] = 1
+        if not record.exists():
+            data['type'] = -1
+            data['change'] = 1
+            data['comment'] = 1
+        else:
+            if record.first().is_creator:
+                data['type'] = 1
+                data['change'] = 0
+                data['comment'] = 0
+            else:
+                data['type'] = 0
+                data['change'] = 0 if record.first().change else 1
+                data['comment'] = 0 if record.first().comment else 1
+        records = Personal_record.objects.filter(files=file)
+        list = []
+        for record in records:
+            if not record.is_creator:
+                user = record.user
+                dic = {
+                    "id": user.id,
+                    "u_username": user.u_username,
+                    "u_icon": str(user.u_icon),
+                    "change": 0 if record.change else 1,
+                    "comment": 0 if record.comment else 1,
+                }
+                list.append(dic)
+        data["list"] = list
     else:
-        data = {
-            'file': file,
+        data['star'] = -1
+        data['is_team'] = 0
+        data['list'] = []
+        team = Team_record.objects.filter(files=file).first().team
+        relation = Team_relation.objects.filter(team=team).filter(user=user)
+        data['team_id'] = team.id
+        if relation.exists():
+            relation = relation.first()
+            if relation.level >= 2:
+                data['type'] = 1
+                data['change'] = 0
+                data['comment'] = 0
+            else:
+                data['type'] = 0
+                data['change'] = 0 if relation.change else 1
+                data['comment'] = 0 if relation.comment else 1
+        else:
+            data['type'] = -1
+            data['change'] = 1
+            data['comment'] = 1
+    data['create_date'] = file.create_date
+    data['creator'] = file.creator
+    data['title'] = file.title
+    data['content'] = file.content
+    list = []
+    comments = Comment.objects.filter(file=file)
+    for comment in comments:
+        dic = {
+            'id': comment.id,
+            'time': comment.time,
+            'content': comment.content,
+            'u_username': comment.user.u_username,
         }
-    return render(request, 'file/file_info.html', context=data)
+        list.append(dic)
+    data['comments'] = list
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
 # def file_info(request):
@@ -213,17 +290,6 @@ def create_team_file(request):
         return redirect(reverse('app:file_info', args={file.id}))
 
 
-# 搜索全部文档（在全部范围内搜索）
-def file_search(request):
-    if request.method == 'GET':
-        return render(request, 'file/file_search.html')
-    elif request.method == 'POST':
-        content = request.POST.get('search_content')
-        files = File.objects.filter(
-            Q(title__icontains=content) | Q(content__icontains=content) | Q(creator__icontains=content))
-        return render(request, 'file/file_search.html', context={'files': files})
-
-
 # 获取模板
 def get_templetes(request):
     templetes = Template.objects.all()
@@ -353,6 +419,10 @@ def create_file(request):
                 'msg': '新建失败',
                 'status': 1
             }
+        file_log = File_log()
+        file_log.file = file
+        file_log.user = request.user
+        file_log.save()
     except:
         data = {
             'msg': 'wrong'
@@ -535,6 +605,9 @@ def change_file(request):
         file.content = content
         file.save()
 
+        file_log = File_log.objects.filter(file=file).filter(user=request.user)
+        if not file_log.exists():
+            file_log.delete()
         file_log = File_log()
         file_log.file = file
         file_log.user = request.user
@@ -543,3 +616,61 @@ def change_file(request):
         return JsonResponse(data={"msg": "修改成功", "status": 0})
     except:
         return JsonResponse(data={"msg": "修改失败", "status": 1})
+
+
+def submit_comment(request):
+    try:
+        file_id = int(request.POST['id'])
+        content = request.POST['content']
+        comment = Comment()
+        comment.file_id = file_id
+        comment.content = content
+        comment.user = request.user
+        comment.save()
+        data = {
+            'msg': '评论成功',
+            'status': 0,
+            'id': comment.id,
+            'u_username': request.user.u_username,
+            'time': comment.time
+        }
+    except:
+        data = {'msg': '评论失败', 'status': 1}
+    return JsonResponse(data=data)
+
+
+def file_search(request):
+    try:
+        content = request.POST.get('key')
+        list = []
+        personal_records = Personal_record.objects.all()
+        for personal_record in personal_records:
+            list.append(personal_record.files_id)
+        files = File.objects.filter(
+            Q(title__icontains=content) | Q(content__icontains=content) | Q(creator__icontains=content))
+        ids = []
+        for file in files:
+            if file.id in list:
+                file_log = File_log.objects.filter(file_id=file.id).order_by("-id").first()
+                if file_log:
+                    change_date = file_log.change_date
+                    u_username = file_log.user.u_username
+                else:
+                    change_date = file.create_date
+                    u_username = file.creator
+                dic = {
+                    "file_id": file.id,
+                    "title": file.title,
+                    "creator": file.creator,
+                    "create_date": file.create_date,
+                    "change_date": change_date,
+                    "u_username": u_username
+                }
+                ids.append(dic)
+        data = {
+            'msg': '搜索成功',
+            'list': ids
+        }
+    except:
+        data = {'msg': '搜索失败'}
+    return JsonResponse(data=data)

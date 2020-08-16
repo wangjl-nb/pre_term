@@ -29,7 +29,6 @@ def add_team(request):
     return JsonResponse(data={'code': 'ok'})
 
 
-
 # 团队信息展示
 def team_info(request):
     try:
@@ -207,7 +206,6 @@ def deal_share(request):
     return JsonResponse(data={"msg": "修改文档分享权限成功"})
 
 
-
 # 踢出成员
 def kick(request):
     try:
@@ -225,7 +223,6 @@ def kick(request):
         return JsonResponse(data={"msg": "踢出成员成功", "status": 0})
     except:
         return JsonResponse(data={"msg": "踢出成员失败", "status": 1})
-
 
 
 def exit_team(request):
@@ -303,6 +300,7 @@ def change_team_describe(request):
         }
     return JsonResponse(data=data)
 
+
 # 发送邀请加入团队
 def team_invitation(request):
     try:
@@ -335,12 +333,13 @@ def team_invitation(request):
         }
     except:
         data = {
-            'msg':'wrong',
-            'status':1
+            'msg': 'wrong',
+            'status': 1
         }
     return JsonResponse(data=data)
 
-#查看邀请
+
+# 查看邀请
 def invitation_list(request):
     try:
         team_invitations = Team_invitation.objects.filter(user=request.user)
@@ -349,21 +348,22 @@ def invitation_list(request):
             team = Team.objects.get(pk=team_invitation.team_id)
             user = User.objects.filter(team_relation__team=team).filter(team_relation__level=2).first()
             dic = {
-                "invitation_id":team_invitation.id,
-                "u_username":user.u_username,
-                "name":team.name,
-                "reason":team_invitation.reason
+                "invitation_id": team_invitation.id,
+                "u_username": user.u_username,
+                "name": team.name,
+                "reason": team_invitation.reason
             }
             res.append(dic)
         data = {
-            'msg':'查看成功',
-            'list':res
+            'msg': '查看成功',
+            'list': res
         }
     except:
         data = {
-            'msg':'查看失败'
+            'msg': '查看失败'
         }
     return JsonResponse(data=data)
+
 
 # 处理邀请
 def process_invitation(request):
@@ -398,13 +398,13 @@ def process_invitation(request):
             }
     except:
         data = {
-                'msg': 'wrong',
-                'status': 1
-            }
+            'msg': 'wrong',
+            'status': 1
+        }
     return JsonResponse(data=data)
 
 
-#发送申请
+# 发送申请
 def team_application(request):
     try:
         team_id = request.POST['id']
@@ -427,7 +427,7 @@ def team_application(request):
         return JsonResponse(data={"msg": "发生了未知错误", "status": 1})
 
 
-#查看申请
+# 查看申请
 def application_list(request):
     try:
         team_id = int(request.GET['team_id'])
@@ -436,24 +436,25 @@ def application_list(request):
         for team_application in team_applications:
             user = User.objects.get(pk=team_application.user_id)
             dic = {
-                "application_id":team_application.id,
-                "u_username":user.u_username,
-                "reason":team_application.reason
+                "application_id": team_application.id,
+                "u_username": user.u_username,
+                "reason": team_application.reason
             }
             res.append(dic)
         data = {
-            'msg':'查看成功',
-            'status':0,
-            'list':res
+            'msg': '查看成功',
+            'status': 0,
+            'list': res
         }
     except:
         data = {
-            'msg':'查看失败',
-            'status':1
+            'msg': '查看失败',
+            'status': 1
         }
     return JsonResponse(data=data)
 
-#处理申请
+
+# 处理申请
 def process_application(request):
     try:
         application_id = request.POST.get('id')
@@ -488,12 +489,13 @@ def process_application(request):
             }
     except:
         data = {
-                'msg': 'wrong',
-                'status': 1
-            }
+            'msg': 'wrong',
+            'status': 1
+        }
     return JsonResponse(data=data)
 
-#修改团队头像
+
+# 修改团队头像
 def change_team_icon(request):
     try:
         icon = request.FILES.get('icon')
@@ -503,15 +505,16 @@ def change_team_icon(request):
         team.save()
 
         data = {
-            'msg':'修改成功',
-            'status':0
+            'msg': '修改成功',
+            'status': 0
         }
     except:
         data = {
-            'msg':'修改失败',
-            'status':1
+            'msg': '修改失败',
+            'status': 1
         }
     return JsonResponse(data=data)
+
 
 def grant_team_power(request):
     try:
@@ -548,10 +551,11 @@ def grant_team_power(request):
         }
     except:
         data = {
-            'msg':'设置失败',
-            'status':1
+            'msg': '设置失败',
+            'status': 1
         }
     return JsonResponse(data=data)
+
 
 def create_team(request):
     try:
@@ -559,9 +563,9 @@ def create_team(request):
         tteam = Team.objects.filter(name=name)
         if tteam.exists():
             data = {
-                'msg':'团队名重复',
-                'status':1,
-                'id':0
+                'msg': '团队名重复',
+                'status': 1,
+                'id': 0
             }
             return JsonResponse(data=data)
         else:
@@ -582,15 +586,14 @@ def create_team(request):
             team_relation.comment = True
             team_relation.save()
             data = {
-                'msg':'创建成功',
-                'status':0,
-                'id':0
+                'msg': '创建成功',
+                'status': 0,
+                'id': 0
             }
     except:
         data = {
-            'msg':'wrong',
-            'status':1,
-            'id':0
+            'msg': 'wrong',
+            'status': 1,
+            'id': 0
         }
     return JsonResponse(data=data)
-

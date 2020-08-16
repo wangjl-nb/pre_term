@@ -134,26 +134,6 @@ def change_password(request):
     return JsonResponse(data=data)
 
 
-# 收藏文件
-def deal_collect(request):
-    try:
-        user = request.user
-        file_id = request.GET['id']
-        personal_collections = Personal_collection.objects.filter(user=user).filter(file_id=file_id)
-        if personal_collections.exists():
-            data = {'msg': '已收藏', 'status': 1}
-        else:
-            personal_collections = Personal_collection()
-            personal_collections.user = user
-            personal_collections.file_id = file_id
-            personal_collections.save()
-            data = {'msg': '收藏成功', 'status': 0}
-    except:
-        data = {'msg':'收藏失败','status':1}
-    return JsonResponse(data=data)
-
-
-
 # 修改用户名
 def change_name(request):
     name = request.POST.get('u_username')
@@ -223,3 +203,32 @@ def is_login(request):
         else:
             return JsonResponse(data={"type": 1, "user_id": user.id})
     return JsonResponse(data={"type": 0})
+
+
+# 收藏文件
+def deal_collect(request):
+    try:
+        user = request.user
+        file_id = int(request.GET['id'])
+        type = int(request.GET['type'])
+        if type == 0:
+            personal_collections = Personal_collection.objects.filter(user=user).filter(file_id=file_id)
+            if personal_collections.exists():
+                data = {'msg': '已收藏', 'status': 1}
+            else:
+                personal_collections = Personal_collection()
+                personal_collections.user = user
+                personal_collections.files_id = file_id
+                personal_collections.save()
+                data = {'msg': '收藏成功', 'status': 0}
+        elif type == 1:
+            personal_collections = Personal_collection.objects.filter(user=user).filter(file_id=file_id).first()
+            print(personal_collections)
+            if not personal_collections:
+                data = {'msg': '未收藏', 'status': 1}
+            else:
+                personal_collections.delete()
+                data = {'msg': '取消收藏成功', 'status': 0}
+    except:
+        data = {'msg': 'wrong', 'status': 1}
+    return JsonResponse(data=data)
