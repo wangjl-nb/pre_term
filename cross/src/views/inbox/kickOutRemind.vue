@@ -4,7 +4,7 @@
       <ul v-for="(item,index) in list" :key="index">
           <li>
               <el-card class="box-card" shadow="hover">
-                    <p style="flex-grow:13"><strong style="font-size:20x">{{item.u_username}}</strong> <span>于{{item.date}}时评论了</span><strong style="font-size:20x">{{item.title}}</strong>文档</p>
+                    <p style="flex-grow:13">你收到一条团队踢出提醒：<strong style="font-size:20x">{{item.message}}</strong> </p>
               </el-card>
           </li>
       </ul>
@@ -23,16 +23,15 @@ export default {
   data(){
       return{
         list:[
-          {id:"1",u_username:"xxx",date:"2020/1/1 12:00",title:"YYYY"},
-          {id:"2",u_username:"xxx",date:"2020/1/1 12:00",title:"YYYY"},
-          {id:"3",u_username:"xxx",date:"2020/1/1 12:00",title:"YYYY"},
-          {id:"4",u_username:"xxx",date:"2020/1/1 12:00",title:"YYYY"},
+          {id:"1",message: "zzz1"},
+          {id:"2",message: "zzz2"},
+          {id:"3",message: "zzz3"},
         ]
       }
   },
   mounted(){
-    //接口文档26
-    this.$axios.post('/app/comment_reminder/').then(res => {
+    //接口文档27.3
+    this.$axios.post('/app/message_list/').then(res => {
       //接收数据
       console.log(res);
       this.list = res.data.list;

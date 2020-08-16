@@ -38,6 +38,11 @@ const routes = [
           name: "CollaboratorRemind",
           component: () => import("../views/inbox/collaboratorRemind.vue")
         },
+        {
+          path: "kickOutRemind",
+          name: "KickOutRemind",
+          component: () => import("../views/inbox/kickOutRemind.vue")
+        },
       ]
     },
     {

@@ -5,7 +5,7 @@
           <li>
               <el-card class="box-card" shadow="hover">
                      <div class="flex flex6" >
-                        <p style="flex-grow:13"><strong style="font-size:20px">{{item.author}}</strong> <span>邀请您成为</span><strong style="font-size:20x">{{item.team}}</strong>的协作者</p>
+                        <p style="flex-grow:13"><strong style="font-size:20px">{{item.name}}</strong> <span>邀请您成为</span><strong style="font-size:20x">{{item.title}}</strong>文档的协作者</p>
                         <el-button style="flex-grow:1" plain @click="argee(item.id)">同意</el-button>
                         <el-button style="flex-grow:1" type="danger" plain  @click="refuse(item.id)">拒绝</el-button>
                      </div>
@@ -21,9 +21,6 @@
           </li>
       </ul>
   </el-main>
-  <el-aside>
-       <info :info="infoo"></info>
-  </el-aside>
 </el-container>
 </template>
 
@@ -38,44 +35,58 @@ export default {
   data(){
       return{
         list:[
-            {id:1231,author:"XXX",team:"sdas",reason:"你太厉害了！！！"},
-            {id:1231,author:"XXXcsx",team:"sdas",reason:"你太厉害了！！！"},
-            {id:1231,author:"XXXwqe",team:"sdas",reason:"你太厉害了！！！"}
+          {id:1,name: "xxx",reason: "你太厉害了！！！",title: "yyyy"},
+          {id:2,name: "xxx",reason: "你太厉害了！！！",title: "yyyy"},
+          {id:3,name: "xxx",reason: "你太厉害了！！！",title: "yyyy"},
+          {id:4,name: "xxx",reason: "你太厉害了！！！",title: "yyyy"},
         ]
       }
   },
   mounted(){
-    this.$axios.post('/app/application_list/', ).then(res => {
+    //接口文档48
+    this.$axios.post('/app/coinvitation_list/', ).then(res => {
       //接收数据
+      console.log(res);
       this.list = res.data.list;
 
     })
   },
   methods:{
-      argee(id){
-        this.$axios.post('/app/coinvitation_list/',this.qs.stringify({id:id, type:0
-        }),{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => {
-            if(res.data.status === 0){
-              alert("协作者加入成功！")
-            }
-            else{
-              alert("协作者加入失败！")
-            }
-        })
-        // this.aa=id
-      },
-      refuse(id){
-        this.$axios.post('/app/coinvitation_list/',this.qs.stringify({id:id, type:1
-        }),{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => {
-          if(res.data.status === 0){
-            alert("拒绝消息成功！")
-          }
-          else{
-            alert("拒绝消息失败！")
+    //接口文档49
+    argee(id) {
+      this.$axios.post('/app/process_coinvitation/',
+        this.qs.stringify({
+          id: id,
+          type: 0
+        }), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+        .then(res => {
+          if (res.data.status === 0) {
+            alert('成为协作者成功！')
+            this.$router.go(0)
+          } else {
+            this.$message.error("成为协作者失败！")
           }
         })
-        // this.aa=id
-      }
+      // this.aa=id
+    },
+    refuse(id) {
+      this.$axios.post('/app/process_coinvitation/',
+        this.qs.stringify({
+          id: id,
+          type: 1,
+        }), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+        .then(res => {
+          console.log(res)
+          if (res.data.status === 0) {
+            alert('拒绝成为协作者成功')
+            this.$router.go(0)
+          } else {
+            this.$message.error("拒绝成为协作者失败！")
+          }
+
+        })
+      // this.aa=id
+    }
   }
 };
 </script>
