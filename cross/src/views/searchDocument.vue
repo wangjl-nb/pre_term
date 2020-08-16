@@ -61,16 +61,24 @@
         },
 		methods: {
 			onSubmit() {
-                this.searchDocument.list= [{name:"j",id:123432,author:"mala",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
-        {name:"jaca",id:1232432,author:"masla",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
-        {name:"jac",id:123345672,author:"malsa",create:"2020/2/2",edit:"2020/2/4",user:"222xs"}
-        ]  
+				var that = this
+        //         this.searchDocument.list= [{name:"j",id:123432,author:"mala",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
+        // {name:"jaca",id:1232432,author:"masla",create:"2020/2/2",edit:"2020/2/4",user:"222xs"},
+        // {name:"jac",id:123345672,author:"malsa",create:"2020/2/2",edit:"2020/2/4",user:"222xs"}
+        // ]
+				that.$axios.post('',
+						this.qs.stringify({keyword: that.searchDocument.keyword}),
+						{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+						.then(res => {
+							this.searchDocument.list = res.data.list
+						})
 			},
 
 		},
 		mounted() {
 			var that = this
 			console.log(that.$route.params.flag)
+
 		}
 	}
 </script>

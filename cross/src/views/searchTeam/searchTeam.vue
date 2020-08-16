@@ -26,13 +26,13 @@
 			<el-col :span="3" class="grid-content"></el-col>
 		</el-row>
 
-		<el-row :gutter="20" style="margin-top: 2rem; margin-right: 2rem" :key="index">
+		<el-row :gutter="20" style="margin-top: 2rem; margin-right: 2rem" v-if="isDisplay">
 			<el-col :span="6"
 							class="grid-content"
 							v-for="(item,index) in teams"
 							:key="index"
 							style="margin-bottom: 1rem">
-				<router-link :to="{path: 'dashboard/team/'+item.id}">
+				<a :href="'/team/'+item.id">
 					<el-card :body-style="{ padding: '0px' }">
 						<div style="text-align: center">
 							<img :src="item.icon" class="image" style="width: 50px; height: 50px">
@@ -41,7 +41,7 @@
 							<p>{{item.describe}}</p>
 						</div>
 					</el-card>
-				</router-link>
+				</a>
 			</el-col>
 		</el-row>
 	</div>
@@ -92,17 +92,25 @@
 						describe: '团队介绍'
 					},
 				],
+				isDisplay: false
 			}
 		},
 		methods: {
 			onSubmit() {
-				alert('submit!');
+				this.isDisplay = true
+				var that = this
+				that.$axios.post('/app/team_search/',
+				this.qs.stringify({key: this.searchTeam.keyword}),
+						{headers: {'Content-Type':'application/x-www-form-urlencoded'}})
+				.then(res => {
+					this.team = res.data.list
+				})
 			},
 
 		},
 		mounted() {
-			var that = this
-			console.log(that.$route.params.flag)
+			// var that = this
+			// console.log(that.$route.params.flag)
 		}
 	}
 </script>
