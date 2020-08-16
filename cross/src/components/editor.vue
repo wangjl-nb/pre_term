@@ -35,7 +35,7 @@
   </ul>
   </div>
    <div v-else> 
-      <pre style="color:#gray;font-size:15px;font-weight:normal">                 当前搜索结果为0</pre>
+      <pre style="color:gray;font-size:15px;font-weight:normal">                 当前搜索结果为0</pre>
     </div>
       <el-button slot="reference" @click="searchUser(search)"> 
          <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
@@ -274,6 +274,7 @@
       mounted() {
         this.fileId=this.$route.params.documentId
         this.getURL()
+        this.getContentInTime()
              //35 获取文档信息
      this.$axios.post('',
               this.qs.stringify({
@@ -298,12 +299,12 @@
                 else{
                   this.document_type="个人文档"
                 }
-                this.team_id=res.data.team_id,
-                this.title=res.data.title,
-                this.content=res.data.content,
-                this.comment=res.data.comments,
-                this.allowShare=res.data.allowShare,
-                this.star=res.data.star,
+                this.team_id=res.data.team_id
+                this.title=res.data.title
+                this.content=res.data.content
+                this.comment=res.data.comments
+                this.allowShare=res.data.allowShare
+                this.star=res.data.star
                 this.userItem=res.data.list
               })
           //定时器 数据库轮询 查看是否可以修改文档
@@ -322,6 +323,23 @@
           },1000);
       },
       methods: {
+        getContentInTime() {
+            //轮询，实时查看文档内容
+          this.fileId = this.$route.params.documentId
+          this.$axios.post('', this.qs.stringify({
+                id: this.fileId
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                if(res.data.status === 0){
+                  this.title = res.data.title
+                  this.content = res.data.content
+                  setTimeout(() => {
+                    this.getContentInTime()
+                  }, 3000)
+                }
+              })
+        },
         handleClick() {
           alert('button click');
         },

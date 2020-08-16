@@ -38,9 +38,9 @@
                                 this.qs.stringify({u_username: this.ruleForm.username}),
                             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
                             .then(res => {
-                                alert(res.data.msg)
+                                this.$message(res.data.msg)
                                 if (res.data.status === 0) {
-                                    this.reload()
+                                    this.$router.go(0)
                                 }
                             })
                     } else {

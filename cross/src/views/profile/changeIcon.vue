@@ -81,7 +81,7 @@
 			},
 			uploadFile () {
 				this.$refs.upload.submit()
-
+        this.$router.go(0)
 			},
 			imgChange (files, fileList) {
 				this.hideUpload = fileList.length >= this.limitNum;

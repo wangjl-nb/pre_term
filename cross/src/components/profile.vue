@@ -87,9 +87,9 @@
 					that.username = res.data.u_username
 					that.password = res.data.u_password
 					that.email = res.data.u_email
-          setTimeout(() => {
-            this.getData()
-          }, 2000)
+          // setTimeout(() => {
+          //   this.getData()
+          // }, 2000)
 			})
       }
 		}}
