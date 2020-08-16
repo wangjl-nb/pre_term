@@ -314,18 +314,22 @@ export default {
     },
     sort1(type) {
       this.sortType = type;
+      if(type === 'title'){
+        this.trashFile.sort(this.titleCompare1(type))
+      }
       this.trashFile.sort(this.compare1(type))
     },
     sort2(type) {
       this.sortType = type;
+      if(type === 'title'){
+        this.trashFile.sort(this.titleCompare2(type))
+      }
       this.trashFile.sort(this.compare2(type))
     },
     compare1(attr) {
       return function (a, b) {
         let val1 = new Date(a[attr]);
-        console.log(val1)
         let val2 = new Date(b[attr]);
-        console.log(val2)
         return val1 - val2;
       }
     },
@@ -333,6 +337,24 @@ export default {
       return function (a, b) {
         let val1 = new Date(a[attr]);
         let val2 = new Date(b[attr]);
+        return val2 - val1;
+      }
+    },
+
+    titleCompare1(attr) {
+      return function (a, b) {
+        let val1 = a[attr];
+        let val2 = b[attr];
+        console.log(val1 - val2)
+        return val1 - val2;
+      }
+    },
+
+    titleCompare2(attr) {
+      return function (a, b) {
+        let val1 = a[attr];
+        let val2 = b[attr];
+        console.log(val2 - val1)
         return val2 - val1;
       }
     },
