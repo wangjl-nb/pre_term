@@ -62,10 +62,12 @@ export default {
   methods: {
     onSubmit() {
       var that = this
+      console.log('submit')
       that.$axios.post('/app/file_search/',
-          this.qs.stringify({keyword: that.searchDocument.keyword}),
+          this.qs.stringify({key: that.searchDocument.keyword}),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
+            console.log(res)
             this.searchDocument.list = res.data.list
           })
     },

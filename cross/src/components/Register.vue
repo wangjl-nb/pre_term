@@ -9,12 +9,12 @@
             <div slot="header" class="clearfix">
               <div>
                 <h1 class="change-color" style="font-weight:lighter ">
-<!--                  <li>-->
+                  <li>
                     <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
                       <use xlink:href="#icon-rengongzhinengjiqiren"></use>
                     </svg>
                     注册
-<!--                  </li>-->
+                  </li>
                 </h1>
               </div>
             </div>
@@ -24,37 +24,22 @@
                 <el-form-item label="用户名" prop="username">
                   <el-input v-model.number="ruleForm.username" placeholder="请输入用户名"></el-input>
                 </el-form-item>
-                <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="70px" class="demo-dynamic">
-                  <el-form-item
-                    :model="dynamicValidateForm"
-                    ref="dynamicValidateForm"
-                    prop="email"
-                    label="邮箱"
-                    :rules="[{ required: false, message: '请输入邮箱地址', trigger: 'blur' },
-                              { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
-                    <el-input v-model="dynamicValidateForm.email" placeholder="请输入邮箱"></el-input>
-                  </el-form-item>
-                </el-form>
+                <el-form-item
+                  prop="email"
+                  label="邮箱"
+                  :rules="[{ required: true, message: '请输入邮箱地址', trigger: 'blur' },
+                            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
+                  <el-input v-model="ruleForm.email" placeholder="请输入邮箱"></el-input>
+                </el-form-item>
                 <el-form-item label="密码" prop="pass">
-                  <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码"></el-input>
+                  <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码" show-password></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="checkPass">
-                  <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder="请再次输入密码"></el-input>
-                </el-form-item>
-                <el-form-item label="上传头像">
-                <!--upload image-->
-                  <el-upload
-                    class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload">
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
+                  <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder="请再次输入密码" show-password></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                  <el-link style="float: right"><a href="/login">已有账号？点我登陆</a></el-link>
                 </el-form-item>
               </el-form>
             </div>
@@ -67,14 +52,13 @@
 <script>
   export default {
     data() {
-      var checkEmail = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('邮箱不能为空'));
-        }
-      };
+
       var checkUsername = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('用户名不能为空'));
+          callback(new Error('用户名不能为空'));
+        }
+        else {
+          callback();
         }
       };
       var validatePass = (rule, value, callback) => {
@@ -97,20 +81,13 @@
         }
       };
       return {
-        //邮箱
-        dynamicValidateForm: {
-          domains: [{
-            value: ''
-          }],
-          email: ''
-        },
+
         imageUrl: '',
         ruleForm: {
           pass: '',
           checkPass: '',
           username: '',
-          email: '',
-          u_icon:"https://p1.ssl.qhimgs1.com/sdr/400__/t0160546366d509d2eb.jpg" 
+          email: ''
         },
         rules: {
           pass: [
@@ -122,9 +99,6 @@
           username: [
             { validator: checkUsername, trigger: 'blur' }
           ],
-          email: [
-            { validator: checkEmail, trigger: 'blur' }
-          ]
         }
       }
     },
@@ -133,27 +107,26 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-               this.$axios.post('/app/login/',
+            this.$axios.post('/app/register/',
               this.qs.stringify({
                 u_username: this.ruleForm.username,
                 u_password: this.ruleForm.pass,
-                u_email:this.ruleForm.email,
-                u_icon:this.ruleForm.u_icon
-                }),
-              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-              .then(res => {
-                console.log(res)
-                 if (res.data.status ===0) {
-                   this.$message({
-          message: '注册成功',
-          type: 'success'
-        })
-                 }
-                 else{
-                   this.$message.error('注册失败');
-                 }
-              })
-              this.$router.push({path:"/login"})
+                u_email: this.ruleForm.email
+              }), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+            .then(res => {
+              console.log(res)
+              if(res.data.status === 0){
+                this.$message({
+                  message: '注册成功',
+                  type: 'success'
+                })
+                this.$router.push({path: '/login'})
+              }
+              else {
+                this.$message.error('注册失败')
+              }
+            })
+              // this.$router.push({path:"/login"})
           } else {
             console.log('error submit!!');
             return false;

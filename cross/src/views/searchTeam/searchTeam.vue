@@ -29,16 +29,16 @@
 		<el-row :gutter="20" style="margin-top: 2rem; margin-right: 2rem">
 			<el-col :span="6"
 							class="grid-content"
-							v-for="(item,index) in teams"
+							v-for="(item, index) in teams"
 							:key="index"
-							style="margin-bottom: 1rem">
-				<a :href="'/team/'+item.id">
-					<el-card :body-style="{ padding: '0px' }">
+							style="margin-bottom: 3rem">
+				<a :href="'/diamond/dashboard/team/'+item.id">
+					<el-card :body-style="{ padding: '0px' }" style="height: 16rem">
 						<div style="text-align: center">
 <!--							<img :src="item.icon" class="image" style="width: 50px; height: 50px">-->
-							<h2>{{item.name}}</h2>
-							<h3>团队人数：{{item.number}}</h3>
-							<p>{{item.description}}</p>
+							<h2 style="color: #3a8ee6">{{item.name}}</h2>
+							<h3 style="background-color:#8fbd39;">团队人数：{{item.number}}</h3>
+							<p class="teamDescription" style="font-family: 隶书">{{item.description}}</p>
 						</div>
 					</el-card>
 				</a>
@@ -69,12 +69,15 @@
 		methods: {
 			onSubmit() {
 				var that = this
+        console.log('submit')
 				that.$axios.post('/app/team_search/',
 				this.qs.stringify({key: this.searchTeam.keyword}),
 						{headers: {'Content-Type':'application/x-www-form-urlencoded'}})
 				.then(res => {
-					this.team = res.data.list
+          console.log(res)
+					this.teams = res.data.list
 				})
+        // this.$router.go(0)
 			},
 
 		},
@@ -90,4 +93,14 @@
 		border-radius: 4px;
 		min-height: 36px;
 	}
+
+  .teamDescription {
+    font-size: 1.3rem;
+    display: inline-block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+}
 </style>
