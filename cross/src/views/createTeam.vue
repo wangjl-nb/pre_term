@@ -53,15 +53,20 @@ export default {
                   //21 创建团队
      this.$axios.post('/app/create_team/',
               this.qs.stringify({
-                name:this.ruleForm.name,
-                discribe:this.ruleForm.desc,
-                icon:"https://p1.ssl.qhimgs1.com/sdr/400__/t0160546366d509d2eb.jpg" 
+                name: this.ruleForm.name,
+                describe: this.ruleForm.desc,
+                icon:"suoluetubig.jpg"
               }),
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
                 console.log(res)
-                if(res.data.status==0)
-                   that.$router.push({path:"/diamond/dashboard/team/"+res.data.id})
+                if(res.data.status === 0){
+                  this.$message({
+                    message: '创建团队成功',
+                    type: 'success'
+                  })
+                  that.$router.push({path:"/diamond/dashboard/team/"+res.data.id})
+                }
                 else{
                     this.$message.error('创建团队失败');
                 }
