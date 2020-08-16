@@ -143,7 +143,7 @@
       }
     },
     mounted() {
-      this.$axios.post('')
+      this.$axios.post('/app/personal_delete_files/')
               .then(res => {
                 this.trashFile = res.data.list
               })

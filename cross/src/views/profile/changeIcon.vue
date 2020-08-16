@@ -52,8 +52,8 @@
 					})
 				}
 				let fd = new FormData();//通过form数据格式来传
-				fd.append("picFile", file); //传文件
-				console.log(fd.get('picFile'));
+				fd.append("u_icon", file); //传文件
+				console.log(fd.get('u_icon'));
 				this.$axios({
 					url: '/app/change_icon/',
 					method: "post",
