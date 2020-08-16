@@ -1,11 +1,13 @@
 import datetime
 import json
 import uuid
+import decimal
+from audioop import avg
 
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.cache import cache
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Avg
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -21,7 +23,7 @@ def my_files_list(request):
     user = request.user
     if type == 0:
         records = Personal_record.objects.filter(user=user).filter(is_creator=False).order_by('-id')
-    elif type ==1:
+    elif type == 1:
         records = File_log.objects.filter(user=user).order_by('-change_date')
     elif type == 2:
         records = Personal_record.objects.filter(user=user).filter(is_creator=True).order_by('-id')
@@ -296,6 +298,11 @@ def get_templetes(request):
     print(templetes)
     res = []
     for templete in templetes:
+        grade = Templete_grade.objects.filter(user=request.user).filter(templete=templete)
+        if grade.exists():
+            myscore = grade.first().score
+        else:
+            myscore = -1
         dic = {
             "id": templete.id,
             "content": templete.content,
@@ -303,6 +310,7 @@ def get_templetes(request):
             "score": templete.score,
             "accept_num": templete.accept_num,
             "img": str(templete.img),
+            "myscore": myscore,
         }
         res.append(dic)
     data = {
@@ -315,15 +323,24 @@ def get_templetes(request):
 # 给模板评分
 def grade_templetes(request):
     id = int(request.POST['id'])
-    score = float(request.POST['score'])
-
+    score = decimal.Decimal(request.POST.get('score'))
+    templete_grade = Templete_grade.objects.filter(templete_id=id).filter(user=request.user)
+    if templete_grade:
+        data = {'msg': '您已评分', 'status': 1}
+        return JsonResponse(data=data)
     templete = Template.objects.get(pk=id)
     if templete:
         if score <= 5 and score >= 0:
-            if templete.accept_num == 0:
-                templete.score = score
-            else:
-                templete.score = (templete.score + score) / templete.accept_num
+            templete_grade = Templete_grade()
+            templete_grade.score = score
+            templete_grade.templete_id = id
+            templete_grade.user = request.user
+            templete_grade.save()
+            dict = Templete_grade.objects.filter(templete_id=id).aggregate(Avg('score'))
+
+            templete.score = dict['score__avg']
+            templete.save()
+            # templete.score = avg(templete_grades.score)
             data = {
                 'msg': '评分成功',
                 'status': 0
@@ -344,13 +361,22 @@ def grade_templetes(request):
 # 新建文档
 def create_file(request):
     try:
-        templete_id = int(request.POST.get('templete_id', 0))
-        title = request.POST['title']
-        content = request.POST['content']
         team_id = int(request.POST.get('team_id', 0))
-        if templete_id == 0 and team_id == 0:
+        templete_id = int(request.POST.get('templete_id', 0))
+        if team_id == 0:
             file = File()
             file.creator = request.user.u_username
+            if templete_id != 0:
+                templete = Template.objects.get(pk=templete_id)
+                title = templete.title
+                content = templete.content
+                templete.accept_num = templete.accept_num + 1
+                templete.save()
+            else:
+                title = ""
+                content = ""
+            file.title = title
+            file.content = content
             file.save()
 
             personal_record = Personal_record()
@@ -358,32 +384,24 @@ def create_file(request):
             personal_record.files = file
             personal_record.save()
             data = {
-                'msg': '未使用模板的个人文档创建成功',
+                'msg': '个人文档创建成功',
                 'status': 0,
                 'id': file.id
             }
-        elif templete_id != 0 and team_id == 0:
-            templete = Template.objects.get(pk=templete_id)
+        elif team_id != 0:
             file = File()
             file.creator = request.user.u_username
-            file.title = templete.title
-            file.content = templete.content
-            file.save()
-            templete.accept_num = templete.accept_num + 1
-            templete.save()
-
-            personal_record = Personal_record()
-            personal_record.user = request.user
-            personal_record.files = file
-            personal_record.save()
-            data = {
-                'msg': '使用模板的个人文档创建成功',
-                'status': 0,
-                'id': file.id
-            }
-        elif templete_id == 0 and team_id != 0:
-            file = File()
-            file.creator = request.user.u_username
+            if templete_id != 0:
+                templete = Template.objects.get(pk=templete_id)
+                title = templete.title
+                content = templete.content
+                templete.accept_num = templete.accept_num + 1
+                templete.save()
+            else:
+                title = ""
+                content = ""
+            file.title = title
+            file.content = content
             file.save()
 
             team_record = Team_record()
@@ -391,26 +409,7 @@ def create_file(request):
             team_record.files = file
             team_record.save()
             data = {
-                'msg': '未使用模板的团队文档创建成功',
-                'status': 0,
-                'id': file.id
-            }
-        elif templete_id != 0 and team_id != 0:
-            templete = Template.objects.get(pk=templete_id)
-            file = File()
-            file.creator = request.user.u_username
-            file.title = templete.title
-            file.content = templete.content
-            file.save()
-            templete.accept_num = templete.accept_num + 1
-            templete.save()
-
-            team_record = Team_record()
-            team_record.team = Team.objects.get(pk=team_id)
-            team_record.files = file
-            team_record.save()
-            data = {
-                'msg': '使用模板的团队文档创建成功',
+                'msg': '团队文档创建成功',
                 'status': 0,
                 'id': file.id
             }
@@ -627,6 +626,12 @@ def submit_comment(request):
         comment.content = content
         comment.user = request.user
         comment.save()
+
+        comment_reminder = Comment_reminder()
+        comment_reminder.comment = comment
+        comment_reminder.user_id = Personal_record.objects.filter(files_id=file_id).filter(
+            is_creator=True).first().user_id
+        comment_reminder.save()
         data = {
             'msg': '评论成功',
             'status': 0,
@@ -673,4 +678,78 @@ def file_search(request):
         }
     except:
         data = {'msg': '搜索失败'}
+    return JsonResponse(data=data)
+
+
+def file_content(request):
+    try:
+        file = File.objects.get(pk=request.GET['id'])
+        data = {
+            'title': file.title,
+            'content': file.content,
+            'status': 0,
+        }
+    except:
+        data = {
+            "status": 1,
+        }
+    return JsonResponse(data=data)
+
+
+# 收到评论提醒
+def comment_reminder(request):
+    try:
+        comment_reminders = Comment_reminder.objects.filter(user=request.user)
+        list = []
+        for comment_reminder in comment_reminders:
+            comment = Comment.objects.get(pk=comment_reminder.comment_id)
+            file = File.objects.get(pk=comment.file_id)
+            user = User.objects.get(pk=comment.user_id)
+            dic = {
+                'title': file.title,
+                'u_username': user.u_username,
+                'date': comment.time
+            }
+            list.append(dic)
+        data = {'msg': '获取评论提醒成功', 'list': list}
+    except:
+        data = {'msg': '获取评论提醒失败'}
+    return JsonResponse(data=data)
+
+
+# 给模板评分
+def grade_templetes(request):
+    id = int(request.POST['id'])
+    score = decimal.Decimal(request.POST.get('score'))
+    templete_grade = Templete_grade.objects.filter(templete_id=id).filter(user=request.user)
+    if templete_grade:
+        data = {'msg':'您已评分','status':1}
+        return JsonResponse(data=data)
+    templete = Template.objects.get(pk=id)
+    if templete:
+        if score <= 5 and score >= 0:
+            templete_grade = Templete_grade()
+            templete_grade.score = score
+            templete_grade.templete_id=id
+            templete_grade.user=request.user
+            templete_grade.save()
+            dict = Templete_grade.objects.filter(templete_id=id).aggregate(Avg('score'))
+
+            templete.score = dict['score__avg']
+            templete.save()
+            # templete.score = avg(templete_grades.score)
+            data = {
+                'msg': '评分成功',
+                'status': 0
+            }
+        else:
+            data = {
+                'msg': '请在0-5范围内评分',
+                'status': 1
+            }
+    else:
+        data = {
+            'msg': '该模板不存在',
+            'status': 1
+        }
     return JsonResponse(data=data)

@@ -59,4 +59,8 @@ urlpatterns = [
     path('process_coinvitation/', views.process_coinvitation, name='process_coinvitation'),
     path('change_file/',views.change_file, name='change_file'),
     path('submit_comment/', views.submit_comment, name='submit_comment'),
+    path('file_content/',views.file_content,name='file_content'),
+    path('message_list/', views.message_list, name='message_list'),
+    path('delete_message/',views.delete_message,name='delete_message'),
+    path('comment_reminder/',views.comment_reminder,name='comment_reminder'),
 ]

@@ -23,7 +23,7 @@ class User(models.Model):
     u_username = models.CharField(max_length=32, unique=True)
     u_password = models.CharField(max_length=64)
     u_email = models.EmailField(blank=False, unique=True)
-    u_icon = models.ImageField(upload_to='icons/%Y/%m/%d/',null=True,blank=True)
+    u_icon = models.ImageField(upload_to='icons/%Y/%m/%d/', null=True, blank=True)
     is_active = models.BooleanField(default=False)
     is_delete = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
@@ -61,7 +61,7 @@ class Team(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     number_num = models.IntegerField(default=1)
     describe = models.TextField()
-    icon = models.ImageField(upload_to='team_icons/%Y/%m/%d/',null=True,blank=True)
+    icon = models.ImageField(upload_to='team_icons/%Y/%m/%d/', null=True, blank=True)
 
     # 头像上传路径
 
@@ -115,7 +115,7 @@ class Template(models.Model):
     content = models.TextField()
     score = models.DecimalField(max_digits=3, decimal_places=1)
     accept_num = models.IntegerField(default=0)
-    img = models.ImageField(upload_to='templates/%Y/%m/%d/', null=True,blank=True)
+    img = models.ImageField(upload_to='templates/%Y/%m/%d/', null=True, blank=True)
 
     class Meta:
         db_table = "templete"
@@ -171,3 +171,38 @@ class Cooperate_invitation(models.Model):
 
     class Meta:
         db_table = 'cooperate_invitation'
+
+
+class Message(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=128, default='消息标题')
+    content = models.TextField(default='消息内容')
+    user = models.ForeignKey(User, on_delete=CASCADE)
+
+    class Meta:
+        db_table = 'message'
+
+
+class Message_to_invitation(models.Model):
+    team_invitation = models.ForeignKey(Team_invitation, on_delete=CASCADE)
+    message = models.ForeignKey(Message, on_delete=CASCADE)
+
+    class Meta:
+        db_table = 'message_to_invitation'
+
+
+class Templete_grade(models.Model):
+    templete = models.ForeignKey(Template, on_delete=CASCADE)
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    score = models.DecimalField(max_digits=3, decimal_places=1)
+
+    class Meta:
+        db_table = 'templete_grade'
+
+class Comment_reminder(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    comment = models.ForeignKey(Comment, on_delete=CASCADE)
+    user = models.ForeignKey(User, on_delete=CASCADE)
+
+    class Meta:
+        db_table = 'comment_reminder'

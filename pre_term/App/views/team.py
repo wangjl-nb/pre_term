@@ -90,14 +90,20 @@ def dismiss_team(request):
 def team_search(request):
     content = request.POST.get('key')
     teams = Team.objects.filter(Q(name__icontains=content) | Q(describe__icontains=content))
-    ids = []
+    list = []
     for team in teams:
-        ids.append(team.id)
+        dic = {
+            "id": team.id,
+            "name": team.name,
+            "description": team.describe,
+            "number": team.number_num,
+        }
+        list.append(dic)
     data = {
-        "msg": "团队id列表",
-        "ids": ids,
+        "msg": "团队列表",
+        "list": list,
     }
-    return JsonResponse(data=data)
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
 def deal_application(request):
@@ -220,6 +226,10 @@ def kick(request):
         team.number_num = team.number_num - 1
         team.save()
         team_relation.delete()
+        message = Message()
+        message.user_id = user_id
+        message.content = '您已被踢出团队' + team.name
+        message.save()
         return JsonResponse(data={"msg": "踢出成员成功", "status": 0})
     except:
         return JsonResponse(data={"msg": "踢出成员失败", "status": 1})
@@ -588,7 +598,7 @@ def create_team(request):
             data = {
                 'msg': '创建成功',
                 'status': 0,
-                'id': 0
+                'id': team.id
             }
     except:
         data = {
@@ -596,4 +606,34 @@ def create_team(request):
             'status': 1,
             'id': 0
         }
+    return JsonResponse(data=data)
+
+
+def message_list(request):
+    try:
+        messages = Message.objects.filter(user=request.user)
+        list = []
+        for message in messages:
+            dic = {
+                'id': message.id,
+                'message': message.content
+            }
+            list.append(dic)
+        data = {'msg': '获取消息列表成功', 'list': list, 'status': 0}
+    except:
+        data = {'msg': '获取失败', 'status': 1}
+    return JsonResponse(data=data)
+
+
+def delete_message(request):
+    try:
+        id = int(request.GET['id'])
+        message = Message.objects.get(pk=id)
+        if message:
+            message.delete()
+            data = {'msg': '删除成功', 'status': 0}
+        else:
+            data = {'msg': '删除失败', 'status': 1}
+    except:
+        data = {'msg': 'wrong', 'status': 1}
     return JsonResponse(data=data)
