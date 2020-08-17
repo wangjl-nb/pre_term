@@ -43,7 +43,6 @@ class delete_date(models.Model):
 
 
 # 个人文档创建记录
-# 个人文档创建记录
 class Personal_record(models.Model):
     files = models.ForeignKey(File, on_delete=CASCADE)
     user = models.ForeignKey(User, on_delete=CASCADE)

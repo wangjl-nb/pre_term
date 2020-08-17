@@ -563,6 +563,9 @@ def process_coinvitation(request):
         invitation_id = request.POST.get('id')
         invitation = Cooperate_invitation.objects.get(pk=invitation_id)
         type = int(request.POST['type'])
+        message = Message()
+        user = User.objects.get(pk=invitation.user_id)
+        file = File.objects.get(pk=invitation.file_id)
         if type == 0:
             personal_record = Personal_record()
             personal_record.user_id = invitation.user_id
@@ -574,17 +577,16 @@ def process_coinvitation(request):
                 "msg": "已接受邀请",
                 'status': 0
             }
-        elif type == 1:
+            message.content = user.u_username + '接受了你的邀请成为文档' + file.title + '的协作者'
+        else:
             data = {
                 "msg": "已拒绝邀请",
                 'status': 0
             }
             invitation.delete()
-        else:
-            data = {
-                'msg': '请输入0或1',
-                'status': 1
-            }
+            message.content = user.u_username + '拒绝了成为文档' + file.title + '的协作者的邀请'
+        message.user = invitation.user
+        message.save()
     except:
         data = {
             'msg': 'wrong',
@@ -714,4 +716,18 @@ def comment_reminder(request):
         data = {'msg': '获取评论提醒成功', 'list': list}
     except:
         data = {'msg': '获取评论提醒失败'}
+    return JsonResponse(data=data)
+
+
+def delete_comment_reminder(request):
+    try:
+        id = int(request.GET['id'])
+        comment_reminder = Comment_reminder.objects.get(pk=id)
+        if comment_reminder:
+            comment_reminder.delete()
+            data = {'msg': '删除成功', 'status': 0}
+        else:
+            data = {'msg': '删除失败', 'status': 1}
+    except:
+        data = {'msg': '删除失败', 'status': 1}
     return JsonResponse(data=data)

@@ -79,8 +79,14 @@ def team_info(request):
 
 def dismiss_team(request):
     try:
-        team_id = request.POST['id']
+        team_id = int(request.POST['id'])
         team = Team.objects.get(pk=team_id)
+        team_relations = Team_relation.objects.filter(team=team)
+        for team_relation in team_relations:
+            message = Message()
+            message.user_id = team_relation.user_id
+            message.content = '团队'+team.name+'已解散'
+            message.save()
         team.delete()
         return JsonResponse(data={"msg": "解散成功", "status": 0})
     except:
@@ -237,8 +243,15 @@ def kick(request):
 
 def exit_team(request):
     try:
-        team_id = request.POST['id']
+        team_id = int(request.POST['id'])
         team = Team.objects.get(pk=team_id)
+        message = Message()
+        team_relations = Team_relation.objects.filter(team_id=team_id)
+        for team_relation in team_relations:
+            if team_relation.level == 2:
+                message.user_id = team_relation.user_id
+        message.content = request.user.u_username + '已退出团队' + team.name
+        message.save()
         team_relation = Team_relation.objects.filter(team_id=team_id).filter(user=request.user)
         team_relation.delete()
         team.number_num = team.number_num - 1
@@ -381,8 +394,9 @@ def process_invitation(request):
         invitation_id = request.POST.get('id')
         invitation = Team_invitation.objects.get(pk=invitation_id)
         type = int(request.POST['type'])
+        team = Team.objects.get(pk=invitation.team_id)
+        message = Message()
         if type == 0:
-            team = Team.objects.get(pk=invitation.team_id)
             team.number_num = team.number_num + 1
             team.save()
             team_relation = Team_relation()
@@ -395,17 +409,20 @@ def process_invitation(request):
                 "msg": "已接受邀请",
                 'status': 0
             }
-        elif type == 1:
+            message.content = invitation.user.u_username + '接受了你的邀请加入了' + team.name
+        else:
             data = {
                 "msg": "已拒绝邀请",
                 'status': 0
             }
             invitation.delete()
-        else:
-            data = {
-                'msg': '请输入0或1',
-                'status': 1
-            }
+            message.content = invitation.user.u_username + '拒绝了你的邀请未加入' + team.name
+        team_relations = Team_relation.objects.filter(team=team)
+        for team_relation in team_relations:
+            if team_relation.level == 2:
+                user = User.objects.get(pk=team_relation.user_id)
+                message.user = user
+        message.save()
     except:
         data = {
             'msg': 'wrong',
@@ -468,12 +485,11 @@ def application_list(request):
 def process_application(request):
     try:
         application_id = request.POST.get('id')
-        print(application_id)
         application = Team_application.objects.get(pk=application_id)
-        print(application)
         type = int(request.POST['type'])
+        team = Team.objects.get(pk=application.team_id)
+        message = Message()
         if type == 0:
-            team = Team.objects.get(pk=application.team_id)
             team.number_num = team.number_num + 1
             team.save()
             team_relation = Team_relation()
@@ -486,17 +502,16 @@ def process_application(request):
                 "msg": "已同意申请",
                 'status': 0
             }
-        elif type == 1:
+            message.content = '团队创建者同意了你的申请你已加入' + team.name
+        else:
             data = {
                 "msg": "已拒绝申请",
                 'status': 0
             }
             application.delete()
-        else:
-            data = {
-                'msg': '请输入0或1',
-                'status': 1
-            }
+            message.content = '团队创建者拒绝了你加入团队'+team.name+'的申请'
+        message.user = application.user
+        message.save()
     except:
         data = {
             'msg': 'wrong',
