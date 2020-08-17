@@ -17,12 +17,6 @@
             <el-input v-model="ruleForm.title"></el-input>
           </el-form-item>
           <el-form-item label="内容">
-            <!--            <div class="editor" v-model="ruleForm.content">-->
-            <!--              <div ref="toolbar" class="toolbar">-->
-            <!--              </div>-->
-            <!--              <div ref="editor" class="text">-->
-            <!--              </div>-->
-            <!--            </div>-->
             <wang-enduit v-model="ruleForm.content"></wang-enduit>
           </el-form-item>
           <el-form-item>
@@ -64,17 +58,13 @@ export default {
     }
   },
   beforeMount() {
-    alert('修改文档时会自动保存，且他人不会在您修改时修改文档，请在修改之后点击下方的“返回修改”按钮，便于他人继续修改')
-    setInterval(() => {
-      this.getContent()
-    }, 1000)
-
+    this.getContent()
   },
   mounted() {
+    alert('修改文档时会自动保存，且他人不会在您修改时修改文档，请在修改之后点击下方的“返回修改”按钮，便于他人继续修改')
     setInterval(() => {
       this.submitForm('ruleForm')
     }, 1000)
-
   },
   methods: {
     getContent() {
@@ -119,14 +109,16 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(() => {
-        this.$axios.get('',
+        this.$axios.get('/app/abandon_change_power/',
           {
             params: {
               id: this.$route.params.fileId
             },
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           }).then(res => {
+          console.log(res)
             if(res.data.status === 0){
+              alert('退出修改成功')
               this.$router.go(-1)
             }
             else{

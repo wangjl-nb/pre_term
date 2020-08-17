@@ -129,15 +129,15 @@
             <h1 class="change-color" style="font-weight:lighter ">{{ document_type }}</h1>
           </div>
 <!--          <router-link :to="{path: '/changefile/'+fileId}">-->
-            <el-button type="primary" v-show="change_power==0&&allow_edit==0" plain @click="goChangeFile">修改</el-button>
+            <el-button type="primary" v-show="change_power===0&&allow_edit===0" plain @click="goChangeFile">修改</el-button>
 <!--          </router-link>-->
-          <el-button type="danger" v-show="change_power==0&&allow_edit==1" plain disabled>当前有人正在修改 禁止修改</el-button>
-          <el-button type="danger" v-show="change_power==1" plain disabled>您没有修改的权限</el-button>
-          <el-button type="primary" v-show="type==1&&is_team==1" plain @click="drawer = true" style="margin-left: 10px">
+          <el-button type="danger" v-show="change_power===0&&allow_edit===1" plain disabled>当前有人正在修改 禁止修改</el-button>
+          <el-button type="danger" v-show="change_power===1" plain disabled>您没有修改的权限</el-button>
+          <el-button type="primary" v-show="type===1&&is_team===1" plain @click="drawer = true" style="margin-left: 10px">
             协作
           </el-button>
-          <el-button type="primary" v-show="type==1&&allowShare==0" @click="set_allowShare(1)" plain>允许分享</el-button>
-          <el-button type="primary" v-show="type==1&&allowShare==1" @click="set_allowShare(0)" plain>禁止分享</el-button>
+          <el-button type="primary" v-show="type===1&&allowShare===0" @click="set_allowShare(1)" plain>允许分享</el-button>
+          <el-button type="primary" v-show="type===1&&allowShare===1" @click="set_allowShare(0)" plain>禁止分享</el-button>
 
           <input type="text" v-model="localURL" style="display: none">
           <el-button class="copyURL"
@@ -284,12 +284,16 @@ export default {
       comments: [],
       fileId: 123,
       userItem: [],
+
     }
   },
   mounted() {
     this.fileId = this.$route.params.documentId
     this.getURL()
-    this.getContentInTime()
+    setInterval(() => {
+      this.getContentInTime()
+    }, 1000)
+
     //35 获取文档信息
     this.$axios.get('/app/file_info/',
         {
@@ -321,7 +325,7 @@ export default {
       this.allowShare = res.data.allow_Share
       this.star = res.data.star
       this.userItem = res.data.list
-      this.creator = res.data.creator,
+      this.creator = res.data.creator
           this.create_date = res.data.create_date
     })
   },
@@ -336,6 +340,7 @@ export default {
             },
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(res => {
+        console.log(res)
         this.title = res.data.title
         this.content = res.data.content
         if(res.data.status === 0){
@@ -343,8 +348,11 @@ export default {
             this.allow_edit = 0
           }
           else {
-            this.allow_edit = 0
+            this.allow_edit = 1
           }
+        }
+        else {
+          this.allow_edit = 1
         }
       })
     },
@@ -389,7 +397,7 @@ export default {
     },
     goChangeFile() {
       //37.5 判断是否掌握修改能力
-      this.$axios.get('', {
+      this.$axios.get('/app/get_change_power/', {
         params: {
           id: this.fileId
         },
