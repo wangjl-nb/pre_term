@@ -205,3 +205,10 @@ class Comment_reminder(models.Model):
 
     class Meta:
         db_table = 'comment_reminder'
+
+class Change_power(models.Model):
+    user = models.ForeignKey(User,on_delete=CASCADE)
+    file = models.ForeignKey(File,on_delete=CASCADE)
+
+    class Meta:
+        db_table = 'change_power'

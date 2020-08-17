@@ -65,4 +65,6 @@ urlpatterns = [
     path('comment_reminder/',views.comment_reminder,name='comment_reminder'),
     path('delete_comment_reminder/',views.delete_comment_reminder,name='delete_comment_reminder'),
     path('template_content/',views.template_content,name='template_content'),
+    path('get_change_power/',views.get_change_power,name='get_change_power'),
+    path('abandon_change_power/',views.abandon_change_power,name='abandon_change_power'),
 ]

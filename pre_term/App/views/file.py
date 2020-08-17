@@ -22,7 +22,7 @@ def my_files_list(request):
     type = int(request.GET['type'])
     user = request.user
     if type == 0:
-        records = Personal_record.objects.filter(user=user).filter(is_creator=False).order_by('-id')
+        records = Personal_record.objects.filter(user=user).order_by('-id')
     elif type == 1:
         records = File_log.objects.filter(user=user).order_by('-change_date')
     elif type == 2:
@@ -55,7 +55,7 @@ def my_files_list(request):
                 dic["change_date"] = log.change_date
                 dic["u_username"] = log.user.u_username
             res.append(dic)
-    data = {'msg': '个人文档列表', "documentList": res}
+    data = {'msg': '个人文档列表', "documentList": res, "pages": paginator.num_pages}
     return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
@@ -161,25 +161,6 @@ def file_info(request):
     data['comments'] = list
     return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
-
-# def file_info(request):
-#     try:
-#         id = int(request.GET['id'])
-#         file = File.objects.get(pk=id)
-#         if file.is_delete == True:
-#             data = {
-#                 'msg':'文件已被删除'
-#             }
-#         else:
-#             data = {
-#                 'msg': '文件获取成功',
-#                 'file_content': file.content
-#             }
-#     except:
-#         data = {
-#             'msg':'文件获取失败',
-#         }
-#     return JsonResponse(data = data)
 
 # 文件删除
 def delete_file(request):
@@ -690,14 +671,25 @@ def file_search(request):
 def file_content(request):
     try:
         file = File.objects.get(pk=request.GET['id'])
-        data = {
-            'title': file.title,
-            'content': file.content,
-            'status': 0,
-        }
+        change_power = Change_power.objects.filter(file=file).first()
+        data = {}
+        if change_power:
+            if change_power.user == request.user:
+                data['power'] = 0
+                data['status'] = 0
+            else:
+                data['power'] = 1
+                data['status'] = 1
+        else:
+            data['power'] = 2
+            data['status'] = 0
+        data['title'] = file.title
+        data['content'] = file.content
+        data['msg'] = '获取成功'
     except:
         data = {
-            "status": 1,
+            'msg': 'wrong',
+            "status": 1
         }
     return JsonResponse(data=data)
 
@@ -749,4 +741,33 @@ def template_content(request):
         data = {
             "status": 1,
         }
+    return JsonResponse(data=data)
+
+
+def get_change_power(request):
+    id = int(request.GET['id'])
+    change_power = Change_power.objects.filter(file_id=id).first()
+    if change_power:
+        if change_power.user != request.user:
+            data = {
+                'msg': '获取修改权限失败',
+                'status': 1
+            }
+            return JsonResponse(data=data)
+    change_power = Change_power()
+    change_power.user = request.user
+    change_power.file_id = id
+    change_power.save()
+    data = {'msg': '获取修改权限成功', 'status': 0}
+    return JsonResponse(data=data)
+
+
+def abandon_change_power(request):
+    id = int(request.GET['id'])
+    change_power = Change_power.objects.filter(file_id=id).filter(user=request.user).first()
+    if change_power:
+        change_power.delete()
+        data = {'msg': '放弃修改权限成功', 'status': 0}
+    else:
+        data = {'msg': '本人无修改权限，放弃失败', 'status': 1}
     return JsonResponse(data=data)
