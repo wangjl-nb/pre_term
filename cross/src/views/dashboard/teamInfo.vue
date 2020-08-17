@@ -1,5 +1,35 @@
 <template>
   <el-container class="router" style="position:relative">
+        <el-dialog
+        title="发送团队邀请"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose2">
+      <el-input
+          type="textarea"
+          autosize
+          placeholder="请输入内容"
+          v-model="reason">
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="invite(inviteId,reason)">确 定</el-button>
+  </span>
+    </el-dialog>
+      <el-dialog
+        title="发送团队申请"
+        :visible.sync="dialogVisible1"
+        width="30%"
+        :before-close="handleClose1">
+      <el-input
+          type="textarea"
+          autosize
+          placeholder="请输入内容"
+          v-model="reason1">
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="join(reason1)">确 定</el-button>
+  </span>
+    </el-dialog>
     <el-drawer
         title="我是标题"
         :visible.sync="drawer"
@@ -26,7 +56,7 @@
                     <el-avatar size="medium" :src="'/media/'+item.u_icon"></el-avatar>
                     <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">
         {{ item.u_username }}
-        <el-button type="text" @click="invite(item.id)"> 
+        <el-button type="text" @click="dialogVisible = true;inviteId=item.id"> 
            <i class="el-icon-circle-plus-outline" style="font-size:20px"></i> 
         </el-button>
        
@@ -136,7 +166,7 @@
         </div>
         <el-button plain v-show="type==0" @click="drawer = true">管理成员</el-button>
         <el-button type="danger" plain v-show="type==0" @click="dispose()">解散团队</el-button>
-        <el-button plain v-show="type==2" @click="join()">加入团队</el-button>
+        <el-button plain v-show="type==2" @click="dialogVisible1=true">加入团队</el-button>
         <el-button type="danger" v-show="type==1" plain @click="out()">退出团队</el-button>
         <el-button type="primary" v-show="type==0" plain @click="changeTeamIcon()">修改团队头像</el-button>
         <el-button type="warning" v-show="type==0" plain @click="changeTeamName()">修改团队名称</el-button>
@@ -232,11 +262,16 @@ export default {
   },
   data() {
     return {
+      dialogVisible: false,
+      inviteId: -1,
+      reason: "",
+      dialogVisible1: false,
+      reason1: "",
       img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       teamId: 134,
       name: "团队名字哈哈",
       newName: '',
-      type: 0,
+      type: 2,
       doucument_ids: [],
       isChangeTeamIcon: false,
       isChangeTeamName: false,
@@ -245,7 +280,7 @@ export default {
       dialogTableVisible: false,
       author: {id: 123, img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', name: "sadasd"}
       ,
-      searchItem: [],
+      searchItem: [ {id: 123, img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', name: "sadasd"}],
       userItem: [],
       drawer: false,
       search: "",
@@ -321,6 +356,14 @@ export default {
       this.editTeamInfo = ""
       this.dialogTableVisible = false
     },
+    handleClose1() {
+      this.reason1 = ""
+      this.dialogVisible1 = false
+    },
+    handleClose2() {
+      this.reason = ""
+      this.dialogVisible = false
+    },
     changeTeamIcon() {
       //11 修改团队头像
       this.isChangeTeamIcon = true
@@ -347,19 +390,20 @@ export default {
           .then(res => {
             console.log(res)
             if (res.data.status === 0) {
-              this.$router.push({path: "/diamond/dashboard/team"})
+              this.$router.push({path: "/diamond/dashboard/desktop"})
             } else {
               this.$message.error("解散团队失败");
             }
           })
 
     },
-    join() {
+    join(reason) {
       //19 申请加入团队
       var that = this
-      this.$axios.post('/app/team_application',
+      this.$axios.post('/app/team_application/',
           this.qs.stringify({
             id: that.teamId,
+            reason:reason
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
@@ -370,8 +414,10 @@ export default {
                 type: 'success'
               });
             } else {
-              this.$message.error("申请加入团队失败，请检查是否存在网络问题");
+              this.$message.error("申请加入团队失败，您的申请正在被处理或者您已经是团队成员，请刷新界面");
             }
+            this.reason1 = ""
+      this.dialogVisible1 = false
           })
     },
     out() {
@@ -391,13 +437,14 @@ export default {
             }
           })
     },
-    invite(id) {
+    invite(id,reason) {
       //14 邀请加入团队
       var that = this
-      this.$axios.post('/app/exit_team/',
+      this.$axios.post('/app/team_invitation/',
           this.qs.stringify({
-            id: that.teamId,
-            u_id: id
+            team_id: that.teamId,
+            user_id:id,
+            reason:reason
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
@@ -408,8 +455,10 @@ export default {
                 type: 'success'
               });
             } else {
-              this.$message.error("邀请失败，请检查是否存在网络问题");
+              this.$message.error("邀请失败,您之前发送的邀请还未被处理或者他已经是团队成员");
             }
+            this.dialogVisible=false
+            this.reason=""
           })
     },
     tichu(id, index) {
