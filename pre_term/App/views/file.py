@@ -628,7 +628,26 @@ def submit_comment(request):
         }
     except:
         data = {'msg': '评论失败', 'status': 1}
-    return JsonResponse(data=data)
+
+    # 收到评论提醒
+    def comment_reminder(request):
+        try:
+            comment_reminders = Comment_reminder.objects.filter(user=request.user)
+            list = []
+            for comment_reminder in comment_reminders:
+                comment = Comment.objects.get(pk=comment_reminder.comment_id)
+                file = File.objects.get(pk=comment.file_id)
+                user = User.objects.get(pk=comment.user_id)
+                dic = {
+                    'title': file.title,
+                    'u_username': user.u_username,
+                    'date': comment.time
+                }
+                list.append(dic)
+            data = {'msg': '获取评论提醒成功', 'list': list}
+        except:
+            data = {'msg': '获取评论提醒失败'}
+        return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
 def file_search(request):
@@ -704,6 +723,7 @@ def comment_reminder(request):
             file = File.objects.get(pk=comment.file_id)
             user = User.objects.get(pk=comment.user_id)
             dic = {
+                'id': comment_reminder.id,
                 'title': file.title,
                 'u_username': user.u_username,
                 'date': comment.time
@@ -712,14 +732,14 @@ def comment_reminder(request):
         data = {'msg': '获取评论提醒成功', 'list': list}
     except:
         data = {'msg': '获取评论提醒失败'}
-    return JsonResponse(data=data)
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
 def delete_comment_reminder(request):
     try:
         id = int(request.GET['id'])
         comment_reminder = Comment_reminder.objects.get(pk=id)
-        if comment_reminder:
+        if comment_reminder != None:
             comment_reminder.delete()
             data = {'msg': '删除成功', 'status': 0}
         else:

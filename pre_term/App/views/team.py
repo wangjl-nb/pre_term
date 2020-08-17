@@ -52,11 +52,12 @@ def team_info(request):
         dic = {
 
         }
-
-        if Team_relation.objects.filter(Q(team=team) & Q(user=user)).first().level == 2:
-            type = 0
-        elif Team_relation.objects.filter(Q(team=team) & Q(user=user)).first().level == 1:
-            type = 1
+        relation = Team_relation.objects.filter(Q(team=team) & Q(user=user))
+        if relation.exists():
+            if relation.first().level == 2:
+                type = 0
+            elif relation.first().level == 1:
+                type = 1
         else:
             type = 2
         data = {'msg': '团队信息介绍',
@@ -644,7 +645,7 @@ def delete_message(request):
     try:
         id = int(request.GET['id'])
         message = Message.objects.get(pk=id)
-        if message:
+        if message != None:
             message.delete()
             data = {'msg': '删除成功', 'status': 0}
         else:
