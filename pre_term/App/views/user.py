@@ -184,12 +184,13 @@ def search_person(request):
     users = User.objects.filter(Q(u_email__icontains=key) | Q(u_username__icontains=key)).order_by("id")
     res = []
     for user in users:
-        dic = {
-            "id": user.id,
-            "u_icon": str(user.u_icon),
-            "u_username": user.u_username,
-        }
-        res.append(dic)
+        if user != request.user:
+            dic = {
+                "id": user.id,
+                "u_icon": str(user.u_icon),
+                "u_username": user.u_username,
+            }
+            res.append(dic)
     data = {'msg': '用户搜索列表', "list": res}
     return HttpResponse(json.dumps(data), content_type='application/json')
 

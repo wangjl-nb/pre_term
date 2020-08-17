@@ -424,10 +424,10 @@ def grant_power(request):
         personal_record = Personal_record.objects.filter(user_id=u_id).filter(files_id=file_id).first()
 
         if comment == 1:
-            personal_record.comment = True
+            personal_record.comment = False
             personal_record.save()
         elif comment == 0:
-            personal_record.comment = False
+            personal_record.comment = True
             personal_record.save()
         else:
             data = {
@@ -436,10 +436,10 @@ def grant_power(request):
             }
             return JsonResponse(data=data)
         if change == 1:
-            personal_record.change = True
+            personal_record.change = False
             personal_record.save()
         elif change == 0:
-            personal_record.change = False
+            personal_record.change = True
             personal_record.save()
         else:
             data = {
