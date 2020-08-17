@@ -209,10 +209,10 @@ def is_login(request):
 def deal_collect(request):
     try:
         user = request.user
-        file_id = int(request.GET['id'])
-        type = int(request.GET['type'])
+        file_id = int(request.POST['id'])
+        type = int(request.POST['type'])
         if type == 0:
-            personal_collections = Personal_collection.objects.filter(user=user).filter(file_id=file_id)
+            personal_collections = Personal_collection.objects.filter(user=user).filter(files_id=file_id)
             if personal_collections.exists():
                 data = {'msg': '已收藏', 'status': 1}
             else:
@@ -222,7 +222,7 @@ def deal_collect(request):
                 personal_collections.save()
                 data = {'msg': '收藏成功', 'status': 0}
         elif type == 1:
-            personal_collections = Personal_collection.objects.filter(user=user).filter(file_id=file_id).first()
+            personal_collections = Personal_collection.objects.filter(user=user).filter(files_id=file_id).first()
             print(personal_collections)
             if not personal_collections:
                 data = {'msg': '未收藏', 'status': 1}

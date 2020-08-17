@@ -144,6 +144,10 @@ def file_info(request):
     data['creator'] = file.creator
     data['title'] = file.title
     data['content'] = file.content
+    if file.is_delete:
+        data['is_delete'] = 1
+    else:
+        data['is_delete'] = 0
     list = []
     comments = Comment.objects.filter(file=file)
     for comment in comments:
@@ -373,7 +377,7 @@ def create_file(request):
                 templete.accept_num = templete.accept_num + 1
                 templete.save()
             else:
-                title = ""
+                title = "空白文档"
                 content = ""
             file.title = title
             file.content = content
@@ -398,7 +402,7 @@ def create_file(request):
                 templete.accept_num = templete.accept_num + 1
                 templete.save()
             else:
-                title = ""
+                title = "空白文档"
                 content = ""
             file.title = title
             file.content = content
@@ -730,4 +734,19 @@ def delete_comment_reminder(request):
             data = {'msg': '删除失败', 'status': 1}
     except:
         data = {'msg': '删除失败', 'status': 1}
+    return JsonResponse(data=data)
+
+
+def template_content(request):
+    try:
+        template = Template.objects.get(pk=int(request.GET['id']))
+        data = {
+            "title": template.title,
+            "content": template.content,
+            "status": 0,
+        }
+    except:
+        data = {
+            "status": 1,
+        }
     return JsonResponse(data=data)

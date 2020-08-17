@@ -64,4 +64,5 @@ urlpatterns = [
     path('delete_message/',views.delete_message,name='delete_message'),
     path('comment_reminder/',views.comment_reminder,name='comment_reminder'),
     path('delete_comment_reminder/',views.delete_comment_reminder,name='delete_comment_reminder'),
+    path('template_content/',views.template_content,name='template_content'),
 ]

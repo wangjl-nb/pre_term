@@ -45,8 +45,8 @@ def team_info(request):
                     "id": team_relation.user.id,
                     "u_icon": str(team_relation.user.u_icon),
                     "u_username": team_relation.user.u_username,
-                    "change": team_relation.change,
-                    "comment": team_relation.comment
+                    "change": 0 if team_relation.change else 1,
+                    "comment": 0 if team_relation.comment else 1
                 }
                 list.append(dic2)
         dic = {
@@ -85,7 +85,7 @@ def dismiss_team(request):
         for team_relation in team_relations:
             message = Message()
             message.user_id = team_relation.user_id
-            message.content = '团队'+team.name+'已解散'
+            message.content = '团队' + team.name + '已解散'
             message.save()
         team.delete()
         return JsonResponse(data={"msg": "解散成功", "status": 0})
@@ -509,7 +509,7 @@ def process_application(request):
                 'status': 0
             }
             application.delete()
-            message.content = '团队创建者拒绝了你加入团队'+team.name+'的申请'
+            message.content = '团队创建者拒绝了你加入团队' + team.name + '的申请'
         message.user = application.user
         message.save()
     except:
