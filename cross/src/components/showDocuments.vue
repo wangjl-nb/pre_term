@@ -9,7 +9,7 @@
                   </div> 
                     <div style="margin-left:20px;margin-top:0px">   
                         <a style="font-size:18px" :href="'/editor/'+item.id">{{item.title}}</a>
-                        <p style="color:gray;font-size:13px">于{{item.create_date}}  {{item.creator}}创建   最后一次更新为{{item.u_username}}编辑于{{item.change_date}} 时</p>
+                        <p style="color:gray;font-size:13px">于{{item.create_date}}  {{item.creator}}创建   最后一次更新为{{item.u_username}}编辑于{{item.change_date}}</p>
                     </div>
                </div>
                   

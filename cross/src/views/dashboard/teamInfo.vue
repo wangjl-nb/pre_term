@@ -1,6 +1,6 @@
 <template>
   <el-container class="router" style="position:relative">
- <el-drawer
+    <el-drawer
         title="我是标题"
         :visible.sync="drawer"
         direction="rtl"
@@ -21,9 +21,9 @@
                 width="400"
                 trigger="click">
               <div v-if="searchItem.length>0">
-                <ul v-for="(item,index) in searchItem" :key="index">
+                <ul v-for="(item, index) in searchItem" :key="index">
                   <li style="position:relative">
-                    <el-avatar size="medium" :src="item.u_icon"></el-avatar>
+                    <el-avatar size="medium" :src="'/media/'+item.u_icon"></el-avatar>
                     <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">
         {{ item.u_username }}
         <el-button type="text" @click="invite(item.id)"> 
@@ -63,7 +63,7 @@
               <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
                 <use xlink:href="#icon-zhanghaoguanli"></use>
               </svg>
-              <el-avatar size="medium" :src="item.u_icon" class="img"></el-avatar>
+              <el-avatar size="medium" :src="'/media/'+item.u_icon" class="img"></el-avatar>
               <span class="user_name">
         {{ item.u_username }}
         </span>
@@ -71,8 +71,8 @@
                 <el-button v-show="item.comment==1" @click="changePower(index,item.id,0,item.change)">享有评论权限</el-button>
                 <el-button v-show="item.comment==0" @click="changePower(index,item.id,1,item.change)">无评论权限</el-button>
                 <el-button v-show="item.change==1" @click="changePower(index,item.id,item.comment,0)">享有修改权限</el-button>
-                <el-button v-show="item.change==0" @click="changePower(index,item.id,item.comment,0)">无修改权限</el-button>
-                <el-button type="text" @click="tichu(item.id)"
+                <el-button v-show="item.change==0" @click="changePower(index,item.id,item.comment,1)">无修改权限</el-button>
+                <el-button type="text" @click="tichu(item.id,index)"
                            style="position:absolute;margin-top:-10px;margin-left:10px">
                   <svg class="icon" aria-hidden="true" style="color:red;width:2em;height:2em">
                     <use xlink:href="#icon-tiren"></use>
@@ -176,18 +176,18 @@
             <el-dialog title="修改团队头像" :visible.sync="isChangeTeamIcon" center :append-to-body='true'
                        :lock-scroll="false" width="50%" @closed="teamIconClose">
               <el-upload ref="upload"
-									 action="#"
-									 accept="image/png,image/gif,image/jpg,image/jpeg"
-									 list-type="picture-card"
-									 :limit=1
-									 :auto-upload="false"
-									 :on-exceed="handleExceed"
-									 :before-upload="handleBeforeUpload"
-									 :on-preview="handlePictureCardPreview"
-									 :on-remove="handleRemove"
-									 :on-change="imgChange">
-					<i class="el-icon-plus"></i>
-				</el-upload>
+                         action="#"
+                         accept="image/png,image/gif,image/jpg,image/jpeg"
+                         list-type="picture-card"
+                         :limit=1
+                         :auto-upload="false"
+                         :on-exceed="handleExceed"
+                         :before-upload="handleBeforeUpload"
+                         :on-preview="handlePictureCardPreview"
+                         :on-remove="handleRemove"
+                         :on-change="imgChange">
+                <i class="el-icon-plus"></i>
+              </el-upload>
               <el-button class="medium" style="margin-left:40%;position:relative;margin-top:30px" plain
                          @click="uploadFile">提交修改
               </el-button>
@@ -245,49 +245,11 @@ export default {
       dialogTableVisible: false,
       author: {id: 123, img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', name: "sadasd"}
       ,
-      searchItem: [
-        {
-          id: 123,
-          u_icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          u_username: "sadasd"
-        },
-      ],
-      userItem: [
-        {
-          id: 12443,
-          u_icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          u_username: "sadasewrwrwrwed",
-          change: 0,
-          comment: 0,
-        },
-        {
-          id: 12443,
-          u_icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          u_username: "sadasewrwrwrwed",
-          change: 1,
-          comment: 0,
-        },
-        {
-          id: 12443,
-          u_icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          u_username: "sadasewrwrwrwed",
-          change: 0,
-          comment: 1,
-        },
-        {
-          id: 12443,
-          u_icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          u_username: "sadasewrwrwrwed",
-          change: 1,
-          comment: 1,
-        }
-      ],
+      searchItem: [],
+      userItem: [],
       drawer: false,
       search: "",
-       list:  [{title:"jac324kff",id:123243,creator:"mala",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
-        {title:"jac432asdk",id:12322342,creator:"masla",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
-        {title:"jac423sdak",id:12324332,creator:"malsa",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"}
-        ],
+      list: [],
       teamRemind: [
         {application_id: 12331, u_username: "你太厉害", reason: "你太厉害了！！！"},
         {application_id: 12331, u_username: "叽叽喳喳害", reason: "你太厉害了！！！"},
@@ -310,13 +272,13 @@ export default {
       that.name = res.data.name
       that.jpg = '/media/' + res.data.icon
       that.type = res.data.type
-      that.teamInfo = res.data.discribe
+      that.teamInfo = res.data.describe
       that.author.id = res.data.u_id
       that.author.img = '/media/' + res.data.u_icon
       that.author.name = res.data.u_username
       that.userItem = res.data.list
       //权限按钮显示？？？
-      that.create_data = res.data.create_date
+      that.create_date = res.data.create_date
       //    this.$router.push({path:"/diamond/dashboard/desktop"})
     })
     //获取团队文档信息
@@ -343,7 +305,7 @@ export default {
           }
         })
     //24.5 获取团队申请信息
-    this.$axios.get('', {
+    this.$axios.get('/app/application_list/', {
           params: {
             team_id: that.teamId,
           }
@@ -450,7 +412,7 @@ export default {
             }
           })
     },
-    tichu(id) {
+    tichu(id, index) {
       // 踢出团队
       var that = this
       this.$axios.post('/app/kick/',
@@ -466,6 +428,7 @@ export default {
                 message: "踢人成功",
                 type: 'success'
               });
+              this.userItem.splice(index, 1)
             } else {
               this.$message.error("踢人失败，请检查是否存在网络问题");
             }
@@ -504,28 +467,28 @@ export default {
     },
     changePower(index, id, comment, change) {
       //15 分配团队文档权限
-      this.$axios.post('',
-          this.qs.stringify({
-            u_id: id,
-            id: this.teamId,
-            comment: comment,
-            change: change
-          }),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-          .then(res => {
-            console.log(res)
-            if (res.data.status == 0) {
-              this.userItem[index].change = change
-              this.userItem[index].comment = comment
-            }
-          })
+      this.$axios.get('/app/grant_team_power/', {
+        params: {
+          u_id: id,
+          team_id: this.teamId,
+          comment: comment,
+          change: change
+        },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(res => {
+        console.log(res)
+        if (res.data.status == 0) {
+          this.userItem[index].change = change
+          this.userItem[index].comment = comment
+        }
+      })
     },
     manageTeamRemind(index, id, type) {
       //25 管理团队申请信息
-      this.$axios.post('',
+      this.$axios.post('/app/process_application/',
           this.qs.stringify({
             id: id,
-            tyoe: type
+            type: type
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
@@ -537,68 +500,68 @@ export default {
     },
 
     //上传头像所用
-    handleBeforeUpload (file) {
-				if (!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
-					this.$notify.warning({
-						title: '警告',
-						message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
-					})
-				}
-				let size = file.size / 1024 / 1024 / 2
-				if (size > 2) {
-					this.$notify.warning({
-						title: '警告',
-						message: '图片大小必须小于2M'
-					})
-				}
-				let fd = new FormData();//通过form数据格式来传
-        fd.append("team_id", this.teamId)
-				fd.append("icon", file); //传文件
-				console.log(fd.get('icon'));
-				this.$axios({
-					url: '/app/change_team_icon/',
-					method: "post",
-					data: fd,
-					headers: {
-						'Content-Type': 'multipart/form-data'
-					}
-				}).then((res) => {
-				  this.$message(res.data.msg)
-					console.log(res)
-          if(res.data.status === 0){
-            this.$router.go(0)
-          }
-				})
-			},
-		handleExceed (files, fileList) {
+    handleBeforeUpload(file) {
+      if (!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
+        this.$notify.warning({
+          title: '警告',
+          message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
+        })
+      }
+      let size = file.size / 1024 / 1024 / 2
+      if (size > 2) {
+        this.$notify.warning({
+          title: '警告',
+          message: '图片大小必须小于2M'
+        })
+      }
+      let fd = new FormData();//通过form数据格式来传
+      fd.append("team_id", this.teamId)
+      fd.append("icon", file); //传文件
+      console.log(fd.get('icon'));
+      this.$axios({
+        url: '/app/change_team_icon/',
+        method: "post",
+        data: fd,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((res) => {
+        this.$message(res.data.msg)
+        console.log(res)
+        if (res.data.status === 0) {
+          this.$router.go(0)
+        }
+      })
+    },
+    handleExceed(files, fileList) {
       //防报错
-      this.aa=files
-      this.aa=fileList
-			},
-		handleRemove (file, fileList) {
-				this.hideUpload = fileList.length >= this.limitNum;
- //防报错
-      this.aa=file
-      this.aa=fileList
-			},
-		handlePictureCardPreview (file) {
-       //防报错
-      this.aa=file
-				// this.dialogImageUrl = file.url;
-				// this.dialogVisible = true;
-			},
-		uploadFile () {
-				this.$refs.upload.submit()
-        this.isChangeTeamIcon = false
-			},
-		imgChange (files, fileList) {
-       //防报错
-      this.aa=files
-				this.hideUpload = fileList.length >= this.limitNum;
-				if (fileList) {
-					this.$refs.uploadElement.clearValidate();
-				}
-			},
+      this.aa = files
+      this.aa = fileList
+    },
+    handleRemove(file, fileList) {
+      this.hideUpload = fileList.length >= this.limitNum;
+      //防报错
+      this.aa = file
+      this.aa = fileList
+    },
+    handlePictureCardPreview(file) {
+      //防报错
+      this.aa = file
+      // this.dialogImageUrl = file.url;
+      // this.dialogVisible = true;
+    },
+    uploadFile() {
+      this.$refs.upload.submit()
+      this.isChangeTeamIcon = false
+    },
+    imgChange(files, fileList) {
+      //防报错
+      this.aa = files
+      this.hideUpload = fileList.length >= this.limitNum;
+      if (fileList) {
+        this.$refs.uploadElement.clearValidate();
+      }
+    },
 
     //修改名称所用
     submitName(text) {
