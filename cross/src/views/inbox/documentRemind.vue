@@ -4,7 +4,8 @@
       <ul v-for="(item,index) in list" :key="index">
           <li>
               <el-card class="box-card" shadow="hover">
-                    <p style="flex-grow:13"><strong style="font-size:20px">{{item.u_username}}</strong> <span>于{{item.date}}时评论了</span><strong style="font-size:20px">{{item.title}}</strong>文档</p>
+                <p style="flex-grow:13"><strong style="font-size:20px">{{item.u_username}}</strong> <span>于{{item.date}}时评论了</span><strong style="font-size:20px">{{item.title}}</strong>文档</p>
+                <el-button type="danger" plain @click="read(item.id)">阅读</el-button>
               </el-card>
           </li>
       </ul>
@@ -40,7 +41,23 @@ export default {
     })
   },
   methods:{
-
+    read(id){
+      //接口文档27.5
+      this.$axios.get('/app/delete_comment_reminder/',{
+        params:{
+          id: id
+        },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(res =>{
+          console.log(res);
+        if (res.data.status === 0) {
+          alert('阅读完成并删除！')
+          this.$router.go(0)
+        } else {
+          this.$message.error("阅读失败！")
+        }
+      })
+    }
   }
 };
 </script>

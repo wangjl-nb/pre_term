@@ -347,7 +347,7 @@ export default {
           .then(res => {
             console.log(res)
             if (res.data.status === 0) {
-              this.$router.push({path: "/diamond/dashboard/desktop"})
+              this.$router.push({path: "/diamond/dashboard/team"})
             } else {
               this.$message.error("解散团队失败");
             }

@@ -128,9 +128,9 @@
           <div style="margin-left:20px;margin-right:30px">
             <h1 class="change-color" style="font-weight:lighter ">{{ document_type }}</h1>
           </div>
-          <router-link :to="{path: '/changefile/'+fileId}">
-            <el-button type="primary" v-show="change_power==0&&allow_edit==0" plain>修改</el-button>
-          </router-link>
+<!--          <router-link :to="{path: '/changefile/'+fileId}">-->
+            <el-button type="primary" v-show="change_power==0&&allow_edit==0" plain @click="goChangeFile">修改</el-button>
+<!--          </router-link>-->
           <el-button type="danger" v-show="change_power==0&&allow_edit==1" plain disabled>当前有人正在修改 禁止修改</el-button>
           <el-button type="danger" v-show="change_power==1" plain disabled>您没有修改的权限</el-button>
           <el-button type="primary" v-show="type==1&&is_team==1" plain @click="drawer = true" style="margin-left: 10px">
@@ -281,26 +281,9 @@ export default {
       //drawer
       drawer: false,
       direction: 'rtl',
-      comments: [
-        {u_username: '用户1', content: '评论内容1', time: '2020-08-10', id: 123},
-      ],
+      comments: [],
       fileId: 123,
-      userItem: [
-        {
-          id: 12443,
-          u_icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          u_username: "sadasewrwrwrwed",
-          change: 0,
-          comment: 0,
-        },
-        {
-          id: 12443,
-          u_icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          u_username: "sadasewrwrwrwed",
-          change: 1,
-          comment: 0,
-        },
-      ],
+      userItem: [],
     }
   },
   mounted() {
@@ -353,7 +336,6 @@ export default {
             },
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(res => {
-        console.log(res)
         this.title = res.data.title
         this.content = res.data.content
         if(res.data.status === 0){
@@ -407,7 +389,20 @@ export default {
     },
     goChangeFile() {
       //37.5 判断是否掌握修改能力
-      
+      this.$axios.get('', {
+        params: {
+          id: this.fileId
+        },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      }).then(res => {
+        if(res.data.status === 0){
+          alert('获取修改能力成功，修改后请点击退出修改以便他人修改文档')
+          this.$router.push({path: '/changefile/'+this.fileId})
+        }
+        else {
+          alert('获取修改能力失败，请等待当前修改文档的用户')
+        }
+      })
     },
     set_allowShare(allowShare) {
       //38 设置分享权限

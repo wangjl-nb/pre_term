@@ -18,6 +18,7 @@
   :visible.sync="dialogVisible"
   width="30%">
     <el-button @click="dialogVisible = false;">取 消</el-button>
+    <el-button @click="$router.push({path: '/templatepreview/'+item.id})">预 览</el-button>
     <el-button type="primary" @click="newDocument(item.id,team_id)">确 定新建</el-button>
 </el-dialog>
         </span>
@@ -79,13 +80,7 @@ export default {
            dialogVisible: false,
            team_id:0,
         visible:false,
-           list:[ 
-          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
-          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
-          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
-          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
-          {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
-        ]
+           list:[]
       }
   },
   mounted(){
@@ -99,7 +94,7 @@ export default {
               })
   },
   methods:{
-      newDocument(templete_id,team_id){
+    newDocument(templete_id,team_id){
                   //4 不基于模板创建文档
       this.$axios.post('/app/create_file/',
               this.qs.stringify({
@@ -112,7 +107,7 @@ export default {
                   this.$router.push({path:"/editor/"+res.data.id})
               })
       },
-           pingfen(id,value){
+    pingfen(id,value){
          //6 给模板评分
      this.$axios.post('/app/grade_templetes/',
               this.qs.stringify({
@@ -133,7 +128,7 @@ export default {
                 }
               })
       this.visible=false
-    }
+    },
   }
 };
 </script>

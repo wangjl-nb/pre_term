@@ -161,7 +161,7 @@ const routes = [
     component: () => import("../components/changeFile.vue")
   },
   {
-    path: "templatepreview/:templateid",
+    path: "/templatepreview/:templateid",
     name: 'TemplatePreview',
     component: () => import("../components/TemplatePreview.vue")
   },

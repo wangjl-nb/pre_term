@@ -25,9 +25,9 @@
             <!--            </div>-->
             <wang-enduit v-model="ruleForm.content"></wang-enduit>
           </el-form-item>
-<!--          <el-form-item>-->
-<!--            <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>-->
-<!--          </el-form-item>-->
+          <el-form-item>
+            <el-button type="primary" @click="quitChange">退出修改</el-button>
+          </el-form-item>
         </el-form>
       </el-col>
       <el-col :span="2" class="grid-content"></el-col>
@@ -64,6 +64,7 @@ export default {
     }
   },
   beforeMount() {
+    alert('修改文档时会自动保存，且他人不会在您修改时修改文档，请在修改之后点击下方的“返回修改”按钮，便于他人继续修改')
     setInterval(() => {
       this.getContent()
     }, 1000)
@@ -78,18 +79,18 @@ export default {
   methods: {
     getContent() {
       this.$axios.get('/app/file_content/',
-        {
-          params: {
-            id: this.$route.params.fileId,
-          },
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        }).then(res => {
-      // console.log(res)
-      if (res.data.status === 0) {
+          {
+            params: {
+              id: this.$route.params.fileId,
+            },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          }).then(res => {
+        // console.log(res)
+        if (res.data.status === 0) {
           this.ruleForm.title = res.data.title
           this.ruleForm.content = res.data.content
-      }
-    })
+        }
+      })
     },
     submitForm(formName) {
       console.log('2222')
@@ -104,8 +105,8 @@ export default {
               {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
               }).then(res => {
-                // console.log(res)
-                // this.$message(res.data.msg)
+            // console.log(res)
+            // this.$message(res.data.msg)
           })
         } else {
           console.log('error submit!!');
@@ -113,6 +114,28 @@ export default {
         }
       });
     },
+    quitChange() {
+      this.$confirm('确定退出修改吗？','提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(() => {
+        this.$axios.get('',
+          {
+            params: {
+              id: this.$route.params.fileId
+            },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          }).then(res => {
+            if(res.data.status === 0){
+              this.$router.go(-1)
+            }
+            else{
+              alert('退出修改失败')
+            }
+        })
+      })
+
+    }
   }
 }
 </script>

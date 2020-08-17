@@ -4,7 +4,8 @@
       <ul v-for="(item,index) in list" :key="index">
           <li>
               <el-card class="box-card" shadow="hover">
-                    <p style="flex-grow:13">你收到一条团队踢出提醒：<strong style="font-size:20px">{{item.message}}</strong> </p>
+                <p style="flex-grow:13">你收到一条团队提醒：<strong style="font-size:20px">{{item.message}}</strong> </p>
+                <el-button type="danger" plain @click="read(item.id)">阅读</el-button>
               </el-card>
           </li>
       </ul>
@@ -39,7 +40,22 @@ export default {
     })
   },
   methods:{
-
+    read(id){
+      //接口文档27.5
+      this.$axios.get('/app/delete_message/',{
+        params:{
+          id: id
+        },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(res =>{
+        if (res.data.status === 0) {
+          alert('阅读完成并删除！')
+          this.$router.go(0)
+        } else {
+          this.$message.error("阅读失败！")
+        }
+      })
+    }
   }
 };
 </script>
