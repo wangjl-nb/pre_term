@@ -128,16 +128,17 @@
           <div style="margin-left:20px;margin-right:30px">
             <h1 class="change-color" style="font-weight:lighter ">{{ document_type }}</h1>
           </div>
-          <router-link :to="{path: '/changefile/', query: {fileId: fileId}}">
+          <router-link :to="{path: '/changefile/'+fileId}">
             <el-button type="primary" v-show="change_power==0&&allow_edit==0" plain>修改</el-button>
-            <el-button type="danger" v-show="change_power==0&&allow_edit==1" plain disabled>当前有人正在修改 禁止修改</el-button>
-            <el-button type="danger" v-show="change_power==1" plain disabled>您没有修改的权限</el-button>
           </router-link>
+          <el-button type="danger" v-show="change_power==0&&allow_edit==1" plain disabled>当前有人正在修改 禁止修改</el-button>
+          <el-button type="danger" v-show="change_power==1" plain disabled>您没有修改的权限</el-button>
           <el-button type="primary" v-show="type==1&&is_team==1" plain @click="drawer = true" style="margin-left: 10px">
             协作
           </el-button>
           <el-button type="primary" v-show="type==1&&allowShare==0" @click="set_allowShare(1)" plain>允许分享</el-button>
           <el-button type="primary" v-show="type==1&&allowShare==1" @click="set_allowShare(0)" plain>禁止分享</el-button>
+
           <input type="text" v-model="localURL" style="display: none">
           <el-button class="copyURL"
                      v-if="allowShare==0"
@@ -154,6 +155,7 @@
             分享
           </el-button>
           <el-button type="primary" v-show="type==1" @click="del()" plain>删除</el-button>
+
         </div>
       </el-menu>
       <div style="position:relative">
@@ -185,17 +187,19 @@
         <el-col :span="2" class="grid-content">
         </el-col>
         <el-col :span="20" style="position:relative">
-          <div class="mengban" style="opacity: 0.5; background-color:#ededed">
+          <div v-if="comment_power==1">
+            <div class="mengban" v-if="comment_power==1" style="opacity: 0.5; background-color:#ededed">
+            </div>
+            <div class="mengban">
+              <p class="change-color" v-if="comment_power==1" style="margin-top:70px;font-size:23px">您没有评论的权限</p>
+            </div>
           </div>
-          <div class="mengban">
-            <p class="change-color" style="margin-top:70px;font-size:23px">您没有评论的权限</p>
-          </div>
-          <el-form action="#" ref="commentTextarea" label-width="100px">
+          <el-form ref="form" :model="form" label-width="100px">
             <el-form-item label="评论">
-              <el-input type="textarea" placeholder="请在此发表评论"></el-input>
+              <el-input type="textarea" v-model="form.desc"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit(textarea)">提交</el-button>
+              <el-button type="primary" @click="onSubmit(form.desc)">提交</el-button>
             </el-form-item>
           </el-form>
 
@@ -224,21 +228,24 @@
 </template>
 
 <script>
-  import WangEnduit from "@/components/wangEnduit";
+import WangEnduit from "@/components/wangEnduit";
 
 export default {
   name: "editor",
-  components:{
+  components: {
     WangEnduit,
   },
   data() {
     return {
+      form: {
+        desc: ''
+      },
       allow_edit: 1,
       dialogVisible: false,
       inviteId: -1,
       reason: "",
       document_type: "个人文档",
-      type: 0,
+      type: 1,
       change_power: 0,
       comment_power: 1,
       is_team: 1,
@@ -249,7 +256,6 @@ export default {
       create_date: "2020/1/1",
       allowShare: 1,
       star: 1,
-      textarea: "",
       //悬浮框
       visible: false,
       isComment: false,
@@ -304,48 +310,37 @@ export default {
     //35 获取文档信息
     this.$axios.get('/app/file_info/',
         {
-            params: {
-              id: this.fileId
-            },
+          params: {
+            id: this.fileId
+          },
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(res => {
-          console.log(res)
-          this.type = res.data.type
-          if (this.type === -1 && this.allowShare === 1) {
-            this.$router.push({path: "/error"})
-          } else if (this.type === -2) {
-            this.$router.push({path: "/login"})
-          }
-          this.change_power = res.data.change
-              this.comment_power = res.data.comment
-              this.is_team = res.data.is_team
-          if (this.is_team === 0) {
-            this.document_type = "团队文档"
-          } else {
-            this.document_type = "个人文档"
-          }
-          this.team_id = res.data.team_id
-          this.title = res.data.title
-          this.content = res.data.content
-          this.comment = res.data.comments
-          this.allowShare = res.data.allowShare
-          this.star = res.data.star
-          this.userItem = res.data.list
-        })
-    //定时器 数据库轮询 查看是否可以修改文档
-    // self.setInterval(
-    //     function () {
-    //       //37 数据库轮询 查看是否可以修改文档
-    //       this.$axios.get('',
-    //           this.qs.stringify({
-    //             id: this.fileId
-    //           }),
-    //           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-    //           .then(res => {
-    //             console.log(res)
-    //             this.allow_edit = res.data.status
-    //           })
-    //     }, 1000);
+      console.log(res)
+      this.type = res.data.type
+      if ((this.type === -1 && this.allowShare === 1) || res.data.is_delete === 1) {
+        this.$router.push({path: "/error"})
+      } else if (this.type === -2) {
+        this.$router.push({path: "/login"})
+      }
+      this.change_power = res.data.change
+      this.comment_power = res.data.comment
+      this.team_id = res.data.team_id
+      if (this.team_id > -1) {
+        this.document_type = "团队文档"
+        this.is_team = 0
+      } else {
+        this.document_type = "个人文档"
+        this.is_team = 1
+      }
+      this.title = res.data.title
+      this.content = res.data.content
+      this.comment = res.data.comments
+      this.allowShare = res.data.allow_Share
+      this.star = res.data.star
+      this.userItem = res.data.list
+      this.creator = res.data.creator,
+          this.create_date = res.data.create_date
+    })
   },
   methods: {
     getContentInTime() {
@@ -359,14 +354,17 @@ export default {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(res => {
         console.log(res)
-            if (res.data.status === 0) {
-              this.title = res.data.title
-              this.content = res.data.content
-              setTimeout(() => {
-                this.getContentInTime()
-              }, 3000)
-            }
-          })
+        this.title = res.data.title
+        this.content = res.data.content
+        if(res.data.status === 0){
+          if(res.data.power === 0 || res.data.power === 2){
+            this.allow_edit = 0
+          }
+          else {
+            this.allow_edit = 0
+          }
+        }
+      })
     },
     handleClick() {
       alert('button click');
@@ -377,41 +375,60 @@ export default {
     goBack() {
       console.log('go back');
     },
-    onSubmit(content) {
-      //45 评论文档
-      this.$axios.post('',
+    searchUser(search) {
+      //13 搜索用户
+      this.$axios.post('/app/search_person/',
           this.qs.stringify({
-            id: this.fileId,
-            content: content
+            key: search,
+          }),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+          .then(res => {
+            console.log(res)
+            this.searchItem = res.data.list
+          })
+    },
+    changePower(index, id, comment, change) {
+      //15 分配个人文档权限
+      this.$axios.post('/app/grant_power/',
+          this.qs.stringify({
+            u_id: id,
+            id: this.teamId,
+            comment: comment,
+            change: change
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
             console.log(res)
             if (res.data.status == 0) {
-              this.textarea = ""
-              var com = {id: res.data.id, time: res.data.time, u_username: res.data.u_username, content: content}
-              this.comments.push(com)
-            } else {
-              this.$message.error('评论失败');
+              this.userItem[index].change = change
+              this.userItem[index].comment = comment
             }
           })
     },
-    copy() {
-      let clipboard = new this.Clipboard('.copyURL');
-      clipboard.on('success', e => {
-        this.$message({
-          type: 'success',
-          message: '链接已复制到剪贴板'
-        });
-        this.aa = e
-        clipboard.destroy()
+    goChangeFile() {
+      //37.5 判断是否掌握修改能力
+      
+    },
+    set_allowShare(allowShare) {
+      //38 设置分享权限
+      this.$axios.get('/app/set_is_share/',
+          {
+            params: {
+              id: this.fileId,
+              type: allowShare
+            },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          }).then(res => {
+        console.log(res)
+        if (res.data.status === 0) {
+          this.allowShare = allowShare
+        } else {
+          this.$message.error("改变分享权限失败，请检查是否存在网络问题");
+        }
       })
     },
-    getURL() {
-      this.localURL = location.href
-    },
     set_favorite(type) {
-      //40 收藏文档
+      //39 收藏文档
       this.$axios.post('/app/deal_collect/',
           this.qs.stringify({
             id: this.fileId,
@@ -447,34 +464,23 @@ export default {
             }
           })
     },
-    changePower(index, id, comment, change) {
-      //15 分配个人文档权限
-      this.$axios.post('/app/grant_power/',
+    onSubmit(content) {
+      //45 评论文档
+      this.$axios.post('/app/submit_comment/',
           this.qs.stringify({
-            u_id: id,
-            id: this.teamId,
-            comment: comment,
-            change: change
+            id: this.fileId,
+            content: content
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
             console.log(res)
             if (res.data.status == 0) {
-              this.userItem[index].change = change
-              this.userItem[index].comment = comment
+              this.form.desc = ""
+              var com = {id: res.data.id, time: res.data.time, u_username: res.data.u_username, content: content}
+              this.comments.push(com)
+            } else {
+              this.$message.error('评论失败');
             }
-          })
-    },
-    searchUser(search) {
-      //13 搜索用户
-      this.$axios.post('/app/search_person/',
-          this.qs.stringify({
-            key: search,
-          }),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-          .then(res => {
-            console.log(res)
-            this.searchItem = res.data.list
           })
     },
     invite(id, reason) {
@@ -497,28 +503,26 @@ export default {
       this.reason = ""
       this.dialogVisible = false
     },
+
+
+    copy() {
+      let clipboard = new this.Clipboard('.copyURL');
+      clipboard.on('success', e => {
+        this.$message({
+          type: 'success',
+          message: '链接已复制到剪贴板'
+        });
+        this.aa = e
+        clipboard.destroy()
+      })
+    },
+    getURL() {
+      this.localURL = location.href
+    },
     handleClose(done) {
       done();
       this.reason = ""
     },
-    set_allowShare(allowShare) {
-      this.allowShare = allowShare
-      //38 设置分享权限
-      this.$axios.post('/app/set_is_share/',
-          this.qs.stringify({
-            id: this.fileId,
-            type: allowShare
-          }),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-          .then(res => {
-            console.log(res)
-            if (res.data.status === 0) {
-              this.allowShare = allowShare
-            } else {
-              this.$message.error("邀请失败，请检查是否存在网络问题");
-            }
-          })
-    }
   }
 }
 </script>

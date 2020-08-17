@@ -5,7 +5,7 @@
     <el-card :body-style="{ padding: '0px' }">
     <div class="demo-image__preview">
   <el-image 
-    :src="item.img" 
+    :src="'/media/'+item.img" 
         style="width:100%;height:150px" 
     :preview-src-list="[item.img]">
   </el-image>
@@ -17,15 +17,8 @@
   title="新建文档"
   :visible.sync="dialogVisible"
   width="30%">
- <el-form ref="form" :model="form" label-width="80px">
-  <el-form-item label="文档名称">
-    <el-input v-model="form.name"></el-input>
-  </el-form-item>
- </el-form>
-  <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false;form.name=''">取 消</el-button>
-    <el-button type="primary" @click="newDocument(form.name,item.id,item.content)">确 定</el-button>
-  </span>
+    <el-button @click="dialogVisible = false;">取 消</el-button>
+    <el-button type="primary" @click="newDocument(item.id,team_id)">确 定新建</el-button>
 </el-dialog>
         </span>
         <div class="bottom clearfix">
@@ -39,8 +32,9 @@
   score-template="{value}">
 </el-rate>
             </div>
-            <div style="margin-left:10px">
+              <div style="margin-left:10px" >
               <el-popover
+  v-show="item.myscore==-1" 
   trigger="click"
   placement="bottom"
   width="250"
@@ -54,10 +48,21 @@
 </div>
   <el-button type="text" slot="reference">评分</el-button>
 </el-popover>
-            </div>
+            </div> 
+          </div>
+          <div v-show="item.myscore!=-1" class="flex flex6">
+<el-rate 
+  v-model="item.myscore"
+  disabled
+  show-score
+  text-color="#ff9900"
+  score-template="{value}">
+</el-rate>
+<span style="font-size:12px;color:gray;margin-left:7px">个人评分</span>
           </div>
           <p style="color:gray;font-size:13px">已经被{{item.accept_num}}位作者采纳</p>
-        </div>
+       
+      </div>
       </div>
     </el-card>
   </el-col> 
@@ -73,11 +78,8 @@ export default {
       return{
            dialogVisible: false,
            team_id:0,
-        form:{
-          name:""
-        },
         visible:false,
-        list:[ 
+           list:[ 
           {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
           {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
           {id:123,img:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',title:"模板名字",content:"",score:3.45,value2:null,accept_num:11},
@@ -93,28 +95,24 @@ export default {
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
                 console.log(res)
-                    this.list=res.data.templetes_list
-
+                this.list=res.data.templetes_list
               })
   },
   methods:{
-      newDocument(name,template_id,content){
+      newDocument(templete_id,team_id){
                   //4 不基于模板创建文档
-     this.$axios.post('/app/create_file/',
+      this.$axios.post('/app/create_file/',
               this.qs.stringify({
-                template_id:template_id,
-                title:name,
-                content:content,
-                team_id:this.team_id
+                templete_id:templete_id,
+                team_id:team_id
               }),
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
                 console.log(res)
                   this.$router.push({path:"/editor/"+res.data.id})
               })
-        this.form.name=""
       },
-    pingfen(id,value){
+           pingfen(id,value){
          //6 给模板评分
      this.$axios.post('/app/grade_templetes/',
               this.qs.stringify({
@@ -124,13 +122,14 @@ export default {
               {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
               .then(res => {
                 console.log(res)
-                if(res.data.status){
+                if(res.data.status==0){
+                 this.$router.go(0);
                    this.$message({
           message: '评分成功',
           type: 'success'
         });
                 }else{
-                   this.$message.error('评分失败，请检查是否存在什么问题');
+                   this.$message.error('您已经评分过了');
                 }
               })
       this.visible=false

@@ -25,9 +25,9 @@
             <!--            </div>-->
             <wang-enduit v-model="ruleForm.content"></wang-enduit>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-          </el-form-item>
+<!--          <el-form-item>-->
+<!--            <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>-->
+<!--          </el-form-item>-->
         </el-form>
       </el-col>
       <el-col :span="2" class="grid-content"></el-col>
@@ -63,9 +63,17 @@ export default {
       url: '',
     }
   },
+  beforeMount() {
+    setInterval(() => {
+      this.getContent()
+    }, 1000)
 
+  },
   mounted() {
-    this.getContent()
+    setInterval(() => {
+      this.submitForm('ruleForm')
+    }, 1000)
+
   },
   methods: {
     getContent() {
@@ -76,18 +84,15 @@ export default {
           },
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         }).then(res => {
-      console.log(res)
+      // console.log(res)
       if (res.data.status === 0) {
           this.ruleForm.title = res.data.title
           this.ruleForm.content = res.data.content
-
       }
-      // setTimeout(() => {
-      //   this.getContent()
-      // }, 3000)
     })
     },
     submitForm(formName) {
+      console.log('2222')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$axios.post('/app/change_file/',
@@ -99,11 +104,8 @@ export default {
               {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
               }).then(res => {
-                console.log(res)
-                this.$message(res.data.msg)
-                // if(res.data.status === 0){
-                //
-                // }
+                // console.log(res)
+                // this.$message(res.data.msg)
           })
         } else {
           console.log('error submit!!');
