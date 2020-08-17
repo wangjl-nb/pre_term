@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('app/', include('App.urls', namespace='app')),
     path('', TemplateView.as_view(template_name='index.html')),
-    path('diamond', TemplateView.as_view(template_name="index.html")),
+    path('diamond/', TemplateView.as_view(template_name="index.html")),
     path('diamond/inbox', TemplateView.as_view(template_name="index.html")),
     path('diamond/invite', TemplateView.as_view(template_name="index.html")),
     path('diamond/teamRemind', TemplateView.as_view(template_name="index.html")),
