@@ -5,14 +5,16 @@
         <li>
           <el-card class="box-card" shadow="hover">
             <div class="flex flex6">
-              <p style="flex-grow:13"><strong style="font-size:20px">{{ item.u_username }}</strong>
+              <p style="flex-grow:11"><strong style="font-size:20px">{{ item.u_username }}</strong>
                 <span>邀请您加入</span><strong style="font-size:20px">{{ item.name }}</strong></p>
-              <el-button style="flex-grow:1" plain @click="argee(item.invitation_id)">同意</el-button>
-              <el-button style="flex-grow:1" type="danger" plain @click="refuse(item.invitation_id)">拒绝</el-button>
+              <div style="flex-grow:1;margin-bottom:-30px" >
+                <button class="btn-7" style="margin-right:-5px" @click="argee(index,item.invitation_id)">同意</button>
+                <button class="btn-10"  @click="refuse(index,item.invitation_id)">拒绝</button>
+              </div> 
             </div>
             <el-divider content-position="left">邀请理由</el-divider>
             <div>
-              <el-row>
+              <el-row style="margin-bottom:-12px">
                 <el-col :span="2">
                   <div class="grid-content"></div>
                 </el-col>
@@ -61,7 +63,7 @@ export default {
     })
   },
   methods: {
-    argee(id) {
+    argee(index,id) {
       this.$axios.post('/app/process_invitation/',
           this.qs.stringify({
             id: id,
@@ -70,14 +72,14 @@ export default {
           .then(res => {
         if (res.data.status === 0) {
           alert('加入团队成功')
-          this.$router.go(0)
+           this.list.splice(index,1)
         } else {
           this.$message.error("加入团队失败！")
         }
       })
       // this.aa=id
     },
-    refuse(id) {
+    refuse(index,id) {
       this.$axios.post('/app/process_invitation/',
           this.qs.stringify({
             id: id,
@@ -87,7 +89,7 @@ export default {
             console.log(res)
             if (res.data.status === 0) {
               alert('拒绝加入成功')
-              this.$router.go(0)
+               this.list.splice(index,1)
             } else {
               this.$message.error("拒绝加入失败！")
             }

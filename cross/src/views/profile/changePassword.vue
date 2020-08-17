@@ -11,7 +11,7 @@
 				<el-input v-model="ruleForm.checkPassword" show-password></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
+				<button class="btn-7" @click="submitForm('ruleForm')">修改</button>
 <!--				<el-button index="/profile">返回个人信息页面</el-button>-->
 			</el-form-item>
 		</el-form>
@@ -87,10 +87,15 @@
 								}),
 								{headers: {'Content-Type':'application/x-www-form-urlencoded'}})
 								.then(res => {
-								  this.$message(res.data.msg)
-									if(res.data.status === 0){
-                    this.$router.go(0)
-									}
+								if (res.data.status === 0) {
+                                     this.$message(res.data.msg)
+                                     this.$router.push({
+                                     path:"/diamond/profile/"
+                                     });
+                                }
+                                else{
+                                    this.$message.error('修改用户名失败，请检查网络配置');
+                                }
 								})
 					} else {
 						return false;

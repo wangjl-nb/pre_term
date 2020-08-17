@@ -36,9 +36,12 @@
 					<el-card :body-style="{ padding: '0px' }" style="height: 16rem">
 						<div style="text-align: center">
 <!--							<img :src="item.icon" class="image" style="width: 50px; height: 50px">-->
-							<h2 style="color: #3a8ee6">{{item.name}}</h2>
-							<h3 style="background-color:#8fbd39;">团队人数：{{item.number}}</h3>
-							<p class="teamDescription" style="font-family: 隶书">{{item.description}}</p>
+							<h2 style="color: #aa67aa;margin-top:14px">{{item.name}}</h2>
+							<h3 >团队人数：{{item.number}}</h3>
+							<div style="padding:15px">
+								<p class="teamDescription" style="font-family: 隶书">{{item.description}}</p>
+							</div>
+							
 						</div>
 					</el-card>
 				</a>
@@ -56,13 +59,13 @@
 					keyword: '',
 				},
 				teams: [
-					// {
-					// 	id: 5,
-					// 	name: '团队5',
-					// 	icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-					// 	number_num: 10,
-					// 	describe: '团队介绍'
-					// },
+					 {
+					 	id: 5,
+					 	name: '团队5',
+					 	icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+					 	number_num: 10,
+						 description: '致力于做喜欢的致力于做喜欢的致力于做喜欢的致力于做喜欢的'
+					 },
 				],
 			}
 		},

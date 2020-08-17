@@ -29,10 +29,10 @@
                     <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码" show-password></el-input>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                    <button class="btn-7"  @click="submitForm('ruleForm')">提交</button>
                     <el-link style="float: right"><a href="/register">还未注册？点我注册</a></el-link>
                   </el-form-item>
-                </el-form>
+                </el-form>        
               </div>
             </el-card>
           </div>
@@ -79,6 +79,7 @@ export default {
   mounted() {
     this.$axios.post('/app/is_login/',)
         .then(res => {
+          console.log(res)
           if (res.data.type > 0) {
             this.$router.push({path: '/diamond/dashboard/desktop'})
           }

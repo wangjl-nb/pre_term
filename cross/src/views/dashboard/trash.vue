@@ -6,21 +6,17 @@
           <div id="recycleBin">
             <div>
               <el-row :gutter="20">
-                <el-col :span="6" :offset="3">
+                <el-col :span="4" :offset="4">
                   <div class="grid-content">
                     <span class="recycleTitle">回收站</span>
                   </div>
                 </el-col>
-                <el-col :span="12">
-                  <div class="grid-content trashButton">
-                    <el-button type="success" round @click="recoverAll">全部恢复</el-button>
-                    <el-button type="danger" round @click="deleteAll">清空回收站</el-button>
-                    <el-button type="success" round
-                               style="background-color: #42b983;" @click="recoverSelection">恢复已选中的部分
-                    </el-button>
-                    <el-button type="danger" round
-                               style="background-color: blueviolet" @click="deleteSelection">清空已选中的部分
-                    </el-button>
+                <el-col :span="14">
+                  <div class="grid-content trashButton" style="margin-top:-30px;margin-bottom:-20px">
+                    <button class="btn-6" style="margin-right:-12px" round @click="recoverAll">全部恢复</button>
+                    <button class="btn-10" style="margin-right:-12px" round @click="deleteAll">清空回收站</button>
+                    <button class="btn-7" style="margin-right:-12px" round  @click="recoverSelection">恢复已选中的部分</button>
+                    <button class="btn-8" round @click="deleteSelection">清空已选中的部分</button>
                   </div>
                 </el-col>
               </el-row>
@@ -53,14 +49,14 @@
                   label="操作"
                   width="300">
                 <template slot-scope="scope">
-                  <el-button type="success"
+                  <button class="btn-6" style="margin-right:-7px" 
                              size="small"
                              @click.native.prevent="recoverOne(scope.$index, trashFile)">恢复
-                  </el-button>
-                  <el-button type="danger"
+                  </button>
+                  <button class="btn-10"
                              size="small"
                              @click.native.prevent="deleteOne(scope.$index, trashFile)">删除
-                  </el-button>
+                  </button>
                 </template>
               </el-table-column>
             </el-table>

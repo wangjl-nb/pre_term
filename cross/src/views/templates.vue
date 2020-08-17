@@ -80,7 +80,7 @@ export default {
            dialogVisible: false,
            team_id:0,
         visible:false,
-           list:[]
+            list:[]
       }
   },
   mounted(){
@@ -91,6 +91,12 @@ export default {
               .then(res => {
                 console.log(res)
                 this.list=res.data.templetes_list
+                for(var i=0;i<this.list.length;i++){
+                  if(this.list[i].score=="5.0")
+                    this.list[i].score=5.0
+                  if(this.list[i].myscore=="5.0")
+                    this.list[i].myscore=5.0
+                }
               })
   },
   methods:{

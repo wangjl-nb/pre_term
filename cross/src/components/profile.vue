@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="profile">
 		<el-container>
 			<el-main class="dashboard">
 				<el-row>

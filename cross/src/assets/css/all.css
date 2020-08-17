@@ -3,6 +3,9 @@ a{
 }
 a:link{color:#aa67aa;}
 a:visited{color:#1682dc;}
+.profile{
+    margin-top:100px
+}
 .icon {
     width: 1em;
     height: 1em;

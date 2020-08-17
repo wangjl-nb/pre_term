@@ -3,9 +3,11 @@
   <el-main class="dashboard">
       <ul v-for="(item,index) in list" :key="index">
           <li>
-              <el-card class="box-card" shadow="hover">
-                <p style="flex-grow:13">你收到一条团队提醒：<strong style="font-size:20px">{{item.message}}</strong> </p>
-                <el-button type="danger" plain @click="read(item.id)">阅读</el-button>
+              <el-card class="box-card" shadow="hover" >
+                <div class="flex flex6">
+                    <p style="flex-grow:13">你收到一条团队提醒：<strong style="font-size:20px">{{item.message}}</strong> </p>
+                    <button class="btn-10" style="flex-grow:1" type="danger" plain @click="read(index,item.id)">已阅</button>
+                </div>
               </el-card>
           </li>
       </ul>
@@ -40,7 +42,7 @@ export default {
     })
   },
   methods:{
-    read(id){
+    read(index,id){
       //接口文档27.5
       this.$axios.get('/app/delete_message/',{
         params:{
@@ -50,7 +52,7 @@ export default {
       }).then(res =>{
         if (res.data.status === 0) {
           alert('阅读完成并删除！')
-          this.$router.go(0)
+           this.list.splice(index,1)
         } else {
           this.$message.error("阅读失败！")
         }

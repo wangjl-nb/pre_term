@@ -1,35 +1,5 @@
 <template>
   <el-container class="router" style="position:relative">
-        <el-dialog
-        title="发送团队邀请"
-        :visible.sync="dialogVisible"
-        width="30%"
-        :before-close="handleClose2">
-      <el-input
-          type="textarea"
-          autosize
-          placeholder="请输入内容"
-          v-model="reason">
-      </el-input>
-      <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="invite(inviteId,reason)">确 定</el-button>
-  </span>
-    </el-dialog>
-      <el-dialog
-        title="发送团队申请"
-        :visible.sync="dialogVisible1"
-        width="30%"
-        :before-close="handleClose1">
-      <el-input
-          type="textarea"
-          autosize
-          placeholder="请输入内容"
-          v-model="reason1">
-      </el-input>
-      <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="join(reason1)">确 定</el-button>
-  </span>
-    </el-dialog>
     <el-drawer
         title="我是标题"
         :visible.sync="drawer"
@@ -56,9 +26,9 @@
                     <el-avatar size="medium" :src="'/media/'+item.u_icon"></el-avatar>
                     <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">
         {{ item.u_username }}
-        <el-button type="text" @click="dialogVisible = true;inviteId=item.id"> 
+        <button class="btn-6" type="text" @click="invite(item.id)"> 
            <i class="el-icon-circle-plus-outline" style="font-size:20px"></i> 
-        </el-button>
+        </button>
        
         </span>
                   </li>
@@ -98,10 +68,10 @@
         {{ item.u_username }}
         </span>
               <p style="positon:relative;margin-left:90px">
-                <el-button v-show="item.comment==1" @click="changePower(index,item.id,0,item.change)">享有评论权限</el-button>
-                <el-button v-show="item.comment==0" @click="changePower(index,item.id,1,item.change)">无评论权限</el-button>
-                <el-button v-show="item.change==1" @click="changePower(index,item.id,item.comment,0)">享有修改权限</el-button>
-                <el-button v-show="item.change==0" @click="changePower(index,item.id,item.comment,1)">无修改权限</el-button>
+                <el-button v-show="item.comment==0" @click="changePower(index,item.id,1,item.change)">享有评论权限</el-button>
+                <el-button v-show="item.comment==1" @click="changePower(index,item.id,0,item.change)">无评论权限</el-button>
+                <el-button v-show="item.change==0" @click="changePower(index,item.id,item.comment,1)">享有修改权限</el-button>
+                <el-button v-show="item.change==1" @click="changePower(index,item.id,item.comment,0)">无修改权限</el-button>
                 <el-button type="text" @click="tichu(item.id,index)"
                            style="position:absolute;margin-top:-10px;margin-left:10px">
                   <svg class="icon" aria-hidden="true" style="color:red;width:2em;height:2em">
@@ -120,28 +90,31 @@
         <ul v-for="(item,index) in teamRemind" :key="index">
           <li>
             <el-card class="box-card" shadow="hover">
-              <div>
+              <div style="margin-bottom:55px">
                 <p style="flex-grow:13"><strong style="font-size:20px">{{ item.u_username }}</strong>
                   <span>申请加入团队</span></p>
               </div>
               <div>
 
               </div>
-              <el-divider content-position="right">
+              <el-divider content-position="right" >
                 申请理由
-                <el-button style="flex-grow:1;margin-left:20px" plain
-                           @click="manageTeamRemind(index,item.application_id,0)">同意
-                </el-button>
-                <el-button style="flex-grow:1" type="danger" plain
+                <span >
+                   <button class="btn-7 r" style="flex-grow:1;margin-left:20px" plain
+                           @click="manageTeamRemind(index,item.application_id,0)" >同意
+                </button>
+                </span>
+               
+                <button class="btn-10" style="flex-grow:1"  plain
                            @click="manageTeamRemind(index,item.application_id,1)">拒绝
-                </el-button>
+                </button>
               </el-divider>
               <div>
                 <el-row style="margin-bottom:-10px;margin-top:-10px">
                   <el-col :span="2">
                     <div class="grid-content"></div>
                   </el-col>
-                  <el-col :span="20">
+                  <el-col :span="20" style="margin-top:20px">
                     <div class="grid-content"><p>{{ item.reason }}</p></div>
                   </el-col>
                   <el-col :span="2">
@@ -153,7 +126,7 @@
           </li>
         </ul>
       </div>
-      <div class="flex flex6">
+      <div class="flex flex6 ">
         <div style="">
           <el-image
               style="width: 70px; height: 70px; border-radius: 50%;"
@@ -162,17 +135,15 @@
           </el-image>
         </div>
         <div style="margin-left:20px;margin-right:30px">
-          <h1 class="change-color" style="font-weight:lighter "><i>{{ name }}</i></h1>
+          <h1 class="change-color" style="font-weight:lighter ">{{ name }}</h1>
         </div>
-        <el-button plain v-show="type==0" @click="drawer = true">管理成员</el-button>
-        <el-button type="danger" plain v-show="type==0" @click="dispose()">解散团队</el-button>
-        <el-button plain v-show="type==2" @click="dialogVisible1=true">加入团队</el-button>
-        <el-button type="danger" v-show="type==1" plain @click="out()">退出团队</el-button>
-        <el-button type="primary" v-show="type==0" plain @click="changeTeamIcon()">修改团队头像</el-button>
-        <el-button type="warning" v-show="type==0" plain @click="changeTeamName()">修改团队名称</el-button>
-        <el-button type="primary" v-show="type==0" plain @click="dialogTableVisible=true"
-                   style="background-color: #ffc107;">修改团队描述
-        </el-button>
+        	<button class="btn-7 r"  v-show="type==0" @click="drawer = true">管理成员</button>
+        <button class="btn-1 r"  v-show="type==0" @click="dispose()">解散团队</button>
+        <button class="btn-2 r" plain v-show="type==2" @click="join()">加入团队</button>
+        <button class="btn-3 r" v-show="type==1" @click="out()">退出团队</button>
+        <button class="btn-4 r" v-show="type==0"  @click="changeTeamIcon()">修改团队头像</button>
+        <button class="btn-5 r" v-show="type==0" @click="changeTeamName()">修改团队名称</button>
+        <button class="btn-6 r"  v-show="type==0" @click="dialogTableVisible=true">修改团队描述</button>
       </div>
 
     </el-header>
@@ -181,7 +152,17 @@
         <el-main>
           <show-documents :list="list"></show-documents>
         </el-main>
-        <el-aside width="200px">
+        <el-aside width="200px" style="position:relative">
+              <div v-if="type==2" style="height:30px;margin-left:0px">
+            <div class="mengban" v-if="type==2" style="opacity: 0.8; background-color:#ededed">
+            </div>
+            <div class="mengban">
+              <div class="change-color" v-if="type==2" style="margin-top:70px;font-size:14px;">
+                <p>您还不是团队成员 </p>
+                <p>不具有创建文档的权限</p>
+              </div>
+            </div>
+          </div>
           <create-document :teamId="teamId"></create-document>
         </el-aside>
       </el-container>
@@ -262,34 +243,28 @@ export default {
   },
   data() {
     return {
-      dialogVisible: false,
-      inviteId: -1,
-      reason: "",
-      dialogVisible1: false,
-      reason1: "",
       img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       teamId: 134,
       name: "团队名字哈哈",
       newName: '',
-      type: 2,
+      type: 0,
       doucument_ids: [],
       isChangeTeamIcon: false,
       isChangeTeamName: false,
       editTeamInfo: "",
       teamInfo: "希望一直加油",
       dialogTableVisible: false,
-      author: {id: 123, img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', name: "sadasd"}
-      ,
-      searchItem: [ {id: 123, img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', name: "sadasd"}],
+      searchItem: [],
       userItem: [],
       drawer: false,
       search: "",
       list: [],
       teamRemind: [
-        {application_id: 12331, u_username: "你太厉害", reason: "你太厉害了！！！"},
+        {application_id: 12331, u_username: "你太厉害你太厉害你太厉害你太厉害你太厉害你厉害你太太厉害", reason: "你太厉害了！！！你太厉害了！！！你太厉害了！！！你太厉害了！！！你太厉害了！！！"},
         {application_id: 12331, u_username: "叽叽喳喳害", reason: "你太厉害了！！！"},
         {application_id: 1231, u_username: "话害", reason: "你太厉害了！！！"},
-      ]
+      ],
+      author:[]
     }
   },
   mounted() {
@@ -356,14 +331,6 @@ export default {
       this.editTeamInfo = ""
       this.dialogTableVisible = false
     },
-    handleClose1() {
-      this.reason1 = ""
-      this.dialogVisible1 = false
-    },
-    handleClose2() {
-      this.reason = ""
-      this.dialogVisible = false
-    },
     changeTeamIcon() {
       //11 修改团队头像
       this.isChangeTeamIcon = true
@@ -390,20 +357,19 @@ export default {
           .then(res => {
             console.log(res)
             if (res.data.status === 0) {
-              this.$router.push({path: "/diamond/dashboard/desktop"})
+              this.$router.push({path: "/diamond/dashboard/team"})
             } else {
-              this.$message.error("解散团队失败");
+              this.$message.error(res.data.msg);
             }
           })
 
     },
-    join(reason) {
+    join() {
       //19 申请加入团队
       var that = this
-      this.$axios.post('/app/team_application/',
+      this.$axios.post('/app/team_application',
           this.qs.stringify({
             id: that.teamId,
-            reason:reason
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
@@ -414,10 +380,8 @@ export default {
                 type: 'success'
               });
             } else {
-              this.$message.error("申请加入团队失败，您的申请正在被处理或者您已经是团队成员，请刷新界面");
+              this.$message.error(res.data.msg);
             }
-            this.reason1 = ""
-      this.dialogVisible1 = false
           })
     },
     out() {
@@ -433,18 +397,17 @@ export default {
             if (res.data.status === 0) {
               this.$router.push({path: "/diamond/dashboard/desktop"})
             } else {
-              this.$message.error("退出团队失败，请检查是否存在网络问题");
+              this.$message.error(res.data.msg);
             }
           })
     },
-    invite(id,reason) {
+    invite(id) {
       //14 邀请加入团队
       var that = this
-      this.$axios.post('/app/team_invitation/',
+      this.$axios.post('/app/exit_team/',
           this.qs.stringify({
-            team_id: that.teamId,
-            user_id:id,
-            reason:reason
+            id: that.teamId,
+            u_id: id
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
@@ -455,10 +418,8 @@ export default {
                 type: 'success'
               });
             } else {
-              this.$message.error("邀请失败,您之前发送的邀请还未被处理或者他已经是团队成员");
+              this.$message.error(res.data.msg);
             }
-            this.dialogVisible=false
-            this.reason=""
           })
     },
     tichu(id, index) {
@@ -479,7 +440,7 @@ export default {
               });
               this.userItem.splice(index, 1)
             } else {
-              this.$message.error("踢人失败，请检查是否存在网络问题");
+              this.$message.error(res.data.msg);
             }
           })
     },
@@ -498,7 +459,7 @@ export default {
             if (res.data.status === 0) {
               this.teamInfo = text
             } else {
-              this.$message.error("修改团队信息失败，请检查是否存在网络问题");
+              tthis.$message.error(res.data.msg);
             }
           })
     },
@@ -634,6 +595,15 @@ export default {
 };
 </script>
 <style scoped>
+.mengban {
+  position: absolute;
+  height: 170px;
+  text-align: center;
+  width: 100%;
+  margin-left: -10%;;
+  margin-top: -20px;
+  z-index: 100
+}
 
 .img {
   position: relative;
@@ -677,6 +647,7 @@ export default {
   border-radius: 4px;
   min-height: 36px;
 }
+
 
 .row-bg {
   padding: 10px 0;

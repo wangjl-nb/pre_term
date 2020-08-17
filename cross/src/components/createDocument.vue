@@ -1,9 +1,9 @@
 <template>
     <div>
-          <p>
-               <el-button plain @click="newDocument(0,teamId)">新建文档</el-button>
+          <p style="margin-bottom:-40px">
+          <button class="btn-6" plain @click="newDocument(0,teamId)">新建文档</button>
           </p>
-         <p><el-button type="dark" plain @click="withDocument()">模板库</el-button> </p> 
+         <p><button class="btn-7" style="margin-left:30px" type="dark" plain @click="withDocument()">模板库</button> </p> 
     </div>
 </template>
 <script>

@@ -63,36 +63,17 @@
                      {{ item.u_username }}
                     </span>
                       <p style="positon:relative;margin-left:70px">
-                        <el-button v-show="item.comment==1" @click="changePower(index,item.id,0,item.change)">享有评论权限
+                        <el-button v-show="item.comment==0" @click="changePower(index,item.id,1,item.change)">享有评论权限
                         </el-button>
-                        <el-button v-show="item.comment==0" @click="changePower(index,item.id,1,item.change)">无评论权限
+                        <el-button v-show="item.comment==1" @click="changePower(index,item.id,0,item.change)">无评论权限
                         </el-button>
-                        <el-button v-show="item.change==1" @click="changePower(index,item.id,item.comment,0)">享有修改权限
+                        <el-button v-show="item.change==0" @click="changePower(index,item.id,item.comment,1)">享有修改权限
                         </el-button>
-                        <el-button v-show="item.change==0" @click="changePower(index,item.id,item.comment,0)">无修改权限
+                        <el-button v-show="item.change==1" @click="changePower(index,item.id,item.comment,0)">无修改权限
                         </el-button>
                       </p>
                     </li>
                   </ul>
-                </div>
-              </div>
-            </el-card>
-          </div>
-          <!--管理者列表卡片-->
-          <div>
-            <el-card class="box-card" shadow="never">
-              <div slot="header" class="clearfix">
-                <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">管理者</span>
-              </div>
-              <div>
-                <div style="position:relative;margin-left:40px">
-                  <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
-                    <use xlink:href="#icon-renwu1"></use>
-                  </svg>
-                  <el-avatar size="medium" :src="author.img" class="img"></el-avatar>
-                  <span class="user_name">
-                  {{ author.name }}
-                </span>
                 </div>
               </div>
             </el-card>
@@ -113,12 +94,12 @@
           v-model="reason">
       </el-input>
       <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="invite(inviteId,reason)">确 定</el-button>
+    <button class="btn-6" @click="invite(inviteId,reason)">确 定</button>
   </span>
     </el-dialog>
     <!--头部导航栏-->
     <el-header>
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
         <div class="flex flex6">
           <div style="">
             <svg class="icon" aria-hidden="true" style="width:4em;height:4em">
@@ -129,32 +110,32 @@
             <h1 class="change-color" style="font-weight:lighter ">{{ document_type }}</h1>
           </div>
 <!--          <router-link :to="{path: '/changefile/'+fileId}">-->
-            <el-button type="primary" v-show="change_power===0&&allow_edit===0" plain @click="goChangeFile">修改</el-button>
+            <button class="btn-6 " v-show="change_power===0&&allow_edit===0" plain @click="goChangeFile">修改</button>
 <!--          </router-link>-->
-          <el-button type="danger" v-show="change_power===0&&allow_edit===1" plain disabled>当前有人正在修改 禁止修改</el-button>
-          <el-button type="danger" v-show="change_power===1" plain disabled>您没有修改的权限</el-button>
-          <el-button type="primary" v-show="type===1&&is_team===1" plain @click="drawer = true" style="margin-left: 10px">
+          <el-button class="btn-10 " v-show="change_power===0&&allow_edit===1" plain disabled>当前有人正在修改 禁止修改</el-button>
+          <button class="btn-10 " v-show="change_power===1" plain disabled>您没有修改的权限</button>
+          <button class="btn-6 " v-show="type===1&&is_team===1" plain @click="drawer = true" style="margin-left: 10px">
             协作
-          </el-button>
-          <el-button type="primary" v-show="type===1&&allowShare===0" @click="set_allowShare(1)" plain>允许分享</el-button>
-          <el-button type="primary" v-show="type===1&&allowShare===1" @click="set_allowShare(0)" plain>禁止分享</el-button>
+          </button>
+          <button class="btn-7" v-show="type===1&&allowShare===0" @click="set_allowShare(1)" plain>允许分享</button>
+          <button class="btn-8" v-show="type===1&&allowShare===1" @click="set_allowShare(0)" plain>禁止分享</button>
 
           <input type="text" v-model="localURL" style="display: none">
-          <el-button class="copyURL"
+          <el-button class="copyURL btn-8"
                      v-if="allowShare==0"
                      :data-clipboard-text="localURL"
                      type="primary"
                      @click="copy" plain style="margin-left: 10px">
-            分享
+            分享 
           </el-button>
-          <el-button class="copyURL"
+          <el-button class="copyURL btn-7"
                      v-else
                      :data-clipboard-text="localURL"
                      type="primary"
                      @click="copy" plain style="margin-left: 10px" disabled>
             分享
           </el-button>
-          <el-button type="primary" v-show="type==1" @click="del()" plain>删除</el-button>
+          <button class="btn-10" v-show="type==1" @click="del()" plain>删除</button>
 
         </div>
       </el-menu>
@@ -171,12 +152,12 @@
     <!--drawer设置-->
 
     <!--中间文件内容-->
-    <el-main>
+    <el-main >
       <el-row>
         <el-col :span="3" class="grid-content"></el-col>
-        <el-col :span="18">
-          <h2>{{ title }}</h2>
-          <wang-enduit v-model="content"></wang-enduit>
+        <el-col :span="18" >
+          <h2 style="margin-top:60px">{{ title }}</h2>
+          <wang-enduit style="margin-top:30px" v-model="content"></wang-enduit>
         </el-col>
         <el-col :span="3" class="grid-content"></el-col>
       </el-row>
@@ -321,7 +302,7 @@ export default {
       }
       this.title = res.data.title
       this.content = res.data.content
-      this.comment = res.data.comments
+      this.comments = res.data.comments
       this.allowShare = res.data.allow_Share
       this.star = res.data.star
       this.userItem = res.data.list
@@ -378,16 +359,16 @@ export default {
           })
     },
     changePower(index, id, comment, change) {
-      //15 分配个人文档权限
-      this.$axios.post('/app/grant_power/',
-          this.qs.stringify({
+      //16 分配个人文档权限
+      this.$axios.get('/app/grant_power/',{
+        params:{
             u_id: id,
-            id: this.teamId,
+            id: this.fileId,
             comment: comment,
             change: change
-          }),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-          .then(res => {
+          },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(res => {
             console.log(res)
             if (res.data.status == 0) {
               this.userItem[index].change = change
@@ -426,7 +407,7 @@ export default {
         if (res.data.status === 0) {
           this.allowShare = allowShare
         } else {
-          this.$message.error("改变分享权限失败，请检查是否存在网络问题");
+          this.$message.error(res.data.msg);
         }
       })
     },
@@ -443,11 +424,7 @@ export default {
             if (res.data.status == 0) {
               this.star = type
             } else {
-              if (type == 0)
-                this.$message.error('收藏失败');
-              else {
-                this.$message.error('取消收藏失败');
-              }
+                this.$message.error(res.data.msg);
             }
           })
     },
@@ -463,7 +440,7 @@ export default {
             if (res.data.status == 0) {
               this.$router.push({path: "/diamond/dashboard/desktop"})
             } else {
-              this.$message.error('删除文档失败');
+              this.$message.error(res.data.msg);
             }
           })
     },
@@ -482,7 +459,7 @@ export default {
               var com = {id: res.data.id, time: res.data.time, u_username: res.data.u_username, content: content}
               this.comments.push(com)
             } else {
-              this.$message.error('评论失败');
+              this.$message.error(res.data.msg);
             }
           })
     },
@@ -498,9 +475,9 @@ export default {
           .then(res => {
             console.log(res)
             if (res.data.status === 0) {
-              //更新数据
+              //发送邀请成功
             } else {
-              this.$message.error("邀请失败，请检查是否存在网络问题");
+              this.$message.error(res.data.$msg);
             }
           })
       this.reason = ""

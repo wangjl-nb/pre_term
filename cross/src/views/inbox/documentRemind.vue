@@ -4,8 +4,10 @@
       <ul v-for="(item,index) in list" :key="index">
           <li>
               <el-card class="box-card" shadow="hover">
-                <p style="flex-grow:13"><strong style="font-size:20px">{{item.u_username}}</strong> <span>于{{item.date}}时评论了</span><strong style="font-size:20px">{{item.title}}</strong>文档</p>
-                <el-button type="danger" plain @click="read(item.id)">阅读</el-button>
+                <div class="flex flex6">
+                  <p style="flex-grow:13"><strong style="font-size:20px">{{item.u_username}}</strong> <span>于{{item.date}}时评论了</span><strong style="font-size:20px">{{item.title}}</strong>文档</p>
+                  <button class="btn-10" style="flex-grow:1"  plain @click="read(index,item.id)">已阅</button>
+                </div>    
               </el-card>
           </li>
       </ul>
@@ -41,7 +43,7 @@ export default {
     })
   },
   methods:{
-    read(id){
+    read(index,id){
       //接口文档27.5
       this.$axios.get('/app/delete_comment_reminder/',{
         params:{
@@ -52,7 +54,7 @@ export default {
           console.log(res);
         if (res.data.status === 0) {
           alert('阅读完成并删除！')
-          this.$router.go(0)
+           this.list.splice(index,1)
         } else {
           this.$message.error("阅读失败！")
         }

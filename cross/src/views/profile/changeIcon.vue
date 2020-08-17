@@ -18,9 +18,8 @@
 				</el-upload>
 			</el-form-item>
 			<el-form-item>
-				<el-button size="small"
-									 type="primary"
-									 @click="uploadFile">上传</el-button>
+			  <button class="btn-7" size="small" type="primary" @click="uploadFile">上传</button>
+				
 			</el-form-item>
 		</el-form>
 	</div>
@@ -62,7 +61,15 @@
 						'Content-Type': 'multipart/form-data'
 					}
 				}).then((res) => {
-					console.log(res)
+					if (res.data.status === 0) {
+                        this.$message("修改成功")
+                        this.$router.push({
+                            path:"/diamond/profile/"
+                        });
+                    }
+                    else{
+                        this.$message.error('修改用户名失败，请检查网络配置');
+                    }
 				})
 			},
 			// 文件超出个数限制时的钩子

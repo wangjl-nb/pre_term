@@ -6,12 +6,14 @@
               <el-card class="box-card" shadow="hover">
                      <div class="flex flex6" >
                         <p style="flex-grow:13"><strong style="font-size:20px">{{item.name}}</strong> <span>邀请您成为</span><strong style="font-size:20px">{{item.title}}</strong>文档的协作者</p>
-                        <el-button style="flex-grow:1" plain @click="argee(item.id)">同意</el-button>
-                        <el-button style="flex-grow:1" type="danger" plain  @click="refuse(item.id)">拒绝</el-button>
+                         <div style="flex-grow:1;margin-bottom:-30px" >
+                            <button class="btn-7" style="margin-right:-5px" plain @click="argee(index,item.id)">同意</button>
+                            <button class="btn-10"  type="danger" plain  @click="refuse(index,item.id)">拒绝</button>
+                         </div>
                      </div>
                      <el-divider content-position="left">邀请理由</el-divider>
                      <div>
-                       <el-row>
+                       <el-row style="margin-bottom:-12px">
                         <el-col :span="2"><div class="grid-content"></div></el-col>
                         <el-col :span="20"><div class="grid-content"><p>{{item.reason}}</p></div></el-col>
                         <el-col :span="2"><div class="grid-content"></div></el-col>
@@ -53,7 +55,7 @@ export default {
   },
   methods:{
     //接口文档49
-    argee(id) {
+    argee(index,id) {
       this.$axios.post('/app/process_coinvitation/',
         this.qs.stringify({
           id: id,
@@ -62,14 +64,14 @@ export default {
         .then(res => {
           if (res.data.status === 0) {
             alert('成为协作者成功！')
-            this.$router.go(0)
+            this.list.splice(index,1)
           } else {
             this.$message.error("成为协作者失败！")
           }
         })
       // this.aa=id
     },
-    refuse(id) {
+    refuse(index,id) {
       this.$axios.post('/app/process_coinvitation/',
         this.qs.stringify({
           id: id,
@@ -79,7 +81,7 @@ export default {
           console.log(res)
           if (res.data.status === 0) {
             alert('拒绝成为协作者成功')
-            this.$router.go(0)
+             this.list.splice(index,1)
           } else {
             this.$message.error("拒绝成为协作者失败！")
           }

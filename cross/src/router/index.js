@@ -14,6 +14,11 @@ const routes = [
     component: () => import("../views/error.vue")
   },
   {
+    path: '/tt',
+    name: 'tt',
+    component: () => import("../views/tt.vue")
+  },
+  {
   path: "/diamond",
   name: "Diamond",
   component: () => import("../components/diamond.vue"),
@@ -27,11 +32,6 @@ const routes = [
           path: "invite",
           name: "Invite",
           component: () => import("../views/inbox/invite.vue")
-        },
-        {
-          path: "teamRemind",
-          name: "TeamRemind",
-          component: () => import("../views/inbox/teamRemind.vue")
         },
         {
           path: "documentRemind",

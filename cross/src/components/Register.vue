@@ -1,8 +1,12 @@
 <template>
-  <div clss = "login">
-    <el-row :gutter="20">
-      <el-col :span="24"><div class="grid-content"></div></el-col>
-      <el-col :span="12" :offset="6">
+  <div class="login">
+    <el-header style="height: 110px"></el-header>
+    <el-main>
+      <el-row :gutter="20">
+        <el-col :span="10" style="height: 18em;text-align: right">
+          <img src="../assets/logo/logo01.png" style="width:35em;height:25em">
+        </el-col>
+      <el-col :span="12" >
         <div class="grid-content">
           <!--card-->
           <el-card class="box-card" style="margin:0px auto; top:50%">
@@ -21,6 +25,7 @@
             <!--form-->
             <div>
               <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="70px" class="demo-ruleForm">
+                 
                 <el-form-item label="用户名" prop="username">
                   <el-input v-model.number="ruleForm.username" placeholder="请输入用户名"></el-input>
                 </el-form-item>
@@ -31,14 +36,15 @@
                             { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
                   <el-input v-model="ruleForm.email" placeholder="请输入邮箱"></el-input>
                 </el-form-item>
+                <input type="password" style="width: 1px; height: 1px; position: absolute; border: 0px; padding: 0px;">
                 <el-form-item label="密码" prop="pass">
-                  <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码" show-password></el-input>
+                  <el-input type="password" v-model="ruleForm.pass" autocomplete="new-password" placeholder="请输入密码" show-password></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="checkPass">
                   <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder="请再次输入密码" show-password></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                  <button class="btn-7" @click="submitForm('ruleForm')">提交</button>
                   <el-link style="float: right"><a href="/login">已有账号？点我登陆</a></el-link>
                 </el-form-item>
               </el-form>
@@ -46,9 +52,12 @@
           </el-card>
         </div>
       </el-col>
-    </el-row>
+      </el-row>
+    </el-main>
+    <el-footer></el-footer>
   </div>
 </template>
+ 
 <script>
   export default {
     data() {
@@ -81,7 +90,8 @@
         }
       };
       return {
-
+        i:"",
+        p:"",
         imageUrl: '',
         ruleForm: {
           pass: '',
