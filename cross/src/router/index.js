@@ -9,6 +9,11 @@ const routes = [
     redirect: '/login'
   },
   {
+    path: '/error',
+    name: 'Error',
+    component: () => import("../views/error.vue")
+  },
+  {
   path: "/diamond",
   name: "Diamond",
   component: () => import("../components/diamond.vue"),
@@ -40,7 +45,7 @@ const routes = [
         },
         {
           path: "kickOutRemind",
-          name: "KickOutRemind",
+          name: "kickOutRemind",
           component: () => import("../views/inbox/kickOutRemind.vue")
         },
       ]
@@ -151,9 +156,14 @@ const routes = [
     component: () => import("../components/editor.vue")
   },
   {
-    path:"/changefile",
+    path:"/changefile/:fileId",
     name: "ChangeFile",
     component: () => import("../components/changeFile.vue")
+  },
+  {
+    path: "templatepreview/:templateid",
+    name: 'TemplatePreview',
+    component: () => import("../components/TemplatePreview.vue")
   },
 ];
 

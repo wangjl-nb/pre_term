@@ -4,7 +4,7 @@
       <ul v-for="(item,index) in list" :key="index">
           <li>
               <el-card class="box-card" shadow="hover">
-                    <p style="flex-grow:13">你收到一条团队踢出提醒：<strong style="font-size:20x">{{item.message}}</strong> </p>
+                    <p style="flex-grow:13">你收到一条团队踢出提醒：<strong style="font-size:20px">{{item.message}}</strong> </p>
               </el-card>
           </li>
       </ul>

@@ -5,7 +5,7 @@
           <li>
               <el-card class="box-card" shadow="hover">
                      <div class="flex flex6" >
-                        <p style="flex-grow:13"><strong style="font-size:20px">{{item.name}}</strong> <span>邀请您成为</span><strong style="font-size:20x">{{item.title}}</strong>文档的协作者</p>
+                        <p style="flex-grow:13"><strong style="font-size:20px">{{item.name}}</strong> <span>邀请您成为</span><strong style="font-size:20px">{{item.title}}</strong>文档的协作者</p>
                         <el-button style="flex-grow:1" plain @click="argee(item.id)">同意</el-button>
                         <el-button style="flex-grow:1" type="danger" plain  @click="refuse(item.id)">拒绝</el-button>
                      </div>
@@ -28,7 +28,7 @@
 // @ is an alias to /src
 import info from '@/components/info'
 export default {
-  name: "Invite",
+  name: "CollaboratorRemind",
   components: {
       info
   },

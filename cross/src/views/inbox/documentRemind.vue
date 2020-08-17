@@ -4,7 +4,7 @@
       <ul v-for="(item,index) in list" :key="index">
           <li>
               <el-card class="box-card" shadow="hover">
-                    <p style="flex-grow:13"><strong style="font-size:20x">{{item.u_username}}</strong> <span>于{{item.date}}时评论了</span><strong style="font-size:20x">{{item.title}}</strong>文档</p>
+                    <p style="flex-grow:13"><strong style="font-size:20px">{{item.u_username}}</strong> <span>于{{item.date}}时评论了</span><strong style="font-size:20px">{{item.title}}</strong>文档</p>
               </el-card>
           </li>
       </ul>
