@@ -1,0 +1,13 @@
+<template>
+  <div >
+	<button class="btn-1">Button 1</button>
+	<button class="btn-2">Button 2</button>
+	<button class="btn-3">Button 3</button><br>
+	<button class="btn-4">Button 4</button>
+	<button class="btn-5">Button 5</button>
+	<button class="btn-6">Button 6</button><br>
+	<button class="btn-7">Button 7</button>
+	<button class="btn-8">Button 8</button>
+	<button class="btn-9">Button 9</button>
+</div>
+</template>

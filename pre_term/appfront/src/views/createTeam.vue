@@ -12,7 +12,7 @@
     <el-input type="textarea"  autosize v-model="ruleForm.desc"></el-input>
   </el-form-item>
   <el-form-item>
-    <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+    <el-button class="btn-7" @click="submitForm('ruleForm')">立即创建</el-button>
   </el-form-item>
 </el-form>
 </div> 
@@ -50,8 +50,27 @@ export default {
         var that=this
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            that.team_id=234
-            that.$router.push({path:"/diamond/dashboard/team/"+that.team_id})
+                  //21 创建团队
+     this.$axios.post('/app/create_team/',
+              this.qs.stringify({
+                name: this.ruleForm.name,
+                describe: this.ruleForm.desc,
+                icon:"suoluetubig.jpg"
+              }),
+              {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+              .then(res => {
+                console.log(res)
+                if(res.data.status === 0){
+                  this.$message({
+                    message: '创建团队成功',
+                    type: 'success'
+                  })
+                  that.$router.push({path:"/diamond/dashboard/team/"+res.data.id})
+                }
+                else{
+                    this.$message.error('创建团队失败');
+                }
+              })
           } else {
             console.log('error submit!!');
             return false;

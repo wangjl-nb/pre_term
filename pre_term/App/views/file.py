@@ -544,39 +544,39 @@ def coinvitation_list(request):
 
 
 def process_coinvitation(request):
-    try:
-        invitation_id = request.POST.get('id')
-        invitation = Cooperate_invitation.objects.get(pk=invitation_id)
-        type = int(request.POST['type'])
-        message = Message()
-        user = User.objects.get(pk=invitation.user_id)
-        file = File.objects.get(pk=invitation.file_id)
-        if type == 0:
-            personal_record = Personal_record()
-            personal_record.user_id = invitation.user_id
-            personal_record.files_id = invitation.file_id
-            personal_record.is_creator = False
-            personal_record.save()
-            invitation.delete()
-            data = {
-                "msg": "已接受邀请",
-                'status': 0
-            }
-            message.content = user.u_username + '接受了你的邀请成为文档' + file.title + '的协作者'
-        else:
-            data = {
-                "msg": "已拒绝邀请",
-                'status': 0
-            }
-            invitation.delete()
-            message.content = user.u_username + '拒绝了成为文档' + file.title + '的协作者的邀请'
-        message.user = invitation.user
-        message.save()
-    except:
+    # try:
+    invitation_id = request.POST.get('id')
+    invitation = Cooperate_invitation.objects.get(pk=invitation_id)
+    type = int(request.POST['type'])
+    message = Message()
+    user = User.objects.get(pk=invitation.user_id)
+    file = File.objects.get(pk=invitation.file_id)
+    record = Personal_record.objects.filter(files=file).filter(is_creator=True).first()
+    if type == 0:
+        personal_record = Personal_record()
+        personal_record.user_id = invitation.user_id
+        personal_record.files_id = invitation.file_id
+        personal_record.is_creator = False
+        personal_record.save()
         data = {
-            'msg': 'wrong',
+            "msg": "已接受邀请",
+            'status': 0
+        }
+        message.content = user.u_username + '接受了你的邀请成为文档' + file.title + '的协作者'
+    else:
+        data = {
+            "msg": "已拒绝邀请",
             'status': 1
         }
+        message.content = user.u_username + '拒绝了成为文档' + file.title + '的协作者的邀请'
+    message.user = User.objects.get(pk=record.user_id)
+    message.save()
+    invitation.delete()
+    # except:
+    #     data = {
+    #         'msg': 'wrong',
+    #         'status': 1
+    #     }
     return JsonResponse(data=data)
 
 
@@ -590,9 +590,8 @@ def change_file(request):
         file.title = title
         file.content = content
         file.save()
-
         file_log = File_log.objects.filter(file=file).filter(user=request.user)
-        if not file_log.exists():
+        if file_log.exists():
             file_log.delete()
         file_log = File_log()
         file_log.file = file
@@ -628,26 +627,28 @@ def submit_comment(request):
         }
     except:
         data = {'msg': '评论失败', 'status': 1}
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
-    # 收到评论提醒
-    def comment_reminder(request):
-        try:
-            comment_reminders = Comment_reminder.objects.filter(user=request.user)
-            list = []
-            for comment_reminder in comment_reminders:
-                comment = Comment.objects.get(pk=comment_reminder.comment_id)
-                file = File.objects.get(pk=comment.file_id)
-                user = User.objects.get(pk=comment.user_id)
-                dic = {
-                    'title': file.title,
-                    'u_username': user.u_username,
-                    'date': comment.time
-                }
-                list.append(dic)
-            data = {'msg': '获取评论提醒成功', 'list': list}
-        except:
-            data = {'msg': '获取评论提醒失败'}
-        return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
+
+# 收到评论提醒
+def comment_reminder(request):
+    try:
+        comment_reminders = Comment_reminder.objects.filter(user=request.user)
+        list = []
+        for comment_reminder in comment_reminders:
+            comment = Comment.objects.get(pk=comment_reminder.comment_id)
+            file = File.objects.get(pk=comment.file_id)
+            user = User.objects.get(pk=comment.user_id)
+            dic = {
+                'title': file.title,
+                'u_username': user.u_username,
+                'date': comment.time
+            }
+            list.append(dic)
+        data = {'msg': '获取评论提醒成功', 'list': list}
+    except:
+        data = {'msg': '获取评论提醒失败'}
+    return HttpResponse(json.dumps(data, cls=DateEncoder), content_type='application/json')
 
 
 def file_search(request):
@@ -766,28 +767,52 @@ def template_content(request):
 
 def get_change_power(request):
     id = int(request.GET['id'])
-    change_power = Change_power.objects.filter(file_id=id).first()
-    if change_power:
-        if change_power.user != request.user:
+    change_power = Change_power.objects.filter(file_id=id)
+    if change_power.exists():
+        if change_power.first().user != request.user:
             data = {
                 'msg': '获取修改权限失败',
-                'status': 1
+                'status': 1,
             }
             return JsonResponse(data=data)
-    change_power = Change_power()
-    change_power.user = request.user
-    change_power.file_id = id
-    change_power.save()
-    data = {'msg': '获取修改权限成功', 'status': 0}
+        else:
+            data = {
+                'msg': '您已有权限',
+                'status': 0,
+            }
+            return JsonResponse(data=data)
+    else:
+        change_power = Change_power()
+        change_power.user = request.user
+        change_power.file_id = id
+        change_power.save()
+        data = {'msg': '获取修改权限成功', 'status': 0}
     return JsonResponse(data=data)
 
 
 def abandon_change_power(request):
     id = int(request.GET['id'])
-    change_power = Change_power.objects.filter(file_id=id).filter(user=request.user).first()
-    if change_power:
+    change_power = Change_power.objects.filter(file_id=id).filter(user=request.user)
+    if change_power.exists():
         change_power.delete()
         data = {'msg': '放弃修改权限成功', 'status': 0}
     else:
         data = {'msg': '本人无修改权限，放弃失败', 'status': 1}
+    return JsonResponse(data=data)
+
+
+def delete_comment(request):
+    try:
+        comment_id = request.GET['id']
+        comment = Comment.objects.get(pk=comment_id)
+        comment.delete()
+        data = {
+            "status": 0,
+            "msg": "删除成功",
+        }
+    except:
+        data = {
+            "status": 1,
+            "msg": "删除失败",
+        }
     return JsonResponse(data=data)

@@ -5,7 +5,7 @@
                 <el-input v-model="ruleForm.username"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
+                <el-button class="btn-7"  @click="submitForm('ruleForm')">修改</el-button>
                 <!--				<el-button index="/profile">返回个人信息页面</el-button>-->
             </el-form-item>
         </el-form>
@@ -15,6 +15,7 @@
 <script>
     export default {
         name: "ChangeUsername",
+        inject: ['reload'],
         data() {
             return {
                 ruleForm: {
@@ -23,7 +24,6 @@
                 rules: {
                     username: [
                         {required: true, message: '请输入用户名', trigger: 'blur'},
-                        {min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur'}
                     ],
                 }
             }
@@ -37,11 +37,16 @@
                                 this.qs.stringify({u_username: this.ruleForm.username}),
                             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
                             .then(res => {
-                                console.log(res)
                                 if (res.data.status === 0) {
-                                    alert(res.data.msg)
-                                } else {
-                                    alert(res.data.msg)
+                                   this.$message(res.data.msg)
+                                   setTimeout(() => {
+                                     this.$router.push({
+                                      path:"/diamond/profile/"
+                                     });
+                                   }, 500)
+                                }
+                                else{
+                                    this.$message.error('修改用户名失败，用户名已存在');
                                 }
                             })
                     } else {

@@ -21,7 +21,7 @@ class File(models.Model):
 # 用户
 class User(models.Model):
     u_username = models.CharField(max_length=32, unique=True)
-    u_password = models.CharField(max_length=64)
+    u_password = models.CharField(max_length=256)
     u_email = models.EmailField(blank=False, unique=True)
     u_icon = models.ImageField(upload_to='icons/%Y/%m/%d/', null=True, blank=True)
     is_active = models.BooleanField(default=False)

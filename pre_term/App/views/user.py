@@ -30,16 +30,17 @@ def register(request):
         user.u_email = email
         user.u_password = password
         user.u_icon = icon
+        user.is_active=True
 
         user.save()
         # 设置缓存
-        u_token = uuid.uuid4().hex
+        # u_token = uuid.uuid4().hex
+        #
+        # print(u_token)
 
-        print(u_token)
-
-        cache.set(u_token, user.id, timeout=60 * 60 * 24)
+        # cache.set(u_token, user.id, timeout=60 * 60 * 24)
         # 发送邮箱
-        send_email_activate(username, email, u_token)
+        # send_email_activate(username, email, u_token)
 
         return JsonResponse(data={"msg": "注册成功", "status": 0})
     except:
@@ -76,25 +77,25 @@ def login(request):
 
 
 # 邮件激活
-def activate(request):
-    u_token = request.GET.get('u_token')
-
-    user_id = cache.get(u_token)
-
-    print(user_id)
-
-    if user_id:
-        cache.delete(u_token)
-
-        user = User.objects.get(pk=user_id)
-
-        user.is_active = True
-
-        user.save()
-
-        return HttpResponseRedirect("/login")
-
-    return JsonResponse(data={"msg": "用户激活失败", "status": 1})
+# def activate(request):
+#     u_token = request.GET.get('u_token')
+#
+#     user_id = cache.get(u_token)
+#
+#     print(user_id)
+#
+#     if user_id:
+#         cache.delete(u_token)
+#
+#         user = User.objects.get(pk=user_id)
+#
+#         user.is_active = True
+#
+#         user.save()
+#
+#         return HttpResponseRedirect("/login")
+#
+#     return JsonResponse(data={"msg": "用户激活失败", "status": 1})
 
 
 # 用户信息展示
@@ -163,7 +164,6 @@ def change_icon(request):
     user = request.user
     try:
         icon = request.FILES.get('u_icon')
-
         user.u_icon = icon
         user.save()
         data = {

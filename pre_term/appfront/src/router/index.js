@@ -9,6 +9,16 @@ const routes = [
     redirect: '/login'
   },
   {
+    path: '/error',
+    name: 'Error',
+    component: () => import("../views/error.vue")
+  },
+  {
+    path: '/tt',
+    name: 'tt',
+    component: () => import("../views/tt.vue")
+  },
+  {
   path: "/diamond",
   name: "Diamond",
   component: () => import("../components/diamond.vue"),
@@ -22,17 +32,22 @@ const routes = [
           path: "invite",
           name: "Invite",
           component: () => import("../views/inbox/invite.vue")
-        }, 
-        {
-          path: "teamRemind",
-          name: "TeamRemind",
-          component: () => import("../views/inbox/teamRemind.vue")
-        }, 
+        },
         {
           path: "documentRemind",
           name: "DocumentRemind",
           component: () => import("../views/inbox/documentRemind.vue")
-        }, 
+        },
+        {
+          path: "collaboratorRemind",
+          name: "CollaboratorRemind",
+          component: () => import("../views/inbox/collaboratorRemind.vue")
+        },
+        {
+          path: "kickOutRemind",
+          name: "kickOutRemind",
+          component: () => import("../views/inbox/kickOutRemind.vue")
+        },
       ]
     },
     {
@@ -141,9 +156,14 @@ const routes = [
     component: () => import("../components/editor.vue")
   },
   {
-    path:"/changefile",
+    path:"/changefile/:fileId",
     name: "ChangeFile",
     component: () => import("../components/changeFile.vue")
+  },
+  {
+    path: "/templatepreview/:templateid",
+    name: 'TemplatePreview',
+    component: () => import("../components/TemplatePreview.vue")
   },
 ];
 

@@ -1,0 +1,51 @@
+{
+  "id": "2004740",
+  "name": "register",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "868597",
+      "name": "icon-注册头像",
+      "font_class": "iconzhucetouxiang",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "3876817",
+      "name": "重点邮件",
+      "font_class": "favmail",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "3904566",
+      "name": "人工智能机器人",
+      "font_class": "rengongzhinengjiqiren",
+      "unicode": "e693",
+      "unicode_decimal": 59027
+    },
+    {
+      "icon_id": "4482967",
+      "name": "密码",
+      "font_class": "mima",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    },
+    {
+      "icon_id": "4482981",
+      "name": "图片",
+      "font_class": "tupian",
+      "unicode": "e682",
+      "unicode_decimal": 59010
+    },
+    {
+      "icon_id": "4650201",
+      "name": "注册",
+      "font_class": "zhuce",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    }
+  ]
+}

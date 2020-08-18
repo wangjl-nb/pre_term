@@ -437,7 +437,6 @@ def team_application(request):
     try:
         team_id = request.POST['id']
         user_id = request.user.id
-        reason = request.POST['reason']
         relation = Team_relation.objects.filter(user_id=user_id).filter(team_id=team_id)
         if relation.exists():
             return JsonResponse(data={"msg": "您已是成员", "status": 1})
@@ -448,7 +447,8 @@ def team_application(request):
             apply = Team_application()
             apply.team_id = team_id
             apply.user_id = user_id
-            apply.reason = reason
+
+            apply.reason = "我想加入团队"
             apply.save()
         return JsonResponse(data={"msg": "申请成功", "status": 0})
     except:
