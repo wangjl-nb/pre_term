@@ -55,6 +55,7 @@ export default {
       },
       flag: false,
       url: '',
+      changeFileInterval: 0,
     }
   },
   beforeMount() {
@@ -62,9 +63,12 @@ export default {
   },
   mounted() {
     alert('修改文档时会自动保存，且他人不会在您修改时修改文档，请在修改之后点击下方的“返回修改”按钮，便于他人继续修改')
-    setInterval(() => {
+    this.changeFileInterval = setInterval(() => {
       this.submitForm('ruleForm')
     }, 1000)
+  },
+  beforeDestroy() {
+    clearInterval(this.changeFileInterval)
   },
   methods: {
     getContent() {

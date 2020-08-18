@@ -12,7 +12,7 @@
     <el-input type="textarea"  autosize v-model="ruleForm.desc"></el-input>
   </el-form-item>
   <el-form-item>
-    <button class="btn-7" type="primary" @click="submitForm('ruleForm')">立即创建</button>
+    <el-button class="btn-7" @click="submitForm('ruleForm')">立即创建</el-button>
   </el-form-item>
 </el-form>
 </div> 

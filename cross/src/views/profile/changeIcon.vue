@@ -18,7 +18,7 @@
 				</el-upload>
 			</el-form-item>
 			<el-form-item>
-			  <button class="btn-7" size="small" type="primary" @click="uploadFile">上传</button>
+			  <el-button class="btn-7" @click="uploadFile">上传</el-button>
 				
 			</el-form-item>
 		</el-form>
@@ -63,9 +63,9 @@
 				}).then((res) => {
 					if (res.data.status === 0) {
                         this.$message("修改成功")
-                        this.$router.push({
-                            path:"/diamond/profile/"
-                        });
+                        // this.$router.push({
+                        //     path:"/diamond/profile/"
+                        // });
                     }
                     else{
                         this.$message.error('修改用户名失败，请检查网络配置');
@@ -88,7 +88,11 @@
 			},
 			uploadFile () {
 				this.$refs.upload.submit()
-        this.$router.go(0)
+				setTimeout(() => {
+					this.$router.go(0)
+				},500)
+				// alert("修改成功")
+        		// this.$router.go(0)
 			},
 			imgChange (files, fileList) {
 				this.hideUpload = fileList.length >= this.limitNum;

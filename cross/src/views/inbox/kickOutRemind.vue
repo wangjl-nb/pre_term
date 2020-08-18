@@ -5,7 +5,7 @@
           <li>
               <el-card class="box-card" shadow="hover" >
                 <div class="flex flex6">
-                    <p style="flex-grow:13">你收到一条团队提醒：<strong style="font-size:20px">{{item.message}}</strong> </p>
+                    <p style="flex-grow:13">你收到一条提醒：<strong style="font-size:20px">{{item.message}}</strong> </p>
                     <button class="btn-10" style="flex-grow:1" type="danger" plain @click="read(index,item.id)">已阅</button>
                 </div>
               </el-card>
@@ -25,7 +25,11 @@ export default {
   },
   data(){
       return{
-        list:[]
+        list:[
+          {id:"1",message: "zzz1"},
+          {id:"2",message: "zzz2"},
+          {id:"3",message: "zzz3"},
+        ]
       }
   },
   mounted(){
@@ -34,7 +38,6 @@ export default {
       //接收数据
       console.log(res);
       this.list = res.data.list;
-
     })
   },
   methods:{

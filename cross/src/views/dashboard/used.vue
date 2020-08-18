@@ -1,8 +1,9 @@
 <template>
-  <el-container >
-  <el-main class="dashboard"> 
+  <el-container>
+  <el-main class="dashboard" > 
+    <div style="height:550px">
        <el-row :span="24" :gutter="20" v-for="(item,index) in list" :key="index">  
-        <el-col :span="18">
+        <el-col :span="18" >
            <el-card shadow="hover" >
                <div class="flex flex6">
                    <div style="margin-top:0px">  
@@ -19,6 +20,7 @@
            </el-card>
         </el-col> 
     </el-row>
+    </div> 
       <el-row>
   <el-col :span="2"><div class="grid-content "></div></el-col>
   <el-col :span="16">
@@ -53,12 +55,9 @@ export default {
       return{
         type:1,
         indexs:['',1,2,3,4,5,6,7,8],
-        pages:9,
-        list:  [{title:"jac324kff",id:123243,creator:"mala",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
-        {title:"jac432asdk",id:12322342,creator:"masla",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"},
-        {title:"jac423sdak",id:12324332,creator:"malsa",create_date:"2020/2/2",change_date:"2020/2/4",u_username:"222xs"}
-        ]  ,
-        perpage:3
+        pages:1,
+        list:  []  ,
+        perpage:5
       }
   },
   mounted(){
@@ -73,6 +72,8 @@ export default {
         .then(res => {
       this.list = res.data.documentList,
       this.pages=res.data.pages
+      if(this.pages==1&&this.list.length==0)
+      this.pages=0
     })
   },
   methods:{

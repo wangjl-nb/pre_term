@@ -49,14 +49,12 @@
                   label="操作"
                   width="300">
                 <template slot-scope="scope">
-                  <button class="btn-6" style="margin-right:-7px" 
-                             size="small"
+                  <el-button class="btn-6" style="margin-right:-7px"
                              @click.native.prevent="recoverOne(scope.$index, trashFile)">恢复
-                  </button>
-                  <button class="btn-10"
-                             size="small"
+                  </el-button>
+                  <el-button class="btn-10"
                              @click.native.prevent="deleteOne(scope.$index, trashFile)">删除
-                  </button>
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>

@@ -1,5 +1,35 @@
 <template>
   <el-container class="router" style="position:relative">
+    <el-dialog
+  title="邀请加入团队"
+  :visible.sync="dialogVisible1"
+  width="30%"
+  :before-close="handleClose1">
+  <el-input
+  type="textarea"
+  autosize
+  placeholder="请输入内容"
+  v-model="reason1">
+</el-input>
+  <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="invite(inviteId,reason1)">确 定</el-button>
+  </span>
+</el-dialog>
+<el-dialog
+  title="申请加入团队"
+  :visible.sync="dialogVisible2"
+  width="30%"
+  :before-close="handleClose2">
+  <el-input
+  type="textarea"
+  autosize
+  placeholder="请输入内容"
+  v-model="reason2">
+</el-input>
+  <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="join(reason2)">确 定</el-button>
+  </span>
+</el-dialog>
     <el-drawer
         title="我是标题"
         :visible.sync="drawer"
@@ -26,9 +56,9 @@
                     <el-avatar size="medium" :src="'/media/'+item.u_icon"></el-avatar>
                     <span style="font-size:17px;position:absolute;margin-top:-5px;margin-left:20px">
         {{ item.u_username }}
-        <button class="btn-6" type="text" @click="invite(item.id)"> 
+        <el-button type="text" @click="dialogVisible1=true;inviteId=item.id"> 
            <i class="el-icon-circle-plus-outline" style="font-size:20px"></i> 
-        </button>
+        </el-button>
        
         </span>
                   </li>
@@ -48,7 +78,7 @@
 
       </div>
       <div>
-        <div style="position:relative;margin-left:40px">
+        <div style="position:relative;margin-left:40px;margin-top:20px">
           <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
             <use xlink:href="#icon-gerenguanli"></use>
           </svg>
@@ -58,7 +88,7 @@
         </span>
         </div>
         <div>
-          <ul v-for="(item,index) in userItem" :key="index">
+          <ul v-for="(item,index) in userItem" :key="index" style="position:relative;margin-left:40px;margin-top:20px">
             <li style="position:relative">
               <svg class="icon" aria-hidden="true" style="width:2em;height:2em">
                 <use xlink:href="#icon-zhanghaoguanli"></use>
@@ -139,7 +169,7 @@
         </div>
         	<button class="btn-7 r"  v-show="type==0" @click="drawer = true">管理成员</button>
         <button class="btn-1 r"  v-show="type==0" @click="dispose()">解散团队</button>
-        <button class="btn-2 r" plain v-show="type==2" @click="join()">加入团队</button>
+        <button class="btn-2 r" plain v-show="type==2" @click="dialogVisible2=true">加入团队</button>
         <button class="btn-3 r" v-show="type==1" @click="out()">退出团队</button>
         <button class="btn-4 r" v-show="type==0"  @click="changeTeamIcon()">修改团队头像</button>
         <button class="btn-5 r" v-show="type==0" @click="changeTeamName()">修改团队名称</button>
@@ -153,17 +183,7 @@
           <show-documents :list="list"></show-documents>
         </el-main>
         <el-aside width="200px" style="position:relative">
-              <div v-if="type==2" style="height:30px;margin-left:0px">
-            <div class="mengban" v-if="type==2" style="opacity: 0.8; background-color:#ededed">
-            </div>
-            <div class="mengban">
-              <div class="change-color" v-if="type==2" style="margin-top:70px;font-size:14px;">
-                <p>您还不是团队成员 </p>
-                <p>不具有创建文档的权限</p>
-              </div>
-            </div>
-          </div>
-          <create-document :teamId="teamId"></create-document>
+          <create-document v-if="type!=2" :teamId="teamId"></create-document>
         </el-aside>
       </el-container>
       <el-footer>
@@ -243,6 +263,10 @@ export default {
   },
   data() {
     return {
+      dialogVisible2:false,
+      dialogVisible1:false,
+      reason1:"",
+      reason2:"",
       img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       teamId: 134,
       name: "团队名字哈哈",
@@ -255,7 +279,10 @@ export default {
       teamInfo: "希望一直加油",
       dialogTableVisible: false,
       searchItem: [],
-      userItem: [],
+      userItem: [
+         {id:12443,img:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',name:"sadasewrwrwrwed",
+         change:0,comment:0}
+      ],
       drawer: false,
       search: "",
       list: [],
@@ -331,6 +358,14 @@ export default {
       this.editTeamInfo = ""
       this.dialogTableVisible = false
     },
+    handleClose1() {
+      this.reason1= ""
+      this.dialogVisible1 = false
+    },
+    handleClose2() {
+      this.reason2= ""
+      this.dialogVisible2 = false
+    },
     changeTeamIcon() {
       //11 修改团队头像
       this.isChangeTeamIcon = true
@@ -364,17 +399,20 @@ export default {
           })
 
     },
-    join() {
+    join(reason) {
       //19 申请加入团队
       var that = this
       this.$axios.post('/app/team_application',
           this.qs.stringify({
             id: that.teamId,
+            reason:reason
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
             console.log(res)
             if (res.data.status === 0) {
+              this.dialogVisible2=false
+              this.reason2=false
               this.$message({
                 message: "申请加入团队成功，请等待对方反馈",
                 type: 'success'
@@ -401,18 +439,21 @@ export default {
             }
           })
     },
-    invite(id) {
+    invite(id,reason) {
       //14 邀请加入团队
       var that = this
-      this.$axios.post('/app/exit_team/',
+      this.$axios.post('/app/team_invitation/',
           this.qs.stringify({
-            id: that.teamId,
-            u_id: id
+            team_id: that.teamId,
+            user_id: id,
+            reason:reason
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
           .then(res => {
             console.log(res)
             if (res.data.status === 0) {
+              this.dialogVisible1=false
+              this.reason1=""
               this.$message({
                 message: "邀请成功，请等待对方同意",
                 type: 'success'

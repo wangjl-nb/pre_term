@@ -5,7 +5,7 @@
                 <el-input v-model="ruleForm.username"></el-input>
             </el-form-item>
             <el-form-item>
-                <button class="btn-7"  @click="submitForm('ruleForm')">修改</button>
+                <el-button class="btn-7"  @click="submitForm('ruleForm')">修改</el-button>
                 <!--				<el-button index="/profile">返回个人信息页面</el-button>-->
             </el-form-item>
         </el-form>
@@ -24,7 +24,6 @@
                 rules: {
                     username: [
                         {required: true, message: '请输入用户名', trigger: 'blur'},
-                        {min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur'}
                     ],
                 }
             }
@@ -39,13 +38,15 @@
                             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
                             .then(res => {
                                 if (res.data.status === 0) {
-                                     this.$message(res.data.msg)
+                                   this.$message(res.data.msg)
+                                   setTimeout(() => {
                                      this.$router.push({
-                                     path:"/diamond/profile/"
+                                      path:"/diamond/profile/"
                                      });
+                                   }, 500)
                                 }
                                 else{
-                                    this.$message.error('修改用户名失败，请检查网络配置');
+                                    this.$message.error('修改用户名失败，用户名已存在');
                                 }
                             })
                     } else {

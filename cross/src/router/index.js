@@ -165,6 +165,11 @@ const routes = [
     name: 'TemplatePreview',
     component: () => import("../components/TemplatePreview.vue")
   },
+    {
+    path: "/userinfo/:userId",
+    name: 'Userinfo',
+    component: () => import("../views/userinfo.vue")
+  },
 ];
 
 const router = new VueRouter({

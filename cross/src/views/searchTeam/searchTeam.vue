@@ -59,13 +59,6 @@
 					keyword: '',
 				},
 				teams: [
-					 {
-					 	id: 5,
-					 	name: '团队5',
-					 	icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-					 	number_num: 10,
-						 description: '致力于做喜欢的致力于做喜欢的致力于做喜欢的致力于做喜欢的'
-					 },
 				],
 			}
 		},
