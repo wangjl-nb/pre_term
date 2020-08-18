@@ -156,6 +156,7 @@ def file_info(request):
             'time': comment.time,
             'content': comment.content,
             'u_username': comment.user.u_username,
+            'u_id': comment.user.id,
         }
         list.append(dic)
     data['comments'] = list

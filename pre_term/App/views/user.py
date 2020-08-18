@@ -30,7 +30,7 @@ def register(request):
         user.u_email = email
         user.u_password = password
         user.u_icon = icon
-        user.is_active=True
+        user.is_active = True
 
         user.save()
         # 设置缓存
@@ -100,10 +100,25 @@ def login(request):
 
 # 用户信息展示
 def user_info(request):
-    user = request.user
+    id = int(request.GET['id'])
+    if id != 0:
+        user = User.objects.get(pk=id)
+    else:
+        user = request.user
+    relations = Team_relation.objects.filter(user=user).filter(level=2)
+    teams = []
+    for relation in relations:
+        team = relation.team
+        dic = {
+            "id": team.id,
+            "name": team.name,
+            "description": team.describe,
+            "level": relation.level,
+        }
+        teams.append(dic)
     data = {'u_icon': str(user.u_icon), 'u_username': user.u_username, 'u_email': user.u_email,
-            'u_password': user.u_password}
-    return JsonResponse(data=data)
+            'u_password': user.u_password, "teams": teams}
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 # 登出
