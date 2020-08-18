@@ -25,11 +25,7 @@ export default {
   },
   data(){
       return{
-        list:[
-          {id:"1",message: "zzz1"},
-          {id:"2",message: "zzz2"},
-          {id:"3",message: "zzz3"},
-        ]
+        list:[]
       }
   },
   mounted(){

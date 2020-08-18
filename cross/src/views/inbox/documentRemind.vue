@@ -25,12 +25,7 @@ export default {
   },
   data(){
       return{
-        list:[
-          {id:"1",u_username:"xxx",date:"2020/1/1 12:00",title:"YYYY"},
-          {id:"2",u_username:"xxx",date:"2020/1/1 12:00",title:"YYYY"},
-          {id:"3",u_username:"xxx",date:"2020/1/1 12:00",title:"YYYY"},
-          {id:"4",u_username:"xxx",date:"2020/1/1 12:00",title:"YYYY"},
-        ]
+        list:[]
       }
   },
   mounted(){

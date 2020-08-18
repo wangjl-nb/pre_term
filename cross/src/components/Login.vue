@@ -29,7 +29,7 @@
                     <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码" show-password></el-input>
                   </el-form-item>
                   <el-form-item>
-                    <button class="btn-7"  @click="submitForm('ruleForm')">提交</button>
+                    <el-button class="btn-7"  @click="submitForm('ruleForm')">提交</el-button>
                     <el-link style="float: right"><a href="/register">还未注册？点我注册</a></el-link>
                   </el-form-item>
                 </el-form>        

@@ -36,12 +36,7 @@ export default {
   },
   data(){
       return{
-        list:[
-          {id:1,name: "xxx",reason: "你太厉害了！！！",title: "yyyy"},
-          {id:2,name: "xxx",reason: "你太厉害了！！！",title: "yyyy"},
-          {id:3,name: "xxx",reason: "你太厉害了！！！",title: "yyyy"},
-          {id:4,name: "xxx",reason: "你太厉害了！！！",title: "yyyy"},
-        ]
+        list:[]
       }
   },
   mounted(){

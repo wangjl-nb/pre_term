@@ -29,11 +29,7 @@ export default {
   },
   data(){
       return{
-        list:[
-            {id:1231,author:"XXX",team:"sdas",},
-            {id:1231,author:"XXXcsx",team:"sdas",},
-            {id:1231,author:"XXXwqe",team:"sdas",}
-        ]
+        list:[]
       }
   },
   mounted(){

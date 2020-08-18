@@ -36,7 +36,7 @@
                             { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
                   <el-input v-model="ruleForm.email" placeholder="请输入邮箱"></el-input>
                 </el-form-item>
-                <input type="password" style="width: 1px; height: 1px; position: absolute; border: 0px; padding: 0px;">
+<!--                <input type="password" style="width: 1px; height: 1px; position: absolute; border: 0px; padding: 0px;">-->
                 <el-form-item label="密码" prop="pass">
                   <el-input type="password" v-model="ruleForm.pass" autocomplete="new-password" placeholder="请输入密码" show-password></el-input>
                 </el-form-item>
@@ -44,7 +44,7 @@
                   <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder="请再次输入密码" show-password></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <button class="btn-7" @click="submitForm('ruleForm')">提交</button>
+                  <el-button class="btn-7" @click="submitForm('ruleForm')">提交</el-button>
                   <el-link style="float: right"><a href="/login">已有账号？点我登陆</a></el-link>
                 </el-form-item>
               </el-form>

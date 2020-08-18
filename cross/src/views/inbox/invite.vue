@@ -47,11 +47,7 @@ export default {
   },
   data() {
     return {
-      list: [
-        {id: 1231, author: "XXX", team: "sdas", reason: "你太厉害了！！！"},
-        {id: 1231, author: "XXXcsx", team: "sdas", reason: "你太厉害了！！！"},
-        {id: 1231, author: "XXXwqe", team: "sdas", reason: "你太厉害了！！！"}
-      ]
+      list: []
     }
   },
   mounted() {
