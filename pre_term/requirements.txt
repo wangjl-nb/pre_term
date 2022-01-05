@@ -28,7 +28,7 @@ config==0.4.2
 cryptography==2.8
 cycler==0.10.0
 decorator==4.4.2
-Django==3.1
+Django==2.2.26
 django-apscheduler==0.3.0
 django-debug-toolbar==2.2
 django-redis==4.11.0
