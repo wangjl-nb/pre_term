@@ -100,7 +100,7 @@ pycparser==2.20
 pygame==1.9.6
 pyglet==1.4.10
 Pygments==2.3.1
-PyJWT==1.7.1
+PyJWT==2.4.0
 pylint==2.3.1
 PyMySQL==0.9.3
 pyparsing==2.4.2
