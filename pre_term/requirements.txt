@@ -83,14 +83,14 @@ mysqlclient==1.4.6
 neobolt==1.7.15
 neotime==1.7.4
 ngender==0.1.1
-numpy==1.18.1
+numpy==1.22.2
 packaging==20.1
 pandas==1.0.0
 passlib==1.7.2
 Pillow==7.0.0
 promise==2.3
 prompt-toolkit==2.0.10
-protobuf==3.11.3
+protobuf==3.18.3
 psutil==5.7.0
 py-postgresql==1.2.1
 py2neo==4.3.0
@@ -100,7 +100,7 @@ pycparser==2.20
 pygame==1.9.6
 pyglet==1.4.10
 Pygments==2.3.1
-PyJWT==1.7.1
+PyJWT==2.4.0
 pylint==2.3.1
 PyMySQL==0.9.3
 pyparsing==2.4.2
