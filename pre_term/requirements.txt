@@ -25,7 +25,7 @@ Click==7.0
 cloudpickle==1.2.2
 colorama==0.4.1
 config==0.4.2
-cryptography==2.8
+cryptography==3.2
 cycler==0.10.0
 decorator==4.4.2
 Django==3.1
@@ -65,7 +65,7 @@ isort==4.3.21
 itsdangerous==1.1.0
 jaraco.functools==3.0.0
 Jinja2==2.11.2
-joblib==0.14.1
+joblib==1.1.1
 kiwisolver==1.1.0
 lazy-object-proxy==1.4.2
 loguru==0.4.1
@@ -83,11 +83,11 @@ mysqlclient==1.4.6
 neobolt==1.7.15
 neotime==1.7.4
 ngender==0.1.1
-numpy==1.18.1
+numpy==1.22.2
 packaging==20.1
 pandas==1.0.0
 passlib==1.7.2
-Pillow==7.0.0
+Pillow==9.0.1
 promise==2.3
 prompt-toolkit==2.0.10
 protobuf==3.11.3
@@ -124,7 +124,7 @@ Sanic-Cors==0.9.9.post4
 Sanic-GraphQL==1.1.0
 sanic-jwt==1.4.0
 Sanic-Plugins-Framework==0.9.1
-scikit-learn==0.22.1
+scikit-learn==0.24.2
 scipy==1.4.1
 singledispatch==3.4.0.3
 six==1.12.0
